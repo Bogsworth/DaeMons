@@ -1,0 +1,143 @@
+[
+{
+    "name": "Chain Whip",
+    "type": "Lust",
+    "power": 50,
+    "accuracy": 95,
+    "uses": 20
+
+},
+{
+    "name": "Bind",
+    "type": "Lust",
+    "Power": 20,
+    "Accuracy": 100,
+    "uses": 30
+},
+
+{
+    "name": "Vore",
+    "type": "Gluttony",
+    "Power": 130,
+    "Accuracy": 80,
+    "uses": 5
+},
+{
+    "name": "Bite",
+    "type": "Gluttony",
+    "Power": 55,
+    "Accuracy": 95,
+    "uses": 20
+},
+{
+    "name": "Nibble",
+    "type": "Gluttony",
+    "Power": 20,
+    "Accuracy": 100,
+    "uses": 30
+},
+
+{
+    "name": "Fuck You Money",
+    "type": "Greed",
+    "Power": 70,
+    "Accuracy": 100,
+    "uses": 10
+},
+{
+    "name": "Buyout",
+    "type": "Greed",
+    "Power": 35,
+    "Accuracy": 90,
+    "uses": 25
+},
+
+{
+    "name": "Convince to Stay In",
+    "type": "Sloth",
+    "Power": 80,
+    "Accuracy": 90,
+    "uses": 10
+},
+{
+    "name": "Laze",
+    "type": "Sloth",
+    "Power": 15,
+    "Accuracy": 100,
+    "uses": 30
+},
+
+{
+    "name": "Normal Punch",
+    "type": "Wrath",
+    "Power": 30,
+    "Accuracy": 100,
+    "uses": 30
+},
+{
+    "name": "Consecutive Normal Punches",
+    "type": "Wrath",
+    "Power": 70,
+    "Accuracy": 100,
+    "uses": 15
+},
+
+{
+    "name": "Sabotage",
+    "type": "Envy",
+    "Power": 70,
+    "Accuracy": 70,
+    "uses": 15
+},
+{
+    "name": "Lash Out",
+    "type": "Envy",
+    "Power": 40,
+    "Accuracy": 100,
+    "uses": 30
+},
+
+{
+    "name": "Show Off",
+    "type": "Pride",
+    "Power": 40,
+    "Accuracy": 90,
+    "uses": 20
+},
+{
+    "name": "The Pants Stay Brown",
+    "type": "Pride",
+    "Power": 140,
+    "Accuracy": 50,
+    "uses": 5
+},
+{
+    "name": "Lord Over",
+    "type": "Pride",
+    "Power": 110,
+    "Accuracy": 80,
+    "uses": 5
+},
+
+{
+    "name": "",
+    "type": "",
+    "Power": 30,
+    "Accuracy": 100,
+    "uses": 20
+},
+{
+    "name": "",
+    "type": "",
+    "Power": 30,
+    "Accuracy": 100,
+    "uses": 20
+},
+{
+    "name": "",
+    "type": "",
+    "Power": 30,
+    "Accuracy": 100,
+    "uses": 20
+}
+]
