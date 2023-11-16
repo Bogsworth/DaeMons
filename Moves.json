@@ -117,27 +117,5 @@
     "Power": 110,
     "Accuracy": 80,
     "uses": 5
-},
-
-{
-    "name": "",
-    "type": "",
-    "Power": 30,
-    "Accuracy": 100,
-    "uses": 20
-},
-{
-    "name": "",
-    "type": "",
-    "Power": 30,
-    "Accuracy": 100,
-    "uses": 20
-},
-{
-    "name": "",
-    "type": "",
-    "Power": 30,
-    "Accuracy": 100,
-    "uses": 20
 }
 ]
