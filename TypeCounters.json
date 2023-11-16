@@ -1,0 +1,23 @@
+{
+    "TypeIDs": {
+        "table_name": "TypeIDs",
+        "table": {
+            "Lust": 0,
+            "Gluttony": 1,
+            "Greed": 2,
+            "Sloth": 3,
+            "Wrath": 4,
+            "Envy": 5,
+            "Pride": 6
+        }
+    },
+    "TypeMultipliers": {
+        "Lust":     [ 2, 1, 1, 0.5, 1, 1, 2 ],
+        "Gluttony": [ 0.5, 1, 2, 2, 1, 0.5, 2 ],
+        "Greed":    [ 1, 0.5, 1, 1, 1, 2, 2 ],
+        "Sloth":    [ 2, 0.5, 2, 1, 1, 1, 0.5 ],
+        "Wrath":    [ 1, 2, 1, 1, 0.5, 1, 2 ],
+        "Envy":     [ 2, 1, 0, 1, 1, 1, 0.5 ],
+        "Pride":    [ 1, 1, 0.5, 2, 1, 2, 1 ]
+    }
+}
