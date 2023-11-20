@@ -60,6 +60,13 @@
     "uses": 10
 },
 {
+    "name": "Remove FOMO",
+    "type": "Sloth",
+    "Power": 50,
+    "Accuracy": 95,
+    "uses": 20
+},
+{
     "name": "Laze",
     "type": "Sloth",
     "Power": 15,
