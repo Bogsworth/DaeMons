@@ -1,23 +1,65 @@
 {
-    "TypeIDs": {
-        "table_name": "TypeIDs",
-        "table": {
-            "Lust": 0,
-            "Gluttony": 1,
-            "Greed": 2,
-            "Sloth": 3,
-            "Wrath": 4,
-            "Envy": 5,
-            "Pride": 6
-        }
+    "lust": { 
+        "vs_lust": 2,
+        "vs_gluttony": 1,
+        "vs_greed": 1,
+        "vs_sloth": 0.5,
+        "vs_wrath": 1,
+        "vs_envy": 1,
+        "vs_pride": 2
     },
-    "TypeMultipliers": {
-        "Lust":     [ 2, 1, 1, 0.5, 1, 1, 2 ],
-        "Gluttony": [ 0.5, 1, 2, 2, 1, 0.5, 2 ],
-        "Greed":    [ 1, 0.5, 1, 1, 1, 2, 2 ],
-        "Sloth":    [ 2, 0.5, 2, 1, 1, 1, 0.5 ],
-        "Wrath":    [ 1, 2, 1, 1, 0.5, 1, 2 ],
-        "Envy":     [ 2, 1, 0, 1, 1, 1, 0.5 ],
-        "Pride":    [ 1, 1, 0.5, 2, 1, 2, 1 ]
+    "gluttony": { 
+        "vs_lust": 0.5,
+        "vs_gluttony": 1,
+        "vs_greed": 2,
+        "vs_sloth": 2,
+        "vs_wrath": 1,
+        "vs_envy": 0.5,
+        "vs_pride": 2
+    },
+    "greed": { 
+        "vs_lust": 1,
+        "vs_gluttony": 0.5,
+        "vs_greed": 1,
+        "vs_sloth": 1,
+        "vs_wrath": 1,
+        "vs_envy": 2,
+        "vs_pride": 2
+    },
+    "sloth": { 
+        "vs_lust": 2,
+        "vs_gluttony": 0.5,
+        "vs_greed": 2,
+        "vs_sloth": 1,
+        "vs_wrath": 1,
+        "vs_envy": 1,
+        "vs_pride": 0.5
+    },
+    "wrath": { 
+        "vs_lust": 1,
+        "vs_gluttony": 2,
+        "vs_greed": 1,
+        "vs_sloth": 1,
+        "vs_wrath": 0.5,
+        "vs_envy": 1,
+        "vs_pride": 2
+    },
+    "envy": { 
+        "vs_lust": 2,
+        "vs_gluttony": 1,
+        "vs_greed": 0,
+        "vs_sloth": 1,
+        "vs_wrath": 1,
+        "vs_envy": 1,
+        "vs_pride": 0.5
+    },
+    "pride": { 
+        "vs_lust": 1,
+        "vs_gluttony": 1,
+        "vs_greed": 0.5,
+        "vs_sloth": 2,
+        "vs_wrath": 1,
+        "vs_envy": 2,
+        "vs_pride": 1
     }
 }
