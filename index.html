@@ -11,10 +11,50 @@
       http-equiv="X-Content-Security-Policy"
       content="default-src 'self'; script-src 'self'"
     />
+    <link rel="stylesheet" href="battle.css">
     <title>Hello from Electron renderer!</title>
   </head>
   <body>
-    <h1>Hello from Electron renderer!</h1>
-    <p>👋</p>
+    <div style="display: flexbox; flex-direction: column;">
+      <div class = "battleScreen">
+        <h1>You are fighting!!</h1>
+        <div class="monSection">
+          <div class="monDisplay">Their Daemon</div>
+          <div>20/20 hp</div>
+        </div>
+        <div class="monSection">
+          <div class="monDisplay">Your Daemon</div>
+          <div>20/20 hp</div>
+        </div>
+        <div class="battleMenu">
+          <div class="battleOption">
+            <div>Choose a move:</div>
+            <select name="moves" id="moves">
+              <option value="move0">move0</option>
+              <option value="move1">move1</option>
+              <option value="move2">move2</option>
+              <option value="move3">move3</option>
+            </select>
+            <button type="button" name="attack">Attack</button>
+          </div>
+          <div class = "battleOption">
+            <div>Choose a Daemon to switch to:</div>
+            <select name="moves" id="moves">
+              <option value="mon0">mon0</option>
+              <option value="mon1">mon1</option>
+              <option value="mon2">mon2</option>
+              <option value="mon3">mon3</option>
+              <option value="mon4">mon4</option>
+              <option value="mon5">mon5</option>
+            </select>
+            <button type="button" name="switch">Switch</button>
+          </div>
+          <div class = "battleOption">
+            <div>Message box</div>
+            <button type="button" name="ok">Ok</button>
+          </div>
+        </div>
+      </div>
+    </div>
   </body>
 </html>
