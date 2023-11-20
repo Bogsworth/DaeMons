@@ -5,7 +5,7 @@
   "name": "daemons",
   "description": "Rogue-like game for fun",
   "version": "1.0.0",
-  "main": "main.js",
+  "main": "main.cjs",
   "dependencies": {
     "boolean": "^3.2.0",
     "buffer-crc32": "^0.2.13",
@@ -76,5 +76,6 @@
     "start": "electron ."
   },
   "author": "Bogsworth",
+  "type": "module",
   "license": "ISC"
 }

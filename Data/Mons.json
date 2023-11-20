@@ -1,150 +1,150 @@
 [{
     "name": "Succubus",
-    "type": ["Lust"],
+    "type": ["lust"],
     "stats": {
         "HP": 50,
-        "Attack": 45,
-        "Defense": 30,
-        "Speed": 70
+        "attack": 45,
+        "defense": 30,
+        "speed": 70
     }
 },
 {
     "name": "Imp",
-    "type": ["Greed"],
+    "type": ["greed"],
     "stats": {
         "HP": 25,
-        "Attack": 35,
-        "Defense": 30,
-        "Speed": 90
+        "attack": 35,
+        "defense": 30,
+        "speed": 90
     }
 },
 {
     "name": "Lay-Z-Boy",
-    "type": ["Sloth"],
+    "type": ["sloth"],
     "stats": {
         "HP": 90,
-        "Attack": 40,
-        "Defense": 100,
-        "Speed": 20
+        "attack": 40,
+        "defense": 100,
+        "speed": 20
     }
 },
 {
     "name": "Angy Boy",
-    "type": ["Wrath"],
+    "type": ["wrath"],
     "stats": {
         "HP": 40,
-        "Attack": 94,
-        "Defense": 45,
-        "Speed": 50
+        "attack": 94,
+        "defense": 45,
+        "speed": 50
     }
 },
 {
     "name": "Precocious Little Shit",
-    "type": ["Pride"],
+    "type": ["pride"],
     "stats": {
         "HP": 40,
-        "Attack": 40,
-        "Defense": 40,
-        "Speed": 40
+        "attack": 40,
+        "defense": 40,
+        "speed": 40
     }
 },
 {
     "name": "Slaanesh",
-    "type": ["Gluttony"],
+    "type": ["gluttony"],
     "stats": {
         "HP": 60,
-        "Attack": 35,
-        "Defense": 80,
-        "Speed": 30
+        "attack": 35,
+        "defense": 80,
+        "speed": 30
     }
 },
 {
     "name": "Wretched",
-    "type": ["Envy"],
+    "type": ["envy"],
     "stats": {
         "HP": 40,
-        "Attack": 40,
-        "Defense": 40,
-        "Speed": 40
+        "attack": 40,
+        "defense": 40,
+        "speed": 40
     }
 },
 {
     "name": "Depression",
-    "type": ["Envy", "Pride"],
+    "type": ["envy", "pride"],
     "stats": {
         "HP": 40,
-        "Attack": 40,
-        "Defense": 40,
-        "Speed": 40
+        "attack": 40,
+        "defense": 40,
+        "speed": 40
     }
 },
 {
     "name": "Vainglory",
-    "type": ["Pride"],
+    "type": ["pride"],
     "stats": {
         "HP": 70,
-        "Attack": 60,
-        "Defense": 35,
-        "Speed": 45
+        "attack": 60,
+        "defense": 35,
+        "speed": 45
     }
 },
 {
     "name": "Damned",
-    "type": ["Sloth", "Envy"],
+    "type": ["sloth", "envy"],
     "stats": {
         "HP": 70,
-        "Attack": 35,
-        "Defense": 35,
-        "Speed": 45
+        "attack": 35,
+        "defense": 35,
+        "speed": 45
     }
 },
 {
     "name": "Jingoist",
-    "type": ["Pride", "Wrath"],
+    "type": ["pride", "wrath"],
     "stats": {
         "HP": 50,
-        "Attack": 60,
-        "Defense": 60,
-        "Speed": 30
+        "attack": 60,
+        "defense": 60,
+        "speed": 30
     }
 },
 {
     "name": "Ignorance",
-    "type": ["Sloth", "Pride"],
+    "type": ["sloth", "pride"],
     "stats": {
         "HP": 70,
-        "Attack": 45,
-        "Defense": 80,
-        "Speed": 60
+        "attack": 45,
+        "defense": 80,
+        "speed": 60
     }
 },
 {
     "name": "Sarcophagus",
-    "type": ["Pride", "Greed"],
+    "type": ["pride", "greed"],
     "stats": {
         "HP": 80,
-        "Attack": 40,
-        "Defense": 70,
-        "Speed": 40
+        "attack": 40,
+        "defense": 70,
+        "speed": 40
     }
 },
 {
     "name": "Fuckboy",
-    "type": ["Lust", "Sloth"],
+    "type": ["lust", "sloth"],
     "stats": {
         "HP": 40,
-        "Attack": 58,
-        "Defense": 25,
-        "Speed": 30
+        "attack": 58,
+        "defense": 25,
+        "speed": 30
     }
 },
 {
     "name": "Dragon",
-    "type": ["Greed", "Wrath"],
+    "type": ["greed", "wrath"],
     "stats": {
         "HP": 70,
-        "Attack": 55,
-        "Defense": 80,
-        "Speed": 36
+        "attack": 55,
+        "defense": 80,
+        "speed": 36
     }
 }]
