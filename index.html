@@ -12,37 +12,47 @@
       content="default-src 'self'; script-src 'self'"
     />
     <link rel="stylesheet" href="battle.css">
-    <title>Hello from Electron renderer!</title>
+    <title>Daemon Test Fighter</title>
+
+    <script type="module" src="./scripts/populateMoves.js"></script>
+
   </head>
   <body>
+
     <div style="display: flexbox; flex-direction: column;">
       <div class = "battleScreen">
         <h1>You are fighting!!</h1>
+        
         <div class="theirs">
           <div class="monSection">
             <div class="monImage">Their Daemon</div>
             <div class="healthDisplay">20/20 hp</div>
           </div>
         </div>
+
         <div class="yours">
           <div class="monSection">
             <div class="monImage">Your Daemon</div>
             <div class="healthDisplay">20/20 hp</div>
           </div>
         </div>
+
         <div class="battleMenu">
+
           <div class="battleOption">
             <div class="menuDropdownSection">
               <div>Choose a move:</div>
-              <select name="moves" id="moves">
-                <option value="move0">move0</option>
+              <select id="selectMoves">
+                <option>Move list</option>
+                <!-- <option value="move0">move0</option>
                 <option value="move1">move1</option>
                 <option value="move2">move2</option>
-                <option value="move3">move3</option>
+                <option value="move3">move3</option> -->
               </select>
             </div>
             <button type="button" name="attack">Attack</button>
           </div>
+
           <div class = "battleOption">
             <div class="menuDropdownSection">
               <div>Choose a Daemon to switch to:</div>
@@ -57,10 +67,12 @@
             </div>
             <button type="button" name="switch">Switch</button>
           </div>
+
           <div class = "battleOption">
             <div class="messageBox">Message box</div>
             <button type="button" name="ok">Ok</button>
           </div>
+
         </div>
       </div>
     </div>
