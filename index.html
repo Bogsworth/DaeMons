@@ -14,8 +14,6 @@
     <link rel="stylesheet" href="battle.css">
     <title>Daemon Test Fighter</title>
 
-    
-
   </head>
   <body>
 
@@ -25,15 +23,15 @@
         
         <div class="theirs">
           <div class="monSection">
-            <div class="monImage">Their Daemon</div>
-            <div class="healthDisplay">20/20 hp</div>
+            <div class="monImage" id="theirMon">Their Daemon</div>
+            <div class="healthDisplay" id="theirMonHP">20/20 hp</div>
           </div>
         </div>
 
         <div class="yours">
           <div class="monSection">
-            <div class="monImage">Your Daemon</div>
-            <div class="healthDisplay">20/20 hp</div>
+            <div class="monImage" id="yourMon">Your Daemon</div>
+            <div class="healthDisplay" id="yourMonHP">20/20 hp</div>
           </div>
         </div>
 
@@ -68,6 +66,6 @@
       </div>
     </div>
     
-    <script type="module" src="./scripts/populate-moves.js"></script>
+    <script type="module" src="./scripts/script-main.js"></script>
   </body>
 </html>
