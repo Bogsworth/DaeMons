@@ -1,19 +1,20 @@
 //import { move } from 'fs-extra';
 
-import * as util from '../lib/Calculations.js'
-import * as parse from '../lib/Import.js'
+import * as util from '../lib/calculations.js'
+import * as parse from '../lib/import.js'
+import * as script from './scripts.js'
 
-function populateMoveSelect( moveArray = []) {
-    const select = document.getElementById('selectMoves')
+function populateSelect( array = [], selectName ) {
+    const select = document.getElementById( selectName )
     
-    moveArray.forEach( move => {
-        if ( move == null ){
+    array.forEach( mon => {
+        if ( mon == null ){
             return;
         }
 
         let element = document.createElement('option');
-        element.textContent = move.name;
-        element.value = move;
+        element.textContent = mon.name;
+        element.value = mon;
         select.appendChild( element );
     })
 }
@@ -41,7 +42,28 @@ function createTheirMon() {
 }
 
 
-let myMon = createMyMon();
+let handleAttack = function() {
+    console.log('attack button pressed')
+}
+
+let handleSwitch = function() {
+    console.log('switch button pressed')
+}
+
+let handleOk = function() {
+    console.log('ok button pressed');
+}
+
+let myMon = [ createMyMon(), createMyMon() ]
 let theirMon = createTheirMon();
 
-populateMoveSelect(myMon.moves);
+
+
+populateSelect(myMon[0].moves, 'selectMoves');
+populateSelect(myMon, 'selectMons');
+
+script.attachButton( handleAttack , 'attack' )
+script.attachButton( handleSwitch , 'switch' )
+script.attachButton( handleOk, 'ok' )
+
+

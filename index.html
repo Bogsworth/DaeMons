@@ -14,12 +14,12 @@
     <link rel="stylesheet" href="battle.css">
     <title>Daemon Test Fighter</title>
 
-    <script type="module" src="./scripts/populateMoves.js"></script>
+    
 
   </head>
   <body>
 
-    <div style="display: flexbox; flex-direction: column;">
+    <div>
       <div class = "battleScreen">
         <h1>You are fighting!!</h1>
         
@@ -43,11 +43,7 @@
             <div class="menuDropdownSection">
               <div>Choose a move:</div>
               <select id="selectMoves">
-                <option>Move list</option>
-                <!-- <option value="move0">move0</option>
-                <option value="move1">move1</option>
-                <option value="move2">move2</option>
-                <option value="move3">move3</option> -->
+                <option>Moves</option>
               </select>
             </div>
             <button type="button" name="attack">Attack</button>
@@ -56,13 +52,8 @@
           <div class = "battleOption">
             <div class="menuDropdownSection">
               <div>Choose a Daemon to switch to:</div>
-              <select name="moves" id="moves">
-                <option value="mon0">mon0</option>
-                <option value="mon1">mon1</option>
-                <option value="mon2">mon2</option>
-                <option value="mon3">mon3</option>
-                <option value="mon4">mon4</option>
-                <option value="mon5">mon5</option>
+              <select id="selectMons">
+                <option>Daemons</option>
               </select>
             </div>
             <button type="button" name="switch">Switch</button>
@@ -76,5 +67,7 @@
         </div>
       </div>
     </div>
+    
+    <script type="module" src="./scripts/populate-moves.js"></script>
   </body>
 </html>
