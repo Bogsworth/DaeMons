@@ -1,3 +1,5 @@
+import * as calc from '../lib/calculations.js';
+
 function populateSelect( array = [], selectName ) {
     const select = document.getElementById( selectName )
     
@@ -33,19 +35,42 @@ function updateMon( mon, isYourMon = true) {
     }
     
     if ( isYourMon == true ) {
-        ID = {
-            name: 'yourMon',
-            HP: 'yourMonHP'
-        }
+        ID.name = 'yourMon';
+        ID.HP = 'yourMonHP';
     }
-    console.log(mon)
 
     document.getElementById(ID.name).innerHTML = mon.name
     document.getElementById(ID.HP).innerHTML = mon.stats.HP + '/' + mon.stats.HP
 }
 
+
 let handleAttack = function() {
+//let handleAttack = function( typeTable, myMon, theirMon ) {
     console.log('attack button pressed');
+    // let chosenMove = document.getElementById( 'selectMoves' ).options.selectedIndex;
+
+    // console.log(chosenMove)
+
+    // if ( chosenMove == 'Moves' ) {
+    //     return;
+    // }
+
+    // console.log(myMon)
+    // console.log(myMon.moves[chosenMove])
+
+    // let damage = calc.calculateDamage({
+    //     attack_stat: myMon.stats.attack,
+    //     defense_stat: theirMon.stats.defense,
+    //     power_stat: chosenMove.power,
+    //     type_modifier: calc.calculateTypeModifier
+    //     (
+    //         typeTable,
+    //         myMon.moves[chosenMove], 
+    //         theirMon.type
+    //     )
+    // });
+
+    // theirMon.stats.HP -= damage;
 }
 
 let handleSwitch = function() {
