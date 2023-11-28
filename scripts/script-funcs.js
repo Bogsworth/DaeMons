@@ -23,12 +23,12 @@ function attachButton( doFunction, elementID ) {
     document.addEventListener("DOMContentLoaded", () => {
 
         //if (el.addEventListener)
-            el[0].addEventListener("click", doFunction, false);
+        el[0].addEventListener("click", doFunction, false);
         //else if (el.attachEvent)
             //el.attachEvent('onclick', doFunction);
-
     })
 }
+
 
 function updateMon( mon, isYourMon = true) {
     let ID = {
@@ -45,7 +45,6 @@ function updateMon( mon, isYourMon = true) {
     document.getElementById(ID.HP).innerHTML = mon.stats.HP + '/' + mon.stats.HP
 }
 
-// TODO: split handleAttack() into functions
 function handleAttack( typeTable, myMon, theirMon ) {
     console.log('attack button pressed');
     
@@ -57,132 +56,125 @@ function handleAttack( typeTable, myMon, theirMon ) {
         return;
     }
 
-    if ( myMon.stats.speed >= theirMon.stats.speed ) {
-        let damage = calc.calculateDamage({
-            attack_stat: myMon.stats.attack,
-            defense_stat: theirMon.stats.defense,
-            power_stat: chosenMove.power,
-            type_modifier: calc.calculateTypeModifier
-            (
-                typeTable,
-                chosenMove.type, 
-                theirMon.type
-            )
-        });
-    
-        theirMon.updateHP( damage );
-        updateShownHP( 'theirMonHP', theirMon )
-        util.writeToMessageBox(`You did ${damage} damage using ${chosenMove.name}!`)
-        awaitOk( 'test 1');
+    let waitForPressResolve;
+    const btn = document.getElementsByName('ok')[0];
 
-        let theirChosenMove = util.chooseMove( theirMon );
-        damage = calc.calculateDamage({
-            attack_stat: theirMon.stats.attack,
-            defense_stat: myMon.stats.defense,
-            power_stat: theirChosenMove.power,
-            type_modifier: calc.calculateTypeModifier
-            (
-                typeTable,
-                chosenMove.type, 
-                theirMon.type
-            )
-        });
-        myMon.updateHP( damage )
-        updateShownHP ('myMonHP', myMon)
-        util.writeToMessageBox(`They did ${damage} damage using ${theirChosenMove.name}!`)
-        awaitOk( 'test 2');
+    roundRunner();
+
+    function waitForPress() {
+        return new Promise(resolve => waitForPressResolve = resolve);
     }
-    else {
-        let theirChosenMove = util.chooseMove( theirMon );
-        let damage = calc.calculateDamage({
-            attack_stat: theirMon.stats.attack,
-            defense_stat: myMon.stats.defense,
-            power_stat: theirChosenMove.power,
-            type_modifier: calc.calculateTypeModifier
-            (
-                typeTable,
-                chosenMove.type, 
-                theirMon.type
-            )
-        });
-        myMon.updateHP( damage );
-        updateShownHP ('yourMonHP', myMon);
-        util.writeToMessageBox(`They did ${damage} damage using ${theirChosenMove.name}!`);
-        awaitOk( 'test 3');
 
-        damage = calc.calculateDamage({
-            attack_stat: myMon.stats.attack,
-            defense_stat: theirMon.stats.defense,
-            power_stat: chosenMove.power,
-            type_modifier: calc.calculateTypeModifier
-            (
-                typeTable,
-                chosenMove.type, 
-                theirMon.type
-            )
-        });
-    
-        theirMon.updateHP( damage );
-        updateShownHP( 'theirMonHP', theirMon );
-        util.writeToMessageBox(`You did ${damage} damage using ${chosenMove.name}`);
-        awaitOk( 'test 4' );
+    function btnResolver() {
+        if (waitForPressResolve) {
+            waitForPressResolve();
+        }
+    }
+
+    // TODO: detach attack and switch buttons to prevent doing extra attacks
+    async function roundRunner() {
+        btn.addEventListener( 'click', btnResolver );
+        
+        round: if ( myMon.stats.speed >= theirMon.stats.speed ) {
+            yourMove( typeTable, myMon, theirMon, chosenMove );
+            await waitForPress();
+            if ( util.checkIfHPZero( myMon, theirMon )) {
+                break round;
+            }
+            theirMove( typeTable, myMon, theirMon );
+            await waitForPress();
+            if ( util.checkIfHPZero( myMon, theirMon )) {
+                break round;
+            }
+        }
+        else {
+            theirMove( typeTable, myMon, theirMon );
+            await waitForPress();
+            if ( util.checkIfHPZero( myMon, theirMon )) {
+                break round;
+            }
+            yourMove( typeTable, myMon, theirMon, chosenMove );
+            await waitForPress();
+            if ( util.checkIfHPZero (myMon, theirMon )) {
+                break round;
+            }
+        }
+
+        if ( util.checkIfHPZero( myMon, theirMon )) {
+            if ( myMon.returnCurrentHP() <= 0 )
+            {
+                util.writeToMessageBox( 'Your dude has died, RIP');
+                await waitForPress();
+            }
+            else {
+                util.writeToMessageBox( 'Their dude has died, hell yeah!');
+                await waitForPress();
+            }
+        }
+
+        // Cleanup
+        btn.removeEventListener( 'click', btnResolver );
+        util.writeToMessageBox( 'What do you want to do?' );
     }
 }
 
-function updateShownHP( ID, mon ) {
+// function handleDaemonZeroHP( myMon, theirMon ) {
+//     if ( myMon.returCurrentHP() <= 0 )
+//     {
+//         util.writeToMessageBox( 'Your dude has died, RIP');
+//         await waitForPress();
+//     }
+//     else {
+//         util.writeToMessageBox( 'Their dude has died, hell yeah!');
+//         await waitForPress();
+//     }
+// }
 
-    document.getElementById( ID ).innerHTML = mon.returnCurrentHP() + '/' + mon.stats.HP
+function yourMove( typeTable, myMon, theirMon, chosenMove ) {
+    let damage = calc.calculateDamage({
+        attack_stat: myMon.stats.attack,
+        defense_stat: theirMon.stats.defense,
+        power_stat: chosenMove.power,
+        type_modifier: calc.calculateTypeModifier
+        (
+            typeTable,
+            chosenMove.type, 
+            theirMon.type
+        )
+    });
+
+    theirMon.updateHP( damage );
+    util.updateShownHP( 'theirMonHP', theirMon )
+    util.writeToMessageBox(`You did ${damage} damage using ${chosenMove.name}!`)
+}
+
+function theirMove(typeTable, myMon, theirMon) {
+    let theirChosenMove = util.chooseMove( theirMon );
+    let damage = calc.calculateDamage({
+        attack_stat: theirMon.stats.attack,
+        defense_stat: myMon.stats.defense,
+        power_stat: theirChosenMove.power,
+        type_modifier: calc.calculateTypeModifier
+        (
+            typeTable,
+            theirChosenMove.type, 
+            theirMon.type
+        )
+    });
+    
+    myMon.updateHP( damage )
+    util.updateShownHP ('yourMonHP', myMon)
+    util.writeToMessageBox(`They did ${damage} damage using ${theirChosenMove.name}!`)
 }
 
 function handleSwitch() {
     console.log('switch button pressed');
 
-    
 }
 
-//function handleOk( message ) {
 function handleOk() {
     console.log('ok button pressed');
-
-
 }
-
-//async function awaitOk( message ) {
-function awaitOk( message ) {
-    // console.log('awaiting')
-    // const result = await onOk( message );
-    // util.writeToMessageBox( result )
-    let buttonPress = false
-    let button = document.getElementsByName('ok')[0]
-    console.log('awaiting');
-
-    // while ( ! buttonPress ) {
-    //     button.onclick = function( buttonPress ) {
-    //         buttonPress = true;
-    //     }
-    // }
-    
-
-}
-
-function onOk( message ) {
-    console.log('ok button pressed in awaitOk()');
-
-    // let button = document.getElementsByName('ok')[0];
-    // button.onclick = function() {
-    //     return new Promise((resolve) => {
-    //         resolve( message );
-    //     })
-    // }
-
-    return new Promise((resolve) => {
-        setTimeout(() => {
-          resolve('resolved');
-        }, 2000);
-      });
-}
-
-
 
 export {
     populateSelect,
