@@ -6,7 +6,7 @@ const MON_TABLE = parse.createMonTable();
 const MOVE_TABLE = parse.createMoveTable();
 const TYPE_TABLE = parse.createCounterTable();
 
-let myMon = util.createParty([ 'Fuckboy', 'Jingoist' ]);
+let myMon = parse.createParty();
 let theirMon = util.createTheirMon( 'Damned' );
 let myCurrentMon = myMon[0];
 let theirCurrentMon = theirMon;
