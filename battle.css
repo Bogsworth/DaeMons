@@ -1,0 +1,68 @@
+body {
+    background-color: lightblue;
+}
+
+h1 {
+    display: flex;
+    color: navy;
+    align-self: center;
+}
+
+.battleScreen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    align-items: stretch;
+    justify-content: space-around;
+}
+
+.battleMenu {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+.menuDropdownSection {
+    display: flex;
+    flex-direction: row;
+}
+
+.battleOption {
+    display: flex;
+    justify-content: space-between;
+}
+
+.yours {
+    display: flex;
+    flex-direction: row;
+}
+.theirs {
+    display: flex;
+    flex-direction: row-reverse;
+}
+
+.messageBox {
+    display: flex;
+    border-style: solid;
+    background-color: aliceblue;
+    border-color: blueviolet;
+    border-width: 1px;
+    flex-grow: 5;
+    margin-right: 50px;
+}
+
+.monSection {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 200px;
+}
+.monImage {
+    display: flex;
+    flex-grow: 3;
+    font-size: 1.5em;
+}
+.healthDisplay {
+    display: flex;
+    align-self: center;
+}

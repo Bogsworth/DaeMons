@@ -11,10 +11,61 @@
       http-equiv="X-Content-Security-Policy"
       content="default-src 'self'; script-src 'self'"
     />
-    <title>Hello from Electron renderer!</title>
+    <link rel="stylesheet" href="battle.css">
+    <title>Daemon Test Fighter</title>
+
   </head>
   <body>
-    <h1>Hello from Electron renderer!</h1>
-    <p>👋</p>
+
+    <div>
+      <div class = "battleScreen">
+        <h1>You are fighting!!</h1>
+        
+        <div class="theirs">
+          <div class="monSection">
+            <div class="monImage" id="theirMon">Their Daemon</div>
+            <div class="healthDisplay" id="theirMonHP">20/20 hp</div>
+          </div>
+        </div>
+
+        <div class="yours">
+          <div class="monSection">
+            <div class="monImage" id="yourMon">Your Daemon</div>
+            <div class="healthDisplay" id="yourMonHP">20/20 hp</div>
+          </div>
+        </div>
+
+        <div class="battleMenu">
+
+          <div class="battleOption">
+            <div class="menuDropdownSection">
+              <div>Choose a move:</div>
+              <select id="selectMoves">
+                <option>Moves</option>
+              </select>
+            </div>
+            <button type="button" name="attack">Attack</button>
+          </div>
+
+          <div class = "battleOption">
+            <div class="menuDropdownSection">
+              <div>Choose a Daemon to switch to:</div>
+              <select id="selectMons">
+                <option>Daemons</option>
+              </select>
+            </div>
+            <button type="button" name="switch">Switch</button>
+          </div>
+
+          <div class = "battleOption">
+            <div class="messageBox" id="messageBox">What do you want to do?</div>
+            <button type="button" name="ok">Ok</button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+    
+    <script type="module" src="./scripts/script-main.js"></script>
   </body>
 </html>
