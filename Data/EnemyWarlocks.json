@@ -1,21 +1,4 @@
 [{
-    "name": "Mirror-You",
-    "Daemons": [
-        {
-            "name": "Fuckboy",
-            "moves": ["Laze", "Show Off", null, null]
-        },
-        {
-            "name": "Imp",
-            "moves": ["Nibble", "Buyout", null, null]
-        },
-        {
-            "name": "Angy Boy",
-            "moves": ["Consecutive Normal Punches", "Chain Whip", null, null]
-        }
-    ]
-},
-{
     "name": "Shorts-Wearer",
     "Daemons": [
         {
@@ -29,6 +12,23 @@
         {
             "name": "Lay-Z-Boy",
             "moves": ["Normal Punch", "Convince to Stay In", null, null]
+        }
+    ]
+},
+{
+    "name": "Mirror-You",
+    "Daemons": [
+        {
+            "name": "Fuckboy",
+            "moves": ["Laze", "Show Off", null, null]
+        },
+        {
+            "name": "Imp",
+            "moves": ["Nibble", "Buyout", null, null]
+        },
+        {
+            "name": "Angy Boy",
+            "moves": ["Consecutive Normal Punches", "Chain Whip", null, null]
         }
     ]
 },
