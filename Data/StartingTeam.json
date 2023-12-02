@@ -9,4 +9,8 @@
 {
     "name": "Angy Boy",
     "moves": ["Consecutive Normal Punches", "Chain Whip", null, null]
+},
+{
+    "name": "Angy Boy",
+    "moves": ["Consecutive Normal Punches", "Chain Whip", null, null]
 }]

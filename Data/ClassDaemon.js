@@ -36,6 +36,17 @@ class Daemon {
             this[key] = monToCopy[key]
         }
     }
+
+    returnTotalMovesKnown() {
+        let movesKnown = 0;
+        this.moves.forEach( move => {
+            if ( move != null ) {
+                movesKnown++;
+            }
+        });
+
+        return movesKnown;
+    }
 };
 
 export {

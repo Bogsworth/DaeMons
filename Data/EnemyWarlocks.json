@@ -16,6 +16,23 @@
     ]
 },
 {
+    "name": "Pushover",
+    "Daemons": [
+        {
+            "name": "Imp",
+            "moves": ["Buyout", "Nibble", null, null]
+        },
+        {
+            "name": "Imp",
+            "moves": ["Buyout", "Nibble", null, null]
+        },
+        {
+            "name": "Imp",
+            "moves": ["Buyout", "Nibble", null, null]
+        }
+    ]
+},
+{
     "name": "Mirror-You",
     "Daemons": [
         {
