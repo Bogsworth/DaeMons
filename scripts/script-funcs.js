@@ -180,26 +180,18 @@ function handleAttack( fightState ) {
 }
 
 function useMove( typeTable, attackingMon, defendingMon, chosenMove, playerActiveFlag ) {
+    class MessageClass {
+        constructor(playerMessage, enemyMessage) {
+            this['player'] = playerMessage;
+            this['enemy'] = enemyMessage;
+        }
+    }
     const TYPE_MOD = calc.calculateTypeModifier
     (
         typeTable,
         chosenMove.type, 
         defendingMon.type
     );
-
-    console.log('attacking Mon: ')
-    console.log(attackingMon)
-    console.log('chosen move: ' + chosenMove.name)
-    console.log('chosen move type: ' + chosenMove.type)
-    console.log('defendingMon type: ' + defendingMon.type)
-    console.log('type modifier: ' + TYPE_MOD)
-
-    // class MessageClass {
-    //     constructor(playerMessage, enemyMessage) {
-    //         this['player'] = playerMessage;
-    //         this['enemy'] = enemyMessage;
-    //     }
-    // }
     let message = '';
     let activeLock = '';
     let damage = calc.calculateDamage(
@@ -210,32 +202,30 @@ function useMove( typeTable, attackingMon, defendingMon, chosenMove, playerActiv
         type_modifier: TYPE_MOD
     });
     const templates = {
-        didDamage: {
-            'player': `Your ${attackingMon.name} did ${damage} using ${chosenMove.name}`,
-            'enemy': `Enemy ${attackingMon.name} did ${damage} using ${chosenMove.name}`
-        },
-        missed: {
-            'player': `Your ${attackingMon.name} used ${chosenMove.name} but it missed...`,
-            'enemy': `Enemy ${attackingMon.name} used ${chosenMove.name} but it missed!`
-        },
-        failed: {
-            'player': 'but it failed...',
-            'enemy': 'but it failed!'
-        },
-        superEffective: {
-            'player': ` It's super effective!`,
-            'enemy': ` It's super effective!`
-        },
+        didDamage: new MessageClass(
+            `Your ${attackingMon.name} did ${damage} using ${chosenMove.name}`,
+            `Enemy ${attackingMon.name} did ${damage} using ${chosenMove.name}`
+        ),
+        missed: new MessageClass (
+            `Your ${attackingMon.name} used ${chosenMove.name} but it missed...`,
+            `Enemy ${attackingMon.name} used ${chosenMove.name} but it missed!`
+        ),
+        failed: new MessageClass ( 'but it failed...', 'but it failed!' ),
+        superEffective: new MessageClass (
+            ` - it's super effective!`,
+            ` - it's super effective!`
+        ),
         // elementName seems backwards, but it's to apply damage to enemy Mon
-        elementName: {
-            'player': 'theirMonHP',
-            'enemy': 'yourMonHP'
-        },
-        usedMove: {
-            'player': '',
-            'enemy': ''
-        }
+        elementName: new MessageClass ('theirMonHP', 'yourMonHP' ) ,
+        usedMove: new MessageClass ( '', '' )
     }
+
+    console.log('attacking Mon: ')
+    console.log(attackingMon)
+    console.log('chosen move: ' + chosenMove.name)
+    console.log('chosen move type: ' + chosenMove.type)
+    console.log('defendingMon type: ' + defendingMon.type)
+    console.log('type modifier: ' + TYPE_MOD)
 
     if (playerActiveFlag) {
         activeLock = 'player';
