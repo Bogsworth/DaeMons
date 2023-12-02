@@ -11,24 +11,34 @@ const TYPE_TABLE = parse.createCounterTable();
 let myParty = parse.createParty();
 let warlocks = parse.createWarlocks();
 
-//let theirMon = util.createTheirMon( 'Damned' );
 let warlock1 = warlocks.get( calc.returnIDFromName('Shorts-Wearer', warlocks))
-let theirMon = warlock1.party;
+let theirParty = warlock1.party;
+let theirCurrentMon = theirParty[0];
+
+
 console.log(warlock1)
+console.log(theirCurrentMon)
 
-let theirCurrentMon = theirMon[0];
-
+scripts.changeHeader( scripts.generateHeaderFromWarlock( warlock1 ));
 scripts.populateSelect(myParty[0].moves, 'selectMoves');
 scripts.populateSelect(myParty, 'selectMons');
 
+let fightState = {
+    TYPE_TABLE: TYPE_TABLE,
+    myParty: myParty,
+    myActiveMon: myParty[0],
+    theirParty: theirParty,
+    theirActiveMon: theirCurrentMon
+}
+
 scripts.attachButton(
     function() {
-        scripts.handleAttack( TYPE_TABLE, myParty[0], theirCurrentMon )
+        scripts.handleAttack( fightState );
     },
     'attack' );
 scripts.attachButton(
     function () {
-        scripts.handleSwitch( TYPE_TABLE, myParty, theirCurrentMon )
+        scripts.handleSwitch( fightState )
     },
     'switch' );
 scripts.attachButton( scripts.handleOk, 'ok' );

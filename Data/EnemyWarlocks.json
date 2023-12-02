@@ -6,12 +6,12 @@
             "moves": ["Lash Out", "Remove FOMO", null, null]
         },
         {
-            "name": "Damned",
-            "moves": ["Lash Out", "Remove FOMO", null, null]
-        },
-        {
             "name": "Lay-Z-Boy",
             "moves": ["Normal Punch", "Convince to Stay In", null, null]
+        },
+        {
+            "name": "Damned",
+            "moves": ["Lash Out", "Remove FOMO", null, null]
         }
     ]
 },

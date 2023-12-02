@@ -18,6 +18,21 @@ function populateSelect( array = [], selectName ) {
     })
 }
 
+function changeHeader( newHeader ) {
+    let header = document.getElementById('header');
+    
+    header.textContent = newHeader;
+}
+
+function generateHeaderFromWarlock ( warlock ) {
+    let name = warlock.name;
+    let title = `Fight with ${name}`;
+
+    console.log(title)
+    return title;
+}
+
+
 function removeOptions(selectElement) {
     var i, L = selectElement.options.length - 1;
     for( i = L; i > 0; i-- ) {
@@ -37,7 +52,6 @@ function attachButton( doFunction, elementID ) {
     })
 }
 
-
 function updateMon( mon, isYourMon = true) {
     let ID = {
         name: 'theirMon',
@@ -53,9 +67,17 @@ function updateMon( mon, isYourMon = true) {
     document.getElementById(ID.HP).innerHTML = mon.returnCurrentHP() + '/' + mon.stats.HP
 }
 
-function handleAttack( typeTable, myMon, theirMon ) {
-    console.log('attack button pressed');
+// function handleAttack( typeTable, myMon, theirParty, theirMon ) {
+function handleAttack( fightState ) {
+    let typeTable = fightState.TYPE_TABLE;
+    let myMon = fightState.myActiveMon;
+    let theirParty = fightState.theirParty;
+    let theirMon = fightState.theirActiveMon;
     
+    
+    console.log('attack button pressed');
+    console.log(theirMon)
+    //let theirMon = theirParty[0];
     let chosenMoveIndex = document.getElementById( 'selectMoves' ).options.selectedIndex;
     let chosenMove = myMon.moves[ chosenMoveIndex - 1 ];
     console.log(myMon)
@@ -120,7 +142,7 @@ function handleAttack( typeTable, myMon, theirMon ) {
 
         // TODO: Force enemy to switch on dead Mon
         // TODO: check for loss state for either player
-        if ( util.checkIfHPZero( myMon, theirMon )) {
+        hpCheck: if ( util.checkIfHPZero( myMon, theirMon )) {
             if ( myMon.returnCurrentHP() <= 0 )
             {
                 util.writeToMessageBox( 'Your dude has died, RIP');
@@ -129,9 +151,22 @@ function handleAttack( typeTable, myMon, theirMon ) {
             else {
                 util.writeToMessageBox( 'Their dude has died, hell yeah!');
                 await waitForPress();
+                if ( util.checkIfEnemyWipe( theirParty, theirMon )) {
+                    util.writeToMessageBox( `You've defeated this dingus!` )
+                    await waitForPress();
+                    break hpCheck;
+                }
+                util.writeToMessageBox( `They lost connection with their ${theirMon.name}`)
+                await waitForPress();
+
+                theirMon = theirParty[theirParty.indexOf(theirMon) + 1];
+                util.writeToMessageBox( `They connect with ${theirMon.name}` );
+                updateMon( theirMon, false );
+                fightState.theirActiveMon = theirMon;
+                await waitForPress();
             }
         }
-
+        //fightState.theirActiveMon = theirMon;
         cleanUp();
 
         function cleanUp() {
@@ -142,6 +177,7 @@ function handleAttack( typeTable, myMon, theirMon ) {
 }
 
 function yourMove( typeTable, myMon, theirMon, chosenMove ) {
+    
     const TYPE_MOD = calc.calculateTypeModifier
     (
         typeTable,
@@ -201,33 +237,22 @@ function theirMove(typeTable, myMon, theirMon) {
     util.writeToMessageBox( message );
 }
 
-function handleSwitch( typeTable, myParty, theirMon) {
-    console.log('switch button pressed');
-    
-    let currentMonDead = false;
-    if ( myParty[0].returnCurrentHP() <= 0) {
-        currentMonDead = true;
-    }
-
+// function handleSwitch( typeTable, myParty, theirMon) {
+function handleSwitch( fightState ) {   
+    let typeTable = fightState.TYPE_TABLE;
+    let myParty = fightState.myParty;
+    let theirMon = fightState.theirActiveMon;
+    let activeMon = fightState.myActiveMon;
     let chosenMonIndex = document
         .getElementById( 'selectMons' )
         .options
         .selectedIndex - 1;
-    let chosenMon = myParty[ chosenMonIndex ];
-
-    // TODO: move this to messageBox
-    if ( chosenMonIndex == -1 ) {
-        console.log('Pick a Daemon to choose for before switching.');
-        return;
-    }
-    // TODO: move this to messageBox
-    if ( chosenMonIndex == 0 ) {
-        console.log( 'Pick a Daemon that is not currently active.' );
-        return;
-    }
-
-    let waitForPressResolve;
     const btn = document.getElementsByName('ok')[0];
+    
+    let waitForPressResolve;
+
+    console.log('switch button pressed');
+    console.log(myParty)
 
     switchMons( myParty );
 
@@ -243,14 +268,25 @@ function handleSwitch( typeTable, myParty, theirMon) {
 
     async function switchMons( myParty ) {
         console.log(myParty)
-
-        const CURRENT_NAME = myParty[ 0 ].name;
+        const CURRENT_NAME = activeMon.name;
         const NEW_NAME = myParty[ chosenMonIndex ].name;
 
         btn.addEventListener( 'click', btnResolver );
 
+        if ( chosenMonIndex == -1 ) {
+            util.writeToMessageBox( 'Pick a Daemon to choose for before switching.'); 
+            await waitForPress();
+            cleanUp();
+            return;
+        }
         if ( myParty[ chosenMonIndex ].returnCurrentHP() <= 0 ) {
             util.writeToMessageBox( `That Daemon is dead and gone, you cannot switch to them.` );
+            await waitForPress();
+            cleanUp();
+            return;
+        }
+        if ( chosenMonIndex == myParty.indexOf( activeMon ) ) {
+            util.writeToMessageBox( 'Pick a Daemon that is not currently active.' );
             await waitForPress();
             cleanUp();
             return;
@@ -259,18 +295,19 @@ function handleSwitch( typeTable, myParty, theirMon) {
         util.writeToMessageBox( `You sever your mind link with ${CURRENT_NAME}` );
         await waitForPress();
 
-        util.writeToMessageBox( `You turn your minds' eye to ${NEW_NAME}` );
-        [ myParty[0], myParty[ chosenMonIndex ]] = [ myParty[ chosenMonIndex ], myParty[ 0 ]];
+        util.writeToMessageBox( `You turn your mind's eye to ${NEW_NAME}` );
+        fightState.myActiveMon = myParty[ chosenMonIndex ];
+        activeMon = fightState.myActiveMon;
 
         // Update UI
-        updateMon( myParty[0], true );
-        util.updateShownHP( 'yourMonHP', myParty[0] )
-        populateSelect( myParty[0].moves, 'selectMoves' );
+        updateMon( activeMon, true );
+        util.updateShownHP( 'yourMonHP', activeMon )
+        populateSelect( activeMon.moves, 'selectMoves' );
         populateSelect( myParty, 'selectMons' );
         await waitForPress();
 
-        if (! currentMonDead ) {
-            theirMove( typeTable, myParty[0], theirMon );
+        if (! util.checkIfHPZero( activeMon ) ) {
+            theirMove( typeTable, activeMon, theirMon );
             await waitForPress();
         }
         
@@ -289,6 +326,8 @@ function handleOk() {
 
 export {
     populateSelect,
+    changeHeader,
+    generateHeaderFromWarlock,
     attachButton,
     updateMon,
     handleAttack,
