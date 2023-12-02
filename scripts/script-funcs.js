@@ -1,9 +1,10 @@
 import * as calc from '../lib/calculations.js';
-import * as parse from '../lib/import.js';
 import * as util from '../lib/utility.js';
 
 function populateSelect( array = [], selectName ) {
-    const select = document.getElementById( selectName )
+    const select = document.getElementById( selectName );
+    
+    removeSelectOptions( select );
     
     array.forEach( mon => {
         if ( mon == null ){
@@ -14,7 +15,29 @@ function populateSelect( array = [], selectName ) {
         element.textContent = mon.name;
         element.value = mon;
         select.appendChild( element );
-    })
+    });
+}
+
+function changeHeader( newHeader ) {
+    document
+        .getElementById('header')
+        .textContent 
+        = newHeader;
+}
+
+function generateHeaderFromWarlock ( warlock ) {
+    const NAME = warlock.name;
+    const TITLE = `Fight with ${NAME}`;
+
+    console.log(TITLE);
+    return TITLE;
+}
+
+function removeSelectOptions(selectElement) {
+    var i, L = selectElement.options.length - 1;
+    for( i = L; i > 0; i-- ) {
+        selectElement.remove(i);
+    }
 }
 
 function attachButton( doFunction, elementID ) {
@@ -29,8 +52,10 @@ function attachButton( doFunction, elementID ) {
     })
 }
 
-
 function updateMon( mon, isYourMon = true) {
+    const NAME = mon.name;
+    const MAX_HP = mon.stats.HP;
+    const HP = mon.returnCurrentHP();
     let ID = {
         name: 'theirMon',
         HP: 'theirMonHP'
@@ -40,24 +65,25 @@ function updateMon( mon, isYourMon = true) {
         ID.name = 'yourMon';
         ID.HP = 'yourMonHP';
     }
-
-    document.getElementById(ID.name).innerHTML = mon.name
-    document.getElementById(ID.HP).innerHTML = mon.stats.HP + '/' + mon.stats.HP
+    document.getElementById(ID.name).innerHTML = NAME;
+    document.getElementById(ID.HP).innerHTML = HP + '/' + MAX_HP;
 }
 
-function handleAttack( typeTable, myMon, theirMon ) {
-    console.log('attack button pressed');
-    
-    let chosenMoveIndex = document.getElementById( 'selectMoves' ).options.selectedIndex;
-    let chosenMove = myMon.moves[ chosenMoveIndex - 1 ];
-
-    if ( chosenMoveIndex == 0 ) {
-        console.log('Pick a move before attacking.')
-        return;
-    }
-
+function handleAttack( fightState ) {
+    let typeTable = fightState.TYPE_TABLE;
+    let myMon = fightState.myActiveMon;
+    let theirParty = fightState.theirParty;
+    let theirMon = fightState.theirActiveMon;
+    let chosenMoveIndex = document
+        .getElementById( 'selectMoves' )
+        .options
+        .selectedIndex;
     let waitForPressResolve;
     const btn = document.getElementsByName('ok')[0];
+
+    console.log('attack button pressed');
+    console.log(theirMon);
+    console.log(myMon);
 
     roundRunner();
 
@@ -73,34 +99,54 @@ function handleAttack( typeTable, myMon, theirMon ) {
 
     // TODO: detach attack and switch buttons to prevent doing extra attacks
     async function roundRunner() {
+        let chosenMove = myMon.moves[ chosenMoveIndex - 1 ];
+        const ENEMY_MOVE = util.chooseMove( theirMon );
+
         btn.addEventListener( 'click', btnResolver );
+
+        if ( chosenMoveIndex == 0 ) {
+            util.writeToMessageBox('Pick a move before attacking.')
+            await waitForPress();
+            cleanUp();
+            return;
+        }
         
+        if ( myMon.returnCurrentHP() <= 0 ) {
+            util.writeToMessageBox( `Your Daemon is dead, choose a new one` );
+            await waitForPress();
+            cleanUp();
+            return;
+        }
+
+        console.log(chosenMove);
+
         round: if ( myMon.stats.speed >= theirMon.stats.speed ) {
-            yourMove( typeTable, myMon, theirMon, chosenMove );
+            useMove( typeTable, myMon, theirMon, chosenMove, true );
             await waitForPress();
             if ( util.checkIfHPZero( myMon, theirMon )) {
                 break round;
             }
-            theirMove( typeTable, myMon, theirMon );
+            useMove( typeTable, theirMon, myMon, ENEMY_MOVE, false );
             await waitForPress();
             if ( util.checkIfHPZero( myMon, theirMon )) {
                 break round;
             }
         }
         else {
-            theirMove( typeTable, myMon, theirMon );
+            useMove( typeTable, theirMon, myMon, ENEMY_MOVE, false );
             await waitForPress();
             if ( util.checkIfHPZero( myMon, theirMon )) {
                 break round;
             }
-            yourMove( typeTable, myMon, theirMon, chosenMove );
+            useMove( typeTable, myMon, theirMon, chosenMove, true );
             await waitForPress();
             if ( util.checkIfHPZero (myMon, theirMon )) {
                 break round;
             }
         }
 
-        if ( util.checkIfHPZero( myMon, theirMon )) {
+        // TODO: check for loss state for player
+        hpCheck: if ( util.checkIfHPZero( myMon, theirMon )) {
             if ( myMon.returnCurrentHP() <= 0 )
             {
                 util.writeToMessageBox( 'Your dude has died, RIP');
@@ -109,67 +155,185 @@ function handleAttack( typeTable, myMon, theirMon ) {
             else {
                 util.writeToMessageBox( 'Their dude has died, hell yeah!');
                 await waitForPress();
+                if ( util.checkIfEnemyWipe( theirParty )) {
+                    util.writeToMessageBox( `You've defeated this dingus!` )
+                    await waitForPress();
+                    break hpCheck;
+                }
+                util.writeToMessageBox( `They lost connection with their ${theirMon.name}`)
+                await waitForPress();
+
+                theirMon = theirParty[theirParty.indexOf(theirMon) + 1];
+                fightState.theirActiveMon = theirMon;
+                util.writeToMessageBox( `They connect with ${theirMon.name}` );
+                updateMon( theirMon, false );
+                await waitForPress();
             }
         }
+        cleanUp();
+    }
 
-        // Cleanup
+    function cleanUp() {
+        btn.removeEventListener( 'click', btnResolver );
+        util.writeToMessageBox( 'What do you want to do?' );
+    } 
+}
+
+function useMove( typeTable, attackingMon, defendingMon, chosenMove, playerActiveFlag ) {
+    class MessageClass {
+        constructor(playerMessage, enemyMessage) {
+            this['player'] = playerMessage;
+            this['enemy'] = enemyMessage;
+        }
+    }
+    const TYPE_MOD = calc.calculateTypeModifier
+    (
+        typeTable,
+        chosenMove.type, 
+        defendingMon.type
+    );
+    let message = '';
+    let activeLock = '';
+    let damage = calc.calculateDamage(
+    {
+        attack_stat: attackingMon.stats.attack,
+        defense_stat: defendingMon.stats.defense,
+        power_stat: chosenMove.power,
+        type_modifier: TYPE_MOD
+    });
+    const templates = {
+        didDamage: new MessageClass(
+            `Your ${attackingMon.name} did ${damage} using ${chosenMove.name}`,
+            `Enemy ${attackingMon.name} did ${damage} using ${chosenMove.name}`
+        ),
+        missed: new MessageClass (
+            `Your ${attackingMon.name} used ${chosenMove.name} but it missed...`,
+            `Enemy ${attackingMon.name} used ${chosenMove.name} but it missed!`
+        ),
+        failed: new MessageClass ( 'but it failed...', 'but it failed!' ),
+        superEffective: new MessageClass (
+            ` - it's super effective!`,
+            ` - it's super effective!`
+        ),
+        // elementName seems backwards, but it's to apply damage to enemy Mon
+        elementName: new MessageClass ('theirMonHP', 'yourMonHP' ) ,
+        usedMove: new MessageClass ( '', '' )
+    }
+
+    console.log('attacking Mon: ')
+    console.log(attackingMon)
+    console.log('chosen move: ' + chosenMove.name)
+    console.log('chosen move type: ' + chosenMove.type)
+    console.log('defendingMon type: ' + defendingMon.type)
+    console.log('type modifier: ' + TYPE_MOD)
+
+    if (playerActiveFlag) {
+        activeLock = 'player';
+    }
+    else {
+        activeLock = 'enemy';
+    }
+
+    if ( ! calc.checkIfHit( chosenMove )) {
+        message += templates.missed[ activeLock ];
+        util.writeToMessageBox( message );
+        return;
+    }
+
+    message += templates.didDamage[ activeLock ];
+    if ( TYPE_MOD > 1 ) {
+        message += templates.superEffective[ activeLock ];
+    }
+    defendingMon.updateHP( damage );
+    console.log(templates.elementName[ activeLock])
+    util.updateShownHP( templates.elementName[ activeLock ], defendingMon)
+    util.writeToMessageBox( message );
+}
+
+function handleSwitch( fightState ) {   
+    let typeTable = fightState.TYPE_TABLE;
+    let myParty = fightState.myParty;
+    let theirMon = fightState.theirActiveMon;
+    let activeMon = fightState.myActiveMon;
+    let chosenMonIndex = document
+        .getElementById( 'selectMons' )
+        .options
+        .selectedIndex - 1;
+    const btn = document.getElementsByName('ok')[0];
+    
+    let waitForPressResolve;
+
+    console.log('switch button pressed');
+    console.log(myParty)
+
+    switchMons( myParty );
+
+    function waitForPress() {
+        return new Promise(resolve => waitForPressResolve = resolve);
+    }
+
+    function btnResolver() {
+        if (waitForPressResolve) {
+            waitForPressResolve();
+        }
+    }
+
+    async function switchMons( myParty ) {
+        const CURRENT_NAME = activeMon.name;
+        const NEW_NAME = myParty[ chosenMonIndex ].name;
+        let prevMon = activeMon;
+
+        console.log(myParty)
+
+        btn.addEventListener( 'click', btnResolver );
+
+        if ( chosenMonIndex == -1 ) {
+            util.writeToMessageBox( 'Pick a Daemon to choose for before switching.'); 
+            await waitForPress();
+            cleanUp();
+            return;
+        }
+        if ( myParty[ chosenMonIndex ].returnCurrentHP() <= 0 ) {
+            util.writeToMessageBox( `That Daemon is dead and gone, you cannot switch to them.` );
+            await waitForPress();
+            cleanUp();
+            return;
+        }
+        if ( chosenMonIndex == myParty.indexOf( activeMon ) ) {
+            util.writeToMessageBox( 'Pick a Daemon that is not currently active.' );
+            await waitForPress();
+            cleanUp();
+            return;
+        }
+
+        util.writeToMessageBox( `You sever your mind link with ${CURRENT_NAME}` );
+        await waitForPress();
+
+        util.writeToMessageBox( `You turn your mind's eye to ${NEW_NAME}` );
+        fightState.myActiveMon = myParty[ chosenMonIndex ];
+        activeMon = fightState.myActiveMon;
+
+        // Update UI
+        updateMon( activeMon, true );
+        util.updateShownHP( 'yourMonHP', activeMon )
+        populateSelect( activeMon.moves, 'selectMoves' );
+        populateSelect( myParty, 'selectMons' );
+        await waitForPress();
+
+        if (! util.checkIfHPZero( prevMon ) ) {
+            const ENEMY_MOVE = util.chooseMove( theirMon );
+            //theirMove( typeTable, activeMon, theirMon );
+            useMove( typeTable, theirMon, activeMon, ENEMY_MOVE, false );
+            await waitForPress();
+        }
+        
+        cleanUp();
+    }
+
+    function cleanUp() {
         btn.removeEventListener( 'click', btnResolver );
         util.writeToMessageBox( 'What do you want to do?' );
     }
-}
-
-// function handleDaemonZeroHP( myMon, theirMon ) {
-//     if ( myMon.returCurrentHP() <= 0 )
-//     {
-//         util.writeToMessageBox( 'Your dude has died, RIP');
-//         await waitForPress();
-//     }
-//     else {
-//         util.writeToMessageBox( 'Their dude has died, hell yeah!');
-//         await waitForPress();
-//     }
-// }
-
-function yourMove( typeTable, myMon, theirMon, chosenMove ) {
-    let damage = calc.calculateDamage({
-        attack_stat: myMon.stats.attack,
-        defense_stat: theirMon.stats.defense,
-        power_stat: chosenMove.power,
-        type_modifier: calc.calculateTypeModifier
-        (
-            typeTable,
-            chosenMove.type, 
-            theirMon.type
-        )
-    });
-
-    theirMon.updateHP( damage );
-    util.updateShownHP( 'theirMonHP', theirMon )
-    util.writeToMessageBox(`You did ${damage} damage using ${chosenMove.name}!`)
-}
-
-function theirMove(typeTable, myMon, theirMon) {
-    let theirChosenMove = util.chooseMove( theirMon );
-    let damage = calc.calculateDamage({
-        attack_stat: theirMon.stats.attack,
-        defense_stat: myMon.stats.defense,
-        power_stat: theirChosenMove.power,
-        type_modifier: calc.calculateTypeModifier
-        (
-            typeTable,
-            theirChosenMove.type, 
-            theirMon.type
-        )
-    });
-    
-    myMon.updateHP( damage )
-    util.updateShownHP ('yourMonHP', myMon)
-    util.writeToMessageBox(`They did ${damage} damage using ${theirChosenMove.name}!`)
-}
-
-function handleSwitch() {
-    console.log('switch button pressed');
-
 }
 
 function handleOk() {
@@ -178,6 +342,8 @@ function handleOk() {
 
 export {
     populateSelect,
+    changeHeader,
+    generateHeaderFromWarlock,
     attachButton,
     updateMon,
     handleAttack,

@@ -3,9 +3,16 @@
 ## Brainstorming
 - Maybe use Tarot instead of sins
 - Maybe add 7 virtues as well as 7 sins
-
+### Linux Daemon Ideas
+ - Init
+ - BioD
+ - CronD
+ - FingerD
+ - SwapperD
+ - SysLogD
+ - SyncD
+ - Reap Children as a move, normally killing a processes children but... it sounds terrible lol
 ## Current Type Counter Table
-
 |           | Lust  | Gluttony  | Greed | Sloth | Wrath | Envy  | Pride |
 | :--:      | :---: | :------:  | :---: | :---: | :---: | :---: | :---: |
 |Lust       | x2    | x1        | x1    | x0.5  | x1    | x1    | x2    |

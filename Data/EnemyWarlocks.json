@@ -1,0 +1,68 @@
+[{
+    "name": "Shorts-Wearer",
+    "Daemons": [
+        {
+            "name": "Damned",
+            "moves": ["Lash Out", "Remove FOMO", null, null]
+        },
+        {
+            "name": "Lay-Z-Boy",
+            "moves": ["Normal Punch", "Convince to Stay In", null, null]
+        },
+        {
+            "name": "Damned",
+            "moves": ["Lash Out", "Remove FOMO", null, null]
+        }
+    ]
+},
+{
+    "name": "Pushover",
+    "Daemons": [
+        {
+            "name": "Imp",
+            "moves": ["Buyout", "Nibble", null, null]
+        },
+        {
+            "name": "Imp",
+            "moves": ["Buyout", "Nibble", null, null]
+        },
+        {
+            "name": "Imp",
+            "moves": ["Buyout", "Nibble", null, null]
+        }
+    ]
+},
+{
+    "name": "Mirror-You",
+    "Daemons": [
+        {
+            "name": "Fuckboy",
+            "moves": ["Laze", "Show Off", null, null]
+        },
+        {
+            "name": "Imp",
+            "moves": ["Nibble", "Buyout", null, null]
+        },
+        {
+            "name": "Angy Boy",
+            "moves": ["Consecutive Normal Punches", "Chain Whip", null, null]
+        }
+    ]
+},
+{
+    "name": "Moneybags",
+    "Daemons": [
+        {
+            "name": "Imp",
+            "moves": ["Nibble", "Buyout", null, null]
+        },
+        {
+            "name": "Imp",
+            "moves": ["Nibble", "Buyout", null, null]
+        },
+        {
+            "name": "Dragon",
+            "moves": ["Fuck You Money", "Consecutive Normal Punches", null, null]
+        }
+    ]
+}]
