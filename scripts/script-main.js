@@ -11,7 +11,7 @@ const TYPE_TABLE = parse.createCounterTable();
 let myParty = parse.createParty();
 let warlocks = parse.createWarlocks();
 
-let warlock1 = warlocks.get( calc.returnIDFromName('Pushover', warlocks))
+let warlock1 = warlocks.get( calc.returnIDFromName('Shorts-Wearer', warlocks))
 let theirParty = warlock1.party;
 let theirCurrentMon = theirParty[0];
 

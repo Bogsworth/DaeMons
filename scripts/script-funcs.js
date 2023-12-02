@@ -100,6 +100,7 @@ function handleAttack( fightState ) {
     // TODO: detach attack and switch buttons to prevent doing extra attacks
     async function roundRunner() {
         let chosenMove = myMon.moves[ chosenMoveIndex - 1 ];
+        const ENEMY_MOVE = util.chooseMove( theirMon );
 
         btn.addEventListener( 'click', btnResolver );
 
@@ -120,24 +121,24 @@ function handleAttack( fightState ) {
         console.log(chosenMove);
 
         round: if ( myMon.stats.speed >= theirMon.stats.speed ) {
-            yourMove( typeTable, myMon, theirMon, chosenMove );
+            useMove( typeTable, myMon, theirMon, chosenMove, true );
             await waitForPress();
             if ( util.checkIfHPZero( myMon, theirMon )) {
                 break round;
             }
-            theirMove( typeTable, myMon, theirMon );
+            useMove( typeTable, theirMon, myMon, ENEMY_MOVE, false );
             await waitForPress();
             if ( util.checkIfHPZero( myMon, theirMon )) {
                 break round;
             }
         }
         else {
-            theirMove( typeTable, myMon, theirMon );
+            useMove( typeTable, theirMon, myMon, ENEMY_MOVE, false );
             await waitForPress();
             if ( util.checkIfHPZero( myMon, theirMon )) {
                 break round;
             }
-            yourMove( typeTable, myMon, theirMon, chosenMove );
+            useMove( typeTable, myMon, theirMon, chosenMove, true );
             await waitForPress();
             if ( util.checkIfHPZero (myMon, theirMon )) {
                 break round;
@@ -178,69 +179,84 @@ function handleAttack( fightState ) {
     } 
 }
 
-function yourMove( typeTable, myMon, theirMon, chosenMove ) {
+function useMove( typeTable, attackingMon, defendingMon, chosenMove, playerActiveFlag ) {
     const TYPE_MOD = calc.calculateTypeModifier
     (
         typeTable,
         chosenMove.type, 
-        theirMon.type
+        defendingMon.type
     );
+
+    console.log('attacking Mon: ')
+    console.log(attackingMon)
+    console.log('chosen move: ' + chosenMove.name)
+    console.log('chosen move type: ' + chosenMove.type)
+    console.log('defendingMon type: ' + defendingMon.type)
+    console.log('type modifier: ' + TYPE_MOD)
+
+    // class MessageClass {
+    //     constructor(playerMessage, enemyMessage) {
+    //         this['player'] = playerMessage;
+    //         this['enemy'] = enemyMessage;
+    //     }
+    // }
     let message = '';
+    let activeLock = '';
     let damage = calc.calculateDamage(
     {
-        attack_stat: myMon.stats.attack,
-        defense_stat: theirMon.stats.defense,
+        attack_stat: attackingMon.stats.attack,
+        defense_stat: defendingMon.stats.defense,
         power_stat: chosenMove.power,
         type_modifier: TYPE_MOD
     });
+    const templates = {
+        didDamage: {
+            'player': `Your ${attackingMon.name} did ${damage} using ${chosenMove.name}`,
+            'enemy': `Enemy ${attackingMon.name} did ${damage} using ${chosenMove.name}`
+        },
+        missed: {
+            'player': `Your ${attackingMon.name} used ${chosenMove.name} but it missed...`,
+            'enemy': `Enemy ${attackingMon.name} used ${chosenMove.name} but it missed!`
+        },
+        failed: {
+            'player': 'but it failed...',
+            'enemy': 'but it failed!'
+        },
+        superEffective: {
+            'player': ` It's super effective!`,
+            'enemy': ` It's super effective!`
+        },
+        // elementName seems backwards, but it's to apply damage to enemy Mon
+        elementName: {
+            'player': 'theirMonHP',
+            'enemy': 'yourMonHP'
+        },
+        usedMove: {
+            'player': '',
+            'enemy': ''
+        }
+    }
+
+    if (playerActiveFlag) {
+        activeLock = 'player';
+    }
+    else {
+        activeLock = 'enemy';
+    }
 
     if ( ! calc.checkIfHit( chosenMove )) {
-        util.writeToMessageBox( `You used ${chosenMove.name} ` + 
-            `but it missed...`);
+        message += templates.missed[ activeLock ];
+        util.writeToMessageBox( message );
         return;
     }
 
-    message += `You did ${damage} damage using ${chosenMove.name}!`
+    message += templates.didDamage[ activeLock ];
     if ( TYPE_MOD > 1 ) {
-        message += ` It's super effective!`
+        message += templates.superEffective[ activeLock ];
     }
-
-    theirMon.updateHP( damage );
-    util.updateShownHP( 'theirMonHP', theirMon );
-    util.writeToMessageBox( message );
-}
-
-function theirMove(typeTable, myMon, theirMon) {
-    let theirChosenMove = util.chooseMove( theirMon );
-    const TYPE_MOD = calc.calculateTypeModifier
-    (
-        typeTable,
-        theirChosenMove.type, 
-        theirMon.type
-    )
-    let message = '';
-    let damage = calc.calculateDamage(
-    {
-        attack_stat: theirMon.stats.attack,
-        defense_stat: myMon.stats.defense,
-        power_stat: theirChosenMove.power,
-        type_modifier: TYPE_MOD
-    });
-
-    if ( ! calc.checkIfHit( theirChosenMove )) {
-        util.writeToMessageBox( ` Enemy ${theirMon.name} ` +
-            `used ${theirChosenMove.name} but missed!` );
-        return;
-    }
-
-    message += `Enemy ${theirMon.name} did ${damage} damage ` + 
-        `using ${theirChosenMove.name}!`
-    if ( damage.type_modifier > 1 ) {
-        message += ` It's super effective!`
-    }
-    
-    myMon.updateHP( damage )
-    util.updateShownHP ( 'yourMonHP', myMon );
+    defendingMon.updateHP( damage );
+    console.log(templates.elementName[ activeLock])
+    util.updateShownHP( templates.elementName[ activeLock ], defendingMon)
     util.writeToMessageBox( message );
 }
 
@@ -315,7 +331,9 @@ function handleSwitch( fightState ) {
         await waitForPress();
 
         if (! util.checkIfHPZero( prevMon ) ) {
-            theirMove( typeTable, activeMon, theirMon );
+            const ENEMY_MOVE = util.chooseMove( theirMon );
+            //theirMove( typeTable, activeMon, theirMon );
+            useMove( typeTable, theirMon, activeMon, ENEMY_MOVE, false );
             await waitForPress();
         }
         
