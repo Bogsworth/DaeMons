@@ -1,3 +1,17 @@
+/*
+# TODO List
+## Required TODOs
+- TODO: Add a way to see type and moves of your Daemon
+- TODO: Add a way to see the stats of your moves
+- TODO: Add a way to see the type of their Daemon
+- TODO: Add a way to see the number of Daemons they have left
+
+## Nice to have TODOs
+- TODO: A health bar
+- TODO: A health bar with an animation as you lose health
+- TODO: A more polished UI
+*/
+
 import * as util from '../lib/utility.js'
 import * as parse from '../lib/import.js'
 import * as scripts from './script-funcs.js'
