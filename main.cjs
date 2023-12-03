@@ -6,7 +6,9 @@ const createWindow = () => {
         height: 600,
     });
 
-    win.loadFile('index.html');
+    //win.loadFile('index.html');
+    win.loadFile('interlude.html');
+    //win.loadURL('./src/interlude.html') this doesn't work I guess?
 };
 
 app.whenReady().then(() => {

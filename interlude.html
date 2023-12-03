@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'"
+    />
+    <meta
+      http-equiv="X-Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'"
+    />
+    <link rel="stylesheet" href="./src/interlude.css">
+    <title>Daemon Test Fighter</title>
+
+  </head>
+  <body>
+
+    <div class="prepPage">
+        <h1 id="header">Prepare for the Next Fight</h1>
+        <div class="topHalf">
+          <div class="partyPlanning">
+            <div>Current Party</div>
+            <div>1.
+              <select id="partySelect0">
+                <option>Pick a Daemon</option>
+              </select>
+            </div>
+            <div>2.
+              <select id="partySelect1">
+                <option>Pick a Daemon</option>
+              </select>
+            </div>
+            <div>3.
+              <select id="partySelect2">
+                <option>Pick a Daemon</option>
+              </select>
+            </div>
+          </div>
+          <div class="enemyInfo">
+            <div>Enemy name</div>
+            <div>Enemy Description</div>
+          </div>
+        </div>
+        <div class="lowerHalf">
+          <div class="insepctionSection">
+            <div>Inspect Daemons</div>
+            <select id="daemonListSelect">
+              <option>All Daemons you have</option>
+            </select>
+          </div>
+          <div class="statsSection">
+            <div class="daemonInfo">
+              <div>Summary</div>
+              <div>Type(s)</div>
+            </div>
+            <div class="moveInfo">
+              <select id="moveSelect">
+                <option>Move</option>
+              </select>
+              <div>move stats</div>
+            </div>
+          </div>
+        </div>
+    </div>
+    
+    <script type="module" src="./interlude.js"></script>
+  </body>
+</html>
