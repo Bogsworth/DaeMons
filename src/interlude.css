@@ -46,3 +46,8 @@ h1 {
     justify-content: space-around;
     /* flex-grow: 1; */
 }
+
+.readyButton {
+    display: flex;
+    justify-content: center;
+}
