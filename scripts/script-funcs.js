@@ -10,12 +10,27 @@ function populateSelect( array = [], selectName ) {
         if ( mon == null ){
             return;
         }
-
         let element = document.createElement('option');
+        
         element.textContent = mon.name;
-        element.value = mon;
+        
+        element.value = JSON.stringify(mon);
+        //element.value = mon;
+        console.log(element.value)
+        
         select.appendChild( element );
     });
+}
+
+function setDefaultSelectValue( select, textString ) {
+    for (var i=0; i<select.options.length; i++) {
+        let option = select.options[i];
+      
+        if (option.text == textString) {
+           option.setAttribute('selected', true);
+           return; 
+        } 
+      }
 }
 
 function changeHeader( newHeader ) {
@@ -66,7 +81,7 @@ function updateMon( mon, isYourMon = true) {
         ID.HP = 'yourMonHP';
     }
     document.getElementById(ID.name).innerHTML = NAME;
-    document.getElementById(ID.HP).innerHTML = HP + '/' + MAX_HP;
+    document.getElementById(ID.HP).innerHTML = HP + '/' + MAX_HP + ' hp';
 }
 
 function handleAttack( fightState ) {
@@ -158,6 +173,7 @@ function handleAttack( fightState ) {
                 if ( util.checkIfEnemyWipe( theirParty )) {
                     util.writeToMessageBox( `You've defeated this dingus!` )
                     await waitForPress();
+                    endFight( fightState );
                     break hpCheck;
                 }
                 util.writeToMessageBox( `They lost connection with their ${theirMon.name}`)
@@ -177,6 +193,19 @@ function handleAttack( fightState ) {
         btn.removeEventListener( 'click', btnResolver );
         util.writeToMessageBox( 'What do you want to do?' );
     } 
+}
+
+function endFight( fightState ) {
+    // let myMon = fightState.myMon
+    // console.log( fightState )
+    // const FILE_PATH = '../Data/currentMon.json';
+    // const MY_MON_JSON = JSON.stringify( myMon );
+    // const blob = new Blob([MY_MON_JSON], {
+    //     type: "application/json",
+    // });
+    // console.log(blob)
+    util.savePostFightParty( fightState.myParty );
+    window.location.href = './interlude.html';
 }
 
 function useMove( typeTable, attackingMon, defendingMon, chosenMove, playerActiveFlag ) {
@@ -342,6 +371,7 @@ function handleOk() {
 
 export {
     populateSelect,
+    setDefaultSelectValue,
     changeHeader,
     generateHeaderFromWarlock,
     attachButton,
