@@ -12,10 +12,10 @@
 - TODO: A more polished UI
 */
 
-import * as util from '../lib/utility.js'
-import * as parse from '../lib/import.js'
+import * as util from '../../../lib/utility.js'
+import * as parse from '../../../lib/import.js'
 import * as scripts from './script-funcs.js'
-import * as calc from '../lib/Calculations.js'
+import * as calc from '../../../lib/Calculations.js'
 
 const MON_TABLE = parse.createMonTable();
 const MOVE_TABLE = parse.createMoveTable();

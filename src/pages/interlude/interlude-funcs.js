@@ -1,6 +1,6 @@
-import * as parse from '../lib/Import.js'
-import * as calc from '../lib/Calculations.js'
-import * as scripts from './script-funcs.js'
+import * as parse from '../../../lib/Import.js'
+import * as calc from '../../../lib/Calculations.js'
+import * as scripts from '../battle/script-funcs.js'
 
 function populateNextFight( warlock ) {
     const NAME_ID = 'lockName';

@@ -1,5 +1,10 @@
-import * as calc from '../lib/calculations.js';
-import * as util from '../lib/utility.js';
+/*
+# TODO List
+- TODO: Split this file up into battle-funcs.js and maybe move more general functions into utility.js or similar
+*/
+
+import * as calc from '../../../lib/calculations.js';
+import * as util from '../../../lib/utility.js';
 
 function populateSelect( array = [], selectName ) {
     const select = document.getElementById( selectName );
@@ -196,16 +201,13 @@ function handleAttack( fightState ) {
 }
 
 function endFight( fightState ) {
-    // let myMon = fightState.myMon
-    // console.log( fightState )
-    // const FILE_PATH = '../Data/currentMon.json';
-    // const MY_MON_JSON = JSON.stringify( myMon );
-    // const blob = new Blob([MY_MON_JSON], {
-    //     type: "application/json",
-    // });
-    // console.log(blob)
     util.savePostFightParty( fightState.myParty );
-    window.location.href = './interlude.html';
+    // This line originally worked before refactor to move a lot of files around for readability
+    //window.location.href = '../pages/interlude/interlude.html';
+    window.location.href = '../interlude/interlude.html';
+    //window.location.href = '/src/pages/interlude/interlude.html';
+    // win.loadURL(`../pages/interlude/interlude.html`);
+
 }
 
 function useMove( typeTable, attackingMon, defendingMon, chosenMove, playerActiveFlag ) {
@@ -295,7 +297,7 @@ function handleSwitch( fightState ) {
     console.log('switch button pressed');
     console.log(myParty)
 
-    switchMons( myParty );
+    switchMons();
 
     function waitForPress() {
         return new Promise(resolve => waitForPressResolve = resolve);
@@ -307,7 +309,7 @@ function handleSwitch( fightState ) {
         }
     }
 
-    async function switchMons( myParty ) {
+    async function switchMons() {
         const CURRENT_NAME = activeMon.name;
         const NEW_NAME = myParty[ chosenMonIndex ].name;
         let prevMon = activeMon;
