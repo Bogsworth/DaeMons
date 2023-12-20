@@ -21,7 +21,7 @@ function populateSelect( array = [], selectName ) {
         
         element.value = JSON.stringify(mon);
         //element.value = mon;
-        console.log(element.value)
+        //console.log(element.value)
         
         select.appendChild( element );
     });
@@ -178,6 +178,11 @@ function handleAttack( fightState ) {
                 if ( util.checkIfEnemyWipe( theirParty )) {
                     util.writeToMessageBox( `You've defeated this dingus!` )
                     await waitForPress();
+                    if ( fightState.enemyLock.reward != "" ) {
+                        let reward = fightState.enemyLock.reward
+                        util.writeToMessageBox( `You've earned a(n) ${reward.name}!`);
+                        await waitForPress();
+                    }
                     endFight( fightState );
                     break hpCheck;
                 }
@@ -202,12 +207,13 @@ function handleAttack( fightState ) {
 
 function endFight( fightState ) {
     util.savePostFightParty( fightState.myParty );
-    // This line originally worked before refactor to move a lot of files around for readability
-    //window.location.href = '../pages/interlude/interlude.html';
+    getReward( fightState );
     window.location.href = '../interlude/interlude.html';
-    //window.location.href = '/src/pages/interlude/interlude.html';
-    // win.loadURL(`../pages/interlude/interlude.html`);
+}
 
+function getReward( fightState ) {
+    sessionStorage.newReward = JSON.stringify(fightState.enemyLock.reward);
+    //console.log(fightState.enemyLock.reward)
 }
 
 function useMove( typeTable, attackingMon, defendingMon, chosenMove, playerActiveFlag ) {

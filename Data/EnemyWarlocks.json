@@ -14,7 +14,8 @@
             "moves": ["Lash Out", "Remove FOMO", null, null]
         }
     ],
-    "description": "Shorts are comfy, and easy to wear!"
+    "description": "Shorts are comfy, and easy to wear!",
+    "reward": "Damned"
 },
 {
     "name": "Pushover",
@@ -24,7 +25,11 @@
             "moves": ["Buyout", "Nibble", null, null]
         }
     ],
-    "description": "This guy should be a walk in the park"
+    "description": "This guy should be a walk in the park",
+    "reward": {
+        "name": "Imp",
+        "moves": ["Buyout", "Nibble", null, null]
+    }
 },
 {
     "name": "Mirror-You",
@@ -42,7 +47,8 @@
             "moves": ["Consecutive Normal Punches", "Chain Whip", null, null]
         }
     ],
-    "description": "You may be strong, but are you strong enough to face.... Yourself?"
+    "description": "You may be strong, but are you strong enough to face.... Yourself?",
+    "reward": "Angy Boy"
 },
 {
     "name": "Moneybags",
@@ -60,5 +66,6 @@
             "moves": ["Fuck You Money", "Consecutive Normal Punches", null, null]
         }
     ],
-    "description": "He looks like the kind of guy who made his fortune from his parents' emerald mine."
+    "description": "He looks like the kind of guy who made his fortune from his parents' emerald mine.",
+    "reward": ""
 }]
