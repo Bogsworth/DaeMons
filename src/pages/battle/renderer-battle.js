@@ -6,6 +6,7 @@
 - TODO: Add a way to see the type of their Daemon
 - TODO: Add a way to see the number of Daemons they have left
 - TODO: Add loss handling
+- TODO: Fix the fact that I stringified an array of already stringified elements
 
 ## Nice to have TODOs
 - TODO: A health bar
@@ -17,39 +18,30 @@ import * as util from '../../../lib/utility.js'
 import * as parse from '../../../lib/import.js'
 import * as scripts from './script-funcs.js'
 import * as calc from '../../../lib/Calculations.js'
-import { Daemon } from '../../../Data/ClassDaemon.js'
 
 const MON_TABLE = parse.createMonTable();
 const MOVE_TABLE = parse.createMoveTable();
 const TYPE_TABLE = parse.createCounterTable();
-
+let warlocks = parse.createWarlocks();
+let currentLock;
 // Note: myParty[0] is always the active Daemon;
 let myParty = [];
+
 if (sessionStorage.currentParty == undefined ) {
     myParty = parse.createParty();
 } 
 else {
-    //console.log('in else statement')
-    let partyJSON = JSON.parse(sessionStorage.currentParty)
-    //console.log(partyJSON);
-
-    partyJSON.forEach(monData =>{
-        // console.log(monData)
-        let newMon = new Daemon;
-        newMon.copyFromData( monData );
-        // console.log('new Mon')
-        // console.log(newMon)
-        myParty.push(newMon);
+    let JSONofStrings = JSON.parse(sessionStorage.currentParty)
+    let partyJSON = []
+    // Somewhere I managed to make an array of stringified JSONs, then stringify the whole array....
+    // TODO: fix this at some point
+    JSONofStrings.forEach( str =>{
+        partyJSON.push(JSON.parse(str))
     })
-    //console.log('heres myParty')
-    //console.log(myParty)
+    myParty = util.parseDaemonJSON(partyJSON)
 }
-let warlocks = parse.createWarlocks();
 
-// console.log('heres sessionStorage')
-// console.log(sessionStorage)
 
-let currentLock;
 if ( sessionStorage.nextLock == undefined ) {
     currentLock = warlocks.get( calc.returnIDFromName('Pushover', warlocks));
 }
@@ -58,20 +50,8 @@ else {
     currentLock = warlocks.get( calc.returnIDFromName( lockJSON.name, warlocks))
 }
 
-console.log(myParty)
-// console.log('heres the current Lock')
-// console.log(currentLock.name)
-//let currentLock = warlocks.get( calc.returnIDFromName('Pushover', warlocks))
 let theirParty = currentLock.party;
 let theirCurrentMon = theirParty[0];
-
-
-console.log(currentLock)
-console.log(theirCurrentMon)
-
-scripts.changeHeader( scripts.generateHeaderFromWarlock( currentLock ));
-scripts.populateSelect(myParty[0].moves, 'selectMoves');
-scripts.populateSelect(myParty, 'selectMons');
 
 let fightState = {
     TYPE_TABLE: TYPE_TABLE,
@@ -81,6 +61,12 @@ let fightState = {
     theirActiveMon: theirCurrentMon,
     enemyLock: currentLock 
 }
+console.log(sessionStorage)
+console.log(fightState)
+
+scripts.changeHeader( scripts.generateHeaderFromWarlock( currentLock ));
+scripts.populateSelect(myParty[0].moves, 'selectMoves');
+scripts.populateSelect(myParty, 'selectMons');
 
 scripts.attachButton(
     function() {
@@ -94,5 +80,5 @@ scripts.attachButton(
     'switch' );
 scripts.attachButton( scripts.handleOk, 'ok' );
 
-scripts.updateMon( myParty[0], true );
+scripts.updateMon( fightState.myActiveMon, true );
 scripts.updateMon( theirCurrentMon, false );

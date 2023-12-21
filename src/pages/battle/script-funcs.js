@@ -10,7 +10,6 @@ function populateSelect( array = [], selectName ) {
     const select = document.getElementById( selectName );
     
     removeSelectOptions( select );
-    
     array.forEach( mon => {
         if ( mon == null ){
             return;
@@ -18,11 +17,7 @@ function populateSelect( array = [], selectName ) {
         let element = document.createElement('option');
         
         element.textContent = mon.name;
-        
-        element.value = JSON.stringify(mon);
-        //element.value = mon;
-        //console.log(element.value)
-        
+        element.value = JSON.stringify(mon); 
         select.appendChild( element );
     });
 }
@@ -213,7 +208,6 @@ function endFight( fightState ) {
 
 function getReward( fightState ) {
     sessionStorage.newReward = JSON.stringify(fightState.enemyLock.reward);
-    //console.log(fightState.enemyLock.reward)
 }
 
 function useMove( typeTable, attackingMon, defendingMon, chosenMove, playerActiveFlag ) {
@@ -359,7 +353,7 @@ function handleSwitch( fightState ) {
 
         if (! util.checkIfHPZero( prevMon ) ) {
             const ENEMY_MOVE = util.chooseMove( theirMon );
-            //theirMove( typeTable, activeMon, theirMon );
+            
             useMove( typeTable, theirMon, activeMon, ENEMY_MOVE, false );
             await waitForPress();
         }

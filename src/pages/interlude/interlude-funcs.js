@@ -1,6 +1,15 @@
 import * as parse from '../../../lib/Import.js'
 import * as calc from '../../../lib/Calculations.js'
 import * as scripts from '../battle/script-funcs.js'
+import * as util from '../../../lib/utility.js'
+import { Daemon } from '../../../Data/ClassDaemon.js';
+
+function setupReadyButton() {
+    const READY_BTN_NAME = 'startFight';
+    const READY_BTN = document.getElementsByName(READY_BTN_NAME)[0];
+    
+    READY_BTN.addEventListener('click', loadBattle);
+}
 
 function populateNextFight( warlock ) {
     const NAME_ID = 'lockName';
@@ -11,6 +20,18 @@ function populateNextFight( warlock ) {
 
     nameEl.textContent = warlock.name;
     descEl.textContent = warlock.description;
+}
+
+function populateDaemonInspect() {
+    const SELECT_ID = 'daemonListSelect';
+    const SEL_ELEMENT = document.getElementById(SELECT_ID);
+
+    const MOVE_SEL_ID = 'moveSelect';
+    const MOVE_SEL_EL = document.getElementById( MOVE_SEL_ID );
+    
+    SEL_ELEMENT.addEventListener( 'change', updateDaemonSummary );
+    MOVE_SEL_EL.addEventListener( 'change', updateMoveStats);
+
 }
 
 function updateDaemonSummary() {
@@ -73,56 +94,58 @@ function moveToPrintable( move ) {
     return message;
 }
 
-function loadBattle() {
-    console.log('Im in loadBattle');
-    importPartyChoices();
-    //return;
-    window.location.href = '../battle/battle.html';
-}
-
-function importPartyChoices() {
+function importPartyChoices( state ) {
     let selectArray = ['partySelect0', 'partySelect1', 'partySelect2', 'daemonListSelect'];
     let partySelects = [
         document.getElementById( selectArray[0] ),
         document.getElementById( selectArray[1] ),
         document.getElementById( selectArray[2] ),
     ];
-    console.log('in importPartyChoices()')
-    //sessionStorage.currentParty = '';
     let tempStorage = [];
 
     partySelects.forEach( select => {
         if ( select.selectedIndex == 0) {
             return;
         }
-        let selectedMonJSON = select.value
-        //console.log(selectedMonJSON);
+        let selectedMonJSON = select.value;
+
         tempStorage.push(selectedMonJSON);
     })
-
+    state.currentParty = JSON.stringify(tempStorage)
     sessionStorage.currentParty = JSON.stringify(tempStorage);
     console.log(sessionStorage.currentParty)
+    console.log(state.currentParty)
+    
 }
 
-function populatePartySelects( currentPartyJSON, selectElements, allDaemons ) {
-    let currentParty = JSON.parse( currentPartyJSON );
+function populatePartySelects( currentParty, selectElements, state ) {  
     let i = 0;
 
     currentParty.forEach( mon => {
         scripts.setDefaultSelectValue(selectElements[i++], mon.name );
     });
+
+    selectElements.forEach ( sel_el => {
+        console.log(sel_el)
+        //let importParty = importPartyChoices(state)
+        //sel_el.addEventListener('change', changer)
+        // SEL_EL.addEventListener('change', function() {
+        //     console.log('changed!')
+        // })
+        sel_el.addEventListener( 'change', function () {
+            //console.log(sessionStorage)
+            importPartyChoices(state);
+            //console.log(sessionStorage)
+        });
+        // function changer(){
+        //     console.log('changed!')
+        // }
+    })
 }
 
-function setupReadyButton() {
-    const READY_BTN_NAME = 'startFight';
-    const READY_BTN = document.getElementsByName(READY_BTN_NAME)[0];
-    
-    READY_BTN.addEventListener('click', loadBattle);
-}
-
-function populateChallenger() {
+function populateChallenger( name ) {
     let warlocks = parse.createWarlocks();
-    let nextLock = warlocks.get( calc.returnIDFromName('Mirror-You', warlocks));
+    let nextLock = warlocks.get( calc.returnIDFromName( name, warlocks));
 
     sessionStorage.nextLock = JSON.stringify(nextLock);
     console.log(sessionStorage)
@@ -133,47 +156,97 @@ function handleReward( rewardString, FULL_DAEMON_LIST, currentParty ) {
     let reward = JSON.parse(rewardString);
     let rewardID = calc.returnIDFromName( reward.name, FULL_DAEMON_LIST );
     let moveMap = parse.createMoveTable();
-    console.log('in handleReward')
-    console.log(reward.name)
-    console.log(rewardID)
-    console.log( FULL_DAEMON_LIST.has(rewardID) )
-    console.log(FULL_DAEMON_LIST)
+
+    console.log(currentParty)
     if ( ! FULL_DAEMON_LIST.has(rewardID) ) {
         return;
     }
-    console.log(FULL_DAEMON_LIST.get(rewardID))
+
     // TODO: see if we need to clone the newDaemon
     let newDaemon = FULL_DAEMON_LIST.get(rewardID);
     
-    reward.moves.forEach( move =>{
+    reward.moves.forEach( move => {
         if (move == null) {
             return;
         }
-        
-        parse.addMove( move, newDaemon, reward, moveMap)
+        parse.addMove( move, newDaemon, reward, moveMap )
     })
-    currentParty.push( newDaemon) ;
+    currentParty.push( newDaemon ) ;
 }
 
-function populateDaemonInspect() {
-    const SELECT_ID = 'daemonListSelect';
-    const SEL_ELEMENT = document.getElementById(SELECT_ID);
+function initSessionStorage() {
+    if ( sessionStorage.currentParty == undefined ) {
+        sessionStorage.currentParty = '""';
+    }
+    if ( sessionStorage.newReward == undefined ) {
+        sessionStorage.reward = '""';
+    }
+    if ( sessionStorage.allHeldMons == undefined ) {
+        sessionStorage.allHeldMons = '""';
+    }
+    if ( sessionStorage.nextLock == undefined ) {
+        sessionStorage.nextLock = '""';
+    }
+}
 
-    const MOVE_SEL_ID = 'moveSelect';
-    const MOVE_SEL_EL = document.getElementById( MOVE_SEL_ID );
-    
-    SEL_ELEMENT.addEventListener( 'change', updateDaemonSummary );
-    MOVE_SEL_EL.addEventListener( 'change', updateMoveStats);
+function handleSessionStorage() {
+    let CURRENT_PARTY_JSON = JSON.parse( sessionStorage.currentParty );
+    let REWARD = JSON.parse( sessionStorage.newReward );
+    let ALL_HELD_MONS_JSON = JSON.parse( sessionStorage.allHeldMons );
+    let NEXT_LOCK = JSON.parse( sessionStorage.nextLock );
+    let currentParty = [];
+    let allHeldMons = [];
 
+    if ( ! ALL_HELD_MONS_JSON ) {
+        ALL_HELD_MONS_JSON = CURRENT_PARTY_JSON
+    }
+    currentParty = util.parseDaemonJSON( CURRENT_PARTY_JSON );
+    allHeldMons = util.parseDaemonJSON( ALL_HELD_MONS_JSON );
+
+    return {
+        currentParty: currentParty,
+        newReward: REWARD,
+        allHeldMons: allHeldMons,
+        nextLock: NEXT_LOCK
+    }
+}
+
+function interludeToSessionStorage( state ) {
+    let sessionStateArray = [
+        'currentParty',
+        'newReward',
+        'allHeldMons',
+        'nextLock'
+    ];
+    let i = 0;
+    console.log('the interlude state')
+    console.log(state)
+
+    //state.forEach( val => {
+    for  ( const [key, val] of Object.entries(state)) {
+        sessionStorage[sessionStateArray[i++]] = JSON.stringify(val);
+    }
+    console.log(sessionStorage);
+}
+
+function loadBattle() {
+    console.log('Im in loadBattle');
+    //importPartyChoices( interludeState );
+    //interludeToSessionStorage( );
+    console.log(sessionStorage)
+    //return;
+    window.location.href = '../battle/battle.html';
 }
 
 export {
     populateNextFight,
     updateDaemonSummary,
     loadBattle,
-    populatePartySelects as populateParty,
+    populatePartySelects,
     setupReadyButton,
     populateChallenger,
     handleReward,
-    populateDaemonInspect
+    populateDaemonInspect,
+    handleSessionStorage,
+    initSessionStorage
 }

@@ -37,10 +37,12 @@ class Daemon {
         }
     }
 
-    copyFromData ( monData ) {
+    copyFromData ( monString ) {
+        //console.log(monData)
+        // monData = JSON.stringify(monData)
+        // console.log(monData)
         for ( const [ key, val ] of Object.entries( this )) {
-            console.log(monData)
-            let parsedData = JSON.parse(monData)
+            let parsedData = JSON.parse(monString)
             this[key] = parsedData[key]
         }
     }
