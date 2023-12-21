@@ -5,6 +5,7 @@
 - TODO: Show if your Daemon is dead
 - TODO: Add optional healing
 - TODO: When selecting Deamons in party, update current party info in interludeState
+- TODO: Fix the fact that if you do not change any Mons in interlude, they don't get saved to interludeState and then sessionStorage correctly.
 
 ## Nice to have TODOs
 - TODO: Better format for move information
@@ -25,6 +26,7 @@ let partySelects = [
     document.getElementById( selectArray[2] ),
 ];
 
+console.log('storage')
 console.log(sessionStorage)
 
 let interludeState = new InterludeState( {
@@ -34,23 +36,24 @@ let interludeState = new InterludeState( {
     'nextLock': sessionStorage.nextLock,
 })
 
+console.log('state')
 console.log(interludeState);
 
 // intFuncs.setupSessionStorage() can eventually be moved, currently only ensuring no undefined JSON variables
-intFuncs.initSessionStorage();
+//intFuncs.initSessionStorage();
 
-//let interludeState = intFuncs.handleSessionStorage();
-let allDaemonsHeld = interludeState['allHeldMons'];
-
-intFuncs.handleReward( JSON.stringify(interludeState.newReward), FULL_DAEMON_TABLE, allDaemonsHeld)
+intFuncs.handleReward( JSON.stringify(interludeState.newReward), FULL_DAEMON_TABLE, interludeState['allHeldMons'])
+intFuncs.healMons( interludeState, ['currentParty', 'allHeldMons']);
 
 console.log(interludeState)
 
 selectArray.forEach( select => {
-    scripts.populateSelect( allDaemonsHeld, select)
+    //scripts.populateSelect( allDaemonsHeld, select)
+    scripts.populateSelect( interludeState['allHeldMons'], select)
 });
 
-intFuncs.populatePartySelects(interludeState['currentParty'], partySelects, interludeState)
+//intFuncs.populatePartySelects(interludeState['currentParty'], partySelects, interludeState)
+intFuncs.populatePartySelects( interludeState, partySelects )
 intFuncs.populateDaemonInspect();
 intFuncs.setupReadyButton();
 intFuncs.populateChallenger( 'Mirror-You' );

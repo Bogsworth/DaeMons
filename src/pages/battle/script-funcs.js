@@ -5,10 +5,11 @@
 
 import * as calc from '../../../lib/calculations.js';
 import * as util from '../../../lib/utility.js';
+import * as parse from '../../../lib/Import.js';
+
 
 function populateSelect( array = [], selectName ) {
     const select = document.getElementById( selectName );
-    
     removeSelectOptions( select );
     array.forEach( mon => {
         if ( mon == null ){
@@ -65,6 +66,42 @@ function attachButton( doFunction, elementID ) {
         //else if (el.attachEvent)
             //el.attachEvent('onclick', doFunction);
     })
+}
+
+function loadMyParty() {
+    let myParty = [];
+
+    if (sessionStorage.currentParty == undefined ) {
+        myParty = parse.createParty();
+    } 
+    else {
+        let JSONofStrings = JSON.parse(sessionStorage.currentParty)
+        let partyJSON = []
+        // Somewhere I managed to make an array of stringified JSONs, then stringify the whole array....
+        // TODO: fix this at some point
+        JSONofStrings.forEach( str =>{
+            partyJSON.push(JSON.parse(str))
+        })
+        myParty = util.parseDaemonJSON(partyJSON)
+    }
+
+    return myParty;
+}
+
+function loadCurrentLock() {
+    let currentLock;
+    let warlocks = parse.createWarlocks();
+
+    if ( sessionStorage.nextLock == undefined ) {
+        currentLock = warlocks.get( calc.returnIDFromName('Pushover', warlocks));
+    }
+    else {
+        let lockJSON = JSON.parse(sessionStorage.nextLock);
+        console.log(lockJSON)
+        currentLock = warlocks.get( calc.returnIDFromName( lockJSON.name, warlocks))
+    }
+
+    return currentLock;
 }
 
 function updateMon( mon, isYourMon = true) {
@@ -376,6 +413,8 @@ export {
     setDefaultSelectValue,
     changeHeader,
     generateHeaderFromWarlock,
+    loadMyParty,
+    loadCurrentLock,
     attachButton,
     updateMon,
     handleAttack,

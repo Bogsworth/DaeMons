@@ -118,28 +118,19 @@ function importPartyChoices( state ) {
     
 }
 
-function populatePartySelects( currentParty, selectElements, state ) {  
+//function populatePartySelects( currentParty, selectElements, state ) { 
+function populatePartySelects( state, selectElements ) {  
     let i = 0;
+    
 
-    currentParty.forEach( mon => {
+    state['currentParty'].forEach( mon => {
         scripts.setDefaultSelectValue(selectElements[i++], mon.name );
     });
 
     selectElements.forEach ( sel_el => {
-        console.log(sel_el)
-        //let importParty = importPartyChoices(state)
-        //sel_el.addEventListener('change', changer)
-        // SEL_EL.addEventListener('change', function() {
-        //     console.log('changed!')
-        // })
         sel_el.addEventListener( 'change', function () {
-            //console.log(sessionStorage)
             importPartyChoices(state);
-            //console.log(sessionStorage)
         });
-        // function changer(){
-        //     console.log('changed!')
-        // }
     })
 }
 
@@ -150,6 +141,23 @@ function populateChallenger( name ) {
     sessionStorage.nextLock = JSON.stringify(nextLock);
     console.log(sessionStorage)
     populateNextFight( nextLock );
+}
+
+function healMons( interludeState, parameters ) {
+    healSubset( interludeState, parameters[0] );
+    healSubset( interludeState, parameters[1] );
+}
+
+function healSubset( interludeState, parameter ) {
+    let daemons = interludeState[parameter];
+    
+    daemons.forEach( mon => {
+        console.log(mon);
+        mon.currentHP = mon.stats.HP;
+        console.log(mon)
+    })
+
+    interludeState.updateParam( daemons, parameter)
 }
 
 function handleReward( rewardString, FULL_DAEMON_LIST, currentParty ) {
@@ -242,6 +250,7 @@ export {
     populateNextFight,
     updateDaemonSummary,
     loadBattle,
+    healMons,
     populatePartySelects,
     setupReadyButton,
     populateChallenger,

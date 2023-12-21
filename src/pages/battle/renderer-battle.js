@@ -22,51 +22,28 @@ import * as calc from '../../../lib/Calculations.js'
 const MON_TABLE = parse.createMonTable();
 const MOVE_TABLE = parse.createMoveTable();
 const TYPE_TABLE = parse.createCounterTable();
-let warlocks = parse.createWarlocks();
-let currentLock;
+
 // Note: myParty[0] is always the active Daemon;
-let myParty = [];
-
-if (sessionStorage.currentParty == undefined ) {
-    myParty = parse.createParty();
-} 
-else {
-    let JSONofStrings = JSON.parse(sessionStorage.currentParty)
-    let partyJSON = []
-    // Somewhere I managed to make an array of stringified JSONs, then stringify the whole array....
-    // TODO: fix this at some point
-    JSONofStrings.forEach( str =>{
-        partyJSON.push(JSON.parse(str))
-    })
-    myParty = util.parseDaemonJSON(partyJSON)
-}
-
-
-if ( sessionStorage.nextLock == undefined ) {
-    currentLock = warlocks.get( calc.returnIDFromName('Pushover', warlocks));
-}
-else {
-    let lockJSON = JSON.parse(sessionStorage.nextLock);
-    currentLock = warlocks.get( calc.returnIDFromName( lockJSON.name, warlocks))
-}
-
-let theirParty = currentLock.party;
-let theirCurrentMon = theirParty[0];
+let myParty = scripts.loadMyParty();
+let currentLock = scripts.loadCurrentLock();
 
 let fightState = {
     TYPE_TABLE: TYPE_TABLE,
     myParty: myParty,
     myActiveMon: myParty[0],
-    theirParty: theirParty,
-    theirActiveMon: theirCurrentMon,
+    theirParty: currentLock.party,
+    theirActiveMon: currentLock.party[0],
     enemyLock: currentLock 
 }
 console.log(sessionStorage)
 console.log(fightState)
 
-scripts.changeHeader( scripts.generateHeaderFromWarlock( currentLock ));
-scripts.populateSelect(myParty[0].moves, 'selectMoves');
-scripts.populateSelect(myParty, 'selectMons');
+scripts.changeHeader( scripts.generateHeaderFromWarlock( fightState.enemyLock ));
+// scripts.populateSelect(myParty[0].moves, 'selectMoves');
+// scripts.populateSelect(myParty, 'selectMons');
+
+scripts.populateSelect(fightState.myActiveMon.moves, 'selectMoves');
+scripts.populateSelect(fightState.myParty, 'selectMons');
 
 scripts.attachButton(
     function() {
@@ -81,4 +58,4 @@ scripts.attachButton(
 scripts.attachButton( scripts.handleOk, 'ok' );
 
 scripts.updateMon( fightState.myActiveMon, true );
-scripts.updateMon( theirCurrentMon, false );
+scripts.updateMon( fightState.theirActiveMon, false );
