@@ -6,7 +6,6 @@
 - TODO: Add a way to see the type of their Daemon
 - TODO: Add a way to see the number of Daemons they have left
 - TODO: Add loss handling
-- TODO: Fix the fact that I stringified an array of already stringified elements
 
 ## Nice to have TODOs
 - TODO: A health bar

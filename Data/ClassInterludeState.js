@@ -6,6 +6,7 @@ class InterludeState {
         'newReward': '""',
         'allHeldMons': '""',
         'nextLock': '""',
+        'nextLockName': '""'
 
     }) {
         for (let [key, val] of Object.entries(builder)) {
@@ -20,6 +21,7 @@ class InterludeState {
         this.newReward = JSON.parse(builder['newReward']);
         this.allHeldMons = JSON.parse(builder['allHeldMons']);
         this.nextLock = JSON.parse(builder['nextLock']);
+        this.nextLockName = JSON.parse(builder['nextLockName']);
 
         if (builder['allHeldMons'] == '""') {
             this.updateParam( this.currentParty, 'allHeldMons' )

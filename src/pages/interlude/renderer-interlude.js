@@ -1,15 +1,13 @@
 /*
 # TODO List
 ## Required TODOs
-- TODO: Save full list of kept daemons, not just current party
 - TODO: Show if your Daemon is dead
-- TODO: Add optional healing
-- TODO: When selecting Deamons in party, update current party info in interludeState
-- TODO: Fix the fact that if you do not change any Mons in interlude, they don't get saved to interludeState and then sessionStorage correctly.
+- TODO: Remove dead Daemons
 
 ## Nice to have TODOs
 - TODO: Better format for move information
 - TODO: Better formatting in general
+- TODO: Make healing depend on difficulty
 */
 
 import * as scripts from '../battle/script-funcs.js';
@@ -34,6 +32,7 @@ let interludeState = new InterludeState( {
     'newReward': sessionStorage.newReward,
     'allHeldMons': sessionStorage.allHeldMons,
     'nextLock': sessionStorage.nextLock,
+    'nextLockName': sessionStorage.nextLockName
 })
 
 console.log('state')
@@ -45,6 +44,7 @@ console.log(interludeState);
 intFuncs.handleReward( JSON.stringify(interludeState.newReward), FULL_DAEMON_TABLE, interludeState['allHeldMons'])
 intFuncs.healMons( interludeState, ['currentParty', 'allHeldMons']);
 
+console.log('interludeState post reward handling and healing')
 console.log(interludeState)
 
 selectArray.forEach( select => {
@@ -52,11 +52,10 @@ selectArray.forEach( select => {
     scripts.populateSelect( interludeState['allHeldMons'], select)
 });
 
-//intFuncs.populatePartySelects(interludeState['currentParty'], partySelects, interludeState)
 intFuncs.populatePartySelects( interludeState, partySelects )
 intFuncs.populateDaemonInspect();
 intFuncs.setupReadyButton();
-intFuncs.populateChallenger( 'Mirror-You' );
+intFuncs.populateChallenger( interludeState.nextLockName )
 
 console.log(interludeState)
 console.log(sessionStorage)

@@ -75,14 +75,9 @@ function loadMyParty() {
         myParty = parse.createParty();
     } 
     else {
-        let JSONofStrings = JSON.parse(sessionStorage.currentParty)
-        let partyJSON = []
-        // Somewhere I managed to make an array of stringified JSONs, then stringify the whole array....
-        // TODO: fix this at some point
-        JSONofStrings.forEach( str =>{
-            partyJSON.push(JSON.parse(str))
-        })
-        myParty = util.parseDaemonJSON(partyJSON)
+        let partyJSON = JSON.parse(sessionStorage.currentParty);
+
+        myParty = util.parseDaemonJSON(partyJSON);
     }
 
     return myParty;
@@ -240,7 +235,12 @@ function handleAttack( fightState ) {
 function endFight( fightState ) {
     util.savePostFightParty( fightState.myParty );
     getReward( fightState );
+    getNextChallenger( fightState );
     window.location.href = '../interlude/interlude.html';
+}
+
+function getNextChallenger( fightState ) {
+    sessionStorage.nextLockName = JSON.stringify(fightState.enemyLock.nextFight)
 }
 
 function getReward( fightState ) {

@@ -107,12 +107,18 @@ function importPartyChoices( state ) {
         if ( select.selectedIndex == 0) {
             return;
         }
-        let selectedMonJSON = select.value;
+        //let selectedMonJSON = select.value;
+        let selectedMonJSON = JSON.parse(select.value);
+        console.log(select.value)
 
         tempStorage.push(selectedMonJSON);
     })
-    state.currentParty = JSON.stringify(tempStorage)
-    sessionStorage.currentParty = JSON.stringify(tempStorage);
+    //state.currentParty = JSON.stringify(tempStorage)
+    state.currentParty = tempStorage
+    
+    
+    //sessionStorage.currentParty = JSON.stringify(tempStorage);
+    sessionStorage.currentParty = JSON.stringify(tempStorage)
     console.log(sessionStorage.currentParty)
     console.log(state.currentParty)
     
@@ -122,7 +128,6 @@ function importPartyChoices( state ) {
 function populatePartySelects( state, selectElements ) {  
     let i = 0;
     
-
     state['currentParty'].forEach( mon => {
         scripts.setDefaultSelectValue(selectElements[i++], mon.name );
     });
@@ -137,6 +142,8 @@ function populatePartySelects( state, selectElements ) {
 function populateChallenger( name ) {
     let warlocks = parse.createWarlocks();
     let nextLock = warlocks.get( calc.returnIDFromName( name, warlocks));
+    console.log(warlocks)
+    console.log(nextLock)
 
     sessionStorage.nextLock = JSON.stringify(nextLock);
     console.log(sessionStorage)
@@ -152,9 +159,7 @@ function healSubset( interludeState, parameter ) {
     let daemons = interludeState[parameter];
     
     daemons.forEach( mon => {
-        console.log(mon);
         mon.currentHP = mon.stats.HP;
-        console.log(mon)
     })
 
     interludeState.updateParam( daemons, parameter)
