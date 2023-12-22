@@ -15,8 +15,7 @@
 
 import * as util from '../../../lib/utility.js'
 import * as parse from '../../../lib/import.js'
-import * as scripts from './script-funcs.js'
-import * as calc from '../../../lib/Calculations.js'
+import * as scripts from './battle-funcs.js'
 
 const MON_TABLE = parse.createMonTable();
 const MOVE_TABLE = parse.createMoveTable();
@@ -30,19 +29,20 @@ let fightState = {
     TYPE_TABLE: TYPE_TABLE,
     myParty: myParty,
     myActiveMon: myParty[0],
+    enemyLock: currentLock,
     theirParty: currentLock.party,
-    theirActiveMon: currentLock.party[0],
-    enemyLock: currentLock 
+    theirActiveMon: currentLock.party[0]
 }
 console.log(sessionStorage)
 console.log(fightState)
 
-scripts.changeHeader( scripts.generateHeaderFromWarlock( fightState.enemyLock ));
-// scripts.populateSelect(myParty[0].moves, 'selectMoves');
-// scripts.populateSelect(myParty, 'selectMons');
+scripts.changeHeader
+(
+    scripts.generateHeaderFromWarlock( fightState.enemyLock )
+);
 
-scripts.populateSelect(fightState.myActiveMon.moves, 'selectMoves');
-scripts.populateSelect(fightState.myParty, 'selectMons');
+util.populateSelect( fightState.myActiveMon.moves, 'selectMoves' );
+util.populateSelect( fightState.myParty, 'selectMons' );
 
 scripts.attachButton(
     function() {

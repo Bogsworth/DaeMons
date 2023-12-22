@@ -1,38 +1,11 @@
 /*
 # TODO List
-- TODO: Split this file up into battle-funcs.js and maybe move more general functions into utility.js or similar
+- TODONE: Split this file up into battle-funcs.js and more general functions into utility.js
 */
 
 import * as calc from '../../../lib/calculations.js';
 import * as util from '../../../lib/utility.js';
-import * as parse from '../../../lib/Import.js';
-
-
-function populateSelect( array = [], selectName ) {
-    const select = document.getElementById( selectName );
-    removeSelectOptions( select );
-    array.forEach( mon => {
-        if ( mon == null ){
-            return;
-        }
-        let element = document.createElement('option');
-        
-        element.textContent = mon.name;
-        element.value = JSON.stringify(mon); 
-        select.appendChild( element );
-    });
-}
-
-function setDefaultSelectValue( select, textString ) {
-    for (var i=0; i<select.options.length; i++) {
-        let option = select.options[i];
-      
-        if (option.text == textString) {
-           option.setAttribute('selected', true);
-           return; 
-        } 
-      }
-}
+import * as parse from '../../../lib/import.js';
 
 function changeHeader( newHeader ) {
     document
@@ -49,20 +22,13 @@ function generateHeaderFromWarlock ( warlock ) {
     return TITLE;
 }
 
-function removeSelectOptions(selectElement) {
-    var i, L = selectElement.options.length - 1;
-    for( i = L; i > 0; i-- ) {
-        selectElement.remove(i);
-    }
-}
-
 function attachButton( doFunction, elementID ) {
     let el = document.getElementsByName( elementID );
 
     document.addEventListener("DOMContentLoaded", () => {
 
         //if (el.addEventListener)
-        el[0].addEventListener("click", doFunction, false);
+            el[0].addEventListener("click", doFunction, false);
         //else if (el.attachEvent)
             //el.attachEvent('onclick', doFunction);
     })
@@ -232,21 +198,6 @@ function handleAttack( fightState ) {
     } 
 }
 
-function endFight( fightState ) {
-    util.savePostFightParty( fightState.myParty );
-    getReward( fightState );
-    getNextChallenger( fightState );
-    window.location.href = '../interlude/interlude.html';
-}
-
-function getNextChallenger( fightState ) {
-    sessionStorage.nextLockName = JSON.stringify(fightState.enemyLock.nextFight)
-}
-
-function getReward( fightState ) {
-    sessionStorage.newReward = JSON.stringify(fightState.enemyLock.reward);
-}
-
 function useMove( typeTable, attackingMon, defendingMon, chosenMove, playerActiveFlag ) {
     class MessageClass {
         constructor(playerMessage, enemyMessage) {
@@ -313,7 +264,6 @@ function useMove( typeTable, attackingMon, defendingMon, chosenMove, playerActiv
         message += templates.superEffective[ activeLock ];
     }
     defendingMon.updateHP( damage );
-    console.log(templates.elementName[ activeLock])
     util.updateShownHP( templates.elementName[ activeLock ], defendingMon)
     util.writeToMessageBox( message );
 }
@@ -351,8 +301,6 @@ function handleSwitch( fightState ) {
         const NEW_NAME = myParty[ chosenMonIndex ].name;
         let prevMon = activeMon;
 
-        console.log(myParty)
-
         btn.addEventListener( 'click', btnResolver );
 
         if ( chosenMonIndex == -1 ) {
@@ -384,8 +332,8 @@ function handleSwitch( fightState ) {
         // Update UI
         updateMon( activeMon, true );
         util.updateShownHP( 'yourMonHP', activeMon )
-        populateSelect( activeMon.moves, 'selectMoves' );
-        populateSelect( myParty, 'selectMons' );
+        util.populateSelect( activeMon.moves, 'selectMoves' );
+        util.populateSelect( myParty, 'selectMons' );
         await waitForPress();
 
         if (! util.checkIfHPZero( prevMon ) ) {
@@ -408,9 +356,22 @@ function handleOk() {
     console.log('ok button pressed');
 }
 
+function endFight( fightState ) {
+    util.savePostFightParty( fightState.myParty );
+    getReward( fightState );
+    getNextChallenger( fightState );
+    window.location.href = '../interlude/interlude.html';
+}
+
+function getNextChallenger( fightState ) {
+    sessionStorage.nextLockName = JSON.stringify(fightState.enemyLock.nextFight)
+}
+
+function getReward( fightState ) {
+    sessionStorage.newReward = JSON.stringify(fightState.enemyLock.reward);
+}
+
 export {
-    populateSelect,
-    setDefaultSelectValue,
     changeHeader,
     generateHeaderFromWarlock,
     loadMyParty,
