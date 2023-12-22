@@ -1,4 +1,19 @@
 [{
+    "name": "Pushover",
+    "Daemons": [
+        {
+            "name": "Imp",
+            "moves": ["Buyout", "Nibble", null, null]
+        }
+    ],
+    "description": "This guy should be a walk in the park",
+    "reward": {
+        "name": "Imp",
+        "moves": ["Buyout", "Nibble", null, null]
+    },
+    "nextFight": "Shorts-Wearer"
+},
+{
     "name": "Shorts-Wearer",
     "Daemons": [
         {
@@ -13,24 +28,13 @@
             "name": "Damned",
             "moves": ["Lash Out", "Remove FOMO", null, null]
         }
-    ]
-},
-{
-    "name": "Pushover",
-    "Daemons": [
-        {
-            "name": "Imp",
-            "moves": ["Buyout", "Nibble", null, null]
-        },
-        {
-            "name": "Imp",
-            "moves": ["Buyout", "Nibble", null, null]
-        },
-        {
-            "name": "Imp",
-            "moves": ["Buyout", "Nibble", null, null]
-        }
-    ]
+    ],
+    "description": "Shorts are comfy, and easy to wear!",
+    "reward": {
+        "name": "Damned",
+        "moves": ["Lash Out", "Remove FOMO", null, null]
+    },
+    "nextFight": "Mirror-You"
 },
 {
     "name": "Mirror-You",
@@ -47,7 +51,13 @@
             "name": "Angy Boy",
             "moves": ["Consecutive Normal Punches", "Chain Whip", null, null]
         }
-    ]
+    ],
+    "description": "You may be strong, but are you strong enough to face.... Yourself?",
+    "reward": {
+        "name": "Angy Boy",
+        "moves": ["Consecutive Normal Punches", "Chain Whip", null, null]
+    },
+    "nextFight": "Moneybags"
 },
 {
     "name": "Moneybags",
@@ -64,5 +74,10 @@
             "name": "Dragon",
             "moves": ["Fuck You Money", "Consecutive Normal Punches", null, null]
         }
-    ]
+    ],
+    "description": "He looks like the kind of guy who made his fortune from his parents' emerald mine.",
+    "reward": {
+        "name": "Dragon",
+        "moves": ["Fuck You Money", "Consecutive Normal Punches", null, null]
+    }
 }]

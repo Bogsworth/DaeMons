@@ -11,7 +11,7 @@
  - SwapperD
  - SysLogD
  - SyncD
- - Reap Children as a move, normally killing a processes children but... it sounds terrible lol
+ - Reap Children as a move, normally killing a process's children but... it sounds terrible lol
 ## Current Type Counter Table
 |           | Lust  | Gluttony  | Greed | Sloth | Wrath | Envy  | Pride |
 | :--:      | :---: | :------:  | :---: | :---: | :---: | :---: | :---: |

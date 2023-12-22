@@ -1,0 +1,53 @@
+body {
+    background-color: lightblue;
+}
+
+.prepPage {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+}
+
+h1 {
+    display: flex;
+    color: navy;
+    align-self: center;
+}
+
+.topHalf {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.partyPlanning {
+    display: flex;
+    flex-direction: column;
+}
+
+.lowerHalf {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    flex-grow: 1;
+    
+}
+
+.inspectionSection {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    /* flex-grow: 1; */
+}
+
+.statsSection {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    /* flex-grow: 1; */
+}
+
+.readyButton {
+    display: flex;
+    justify-content: center;
+}

@@ -1,22 +1,11 @@
-import * as calc from '../lib/calculations.js';
-import * as util from '../lib/utility.js';
+/*
+# TODO List
+- TODONE: Split this file up into battle-funcs.js and more general functions into utility.js
+*/
 
-function populateSelect( array = [], selectName ) {
-    const select = document.getElementById( selectName );
-    
-    removeSelectOptions( select );
-    
-    array.forEach( mon => {
-        if ( mon == null ){
-            return;
-        }
-
-        let element = document.createElement('option');
-        element.textContent = mon.name;
-        element.value = mon;
-        select.appendChild( element );
-    });
-}
+import * as calc from '../../../lib/calculations.js';
+import * as util from '../../../lib/utility.js';
+import * as parse from '../../../lib/import.js';
 
 function changeHeader( newHeader ) {
     document
@@ -33,23 +22,47 @@ function generateHeaderFromWarlock ( warlock ) {
     return TITLE;
 }
 
-function removeSelectOptions(selectElement) {
-    var i, L = selectElement.options.length - 1;
-    for( i = L; i > 0; i-- ) {
-        selectElement.remove(i);
-    }
-}
-
 function attachButton( doFunction, elementID ) {
     let el = document.getElementsByName( elementID );
 
     document.addEventListener("DOMContentLoaded", () => {
 
         //if (el.addEventListener)
-        el[0].addEventListener("click", doFunction, false);
+            el[0].addEventListener("click", doFunction, false);
         //else if (el.attachEvent)
             //el.attachEvent('onclick', doFunction);
     })
+}
+
+function loadMyParty() {
+    let myParty = [];
+
+    if (sessionStorage.currentParty == undefined ) {
+        myParty = parse.createParty();
+    } 
+    else {
+        let partyJSON = JSON.parse(sessionStorage.currentParty);
+
+        myParty = util.parseDaemonJSON(partyJSON);
+    }
+
+    return myParty;
+}
+
+function loadCurrentLock() {
+    let currentLock;
+    let warlocks = parse.createWarlocks();
+
+    if ( sessionStorage.nextLock == undefined ) {
+        currentLock = warlocks.get( calc.returnIDFromName('Pushover', warlocks));
+    }
+    else {
+        let lockJSON = JSON.parse(sessionStorage.nextLock);
+        console.log(lockJSON)
+        currentLock = warlocks.get( calc.returnIDFromName( lockJSON.name, warlocks))
+    }
+
+    return currentLock;
 }
 
 function updateMon( mon, isYourMon = true) {
@@ -66,7 +79,7 @@ function updateMon( mon, isYourMon = true) {
         ID.HP = 'yourMonHP';
     }
     document.getElementById(ID.name).innerHTML = NAME;
-    document.getElementById(ID.HP).innerHTML = HP + '/' + MAX_HP;
+    document.getElementById(ID.HP).innerHTML = HP + '/' + MAX_HP + ' hp';
 }
 
 function handleAttack( fightState ) {
@@ -158,6 +171,12 @@ function handleAttack( fightState ) {
                 if ( util.checkIfEnemyWipe( theirParty )) {
                     util.writeToMessageBox( `You've defeated this dingus!` )
                     await waitForPress();
+                    if ( fightState.enemyLock.reward != "" ) {
+                        let reward = fightState.enemyLock.reward
+                        util.writeToMessageBox( `You've earned a(n) ${reward.name}!`);
+                        await waitForPress();
+                    }
+                    endFight( fightState );
                     break hpCheck;
                 }
                 util.writeToMessageBox( `They lost connection with their ${theirMon.name}`)
@@ -245,7 +264,6 @@ function useMove( typeTable, attackingMon, defendingMon, chosenMove, playerActiv
         message += templates.superEffective[ activeLock ];
     }
     defendingMon.updateHP( damage );
-    console.log(templates.elementName[ activeLock])
     util.updateShownHP( templates.elementName[ activeLock ], defendingMon)
     util.writeToMessageBox( message );
 }
@@ -266,7 +284,7 @@ function handleSwitch( fightState ) {
     console.log('switch button pressed');
     console.log(myParty)
 
-    switchMons( myParty );
+    switchMons();
 
     function waitForPress() {
         return new Promise(resolve => waitForPressResolve = resolve);
@@ -278,12 +296,10 @@ function handleSwitch( fightState ) {
         }
     }
 
-    async function switchMons( myParty ) {
+    async function switchMons() {
         const CURRENT_NAME = activeMon.name;
         const NEW_NAME = myParty[ chosenMonIndex ].name;
         let prevMon = activeMon;
-
-        console.log(myParty)
 
         btn.addEventListener( 'click', btnResolver );
 
@@ -316,13 +332,13 @@ function handleSwitch( fightState ) {
         // Update UI
         updateMon( activeMon, true );
         util.updateShownHP( 'yourMonHP', activeMon )
-        populateSelect( activeMon.moves, 'selectMoves' );
-        populateSelect( myParty, 'selectMons' );
+        util.populateSelect( activeMon.moves, 'selectMoves' );
+        util.populateSelect( myParty, 'selectMons' );
         await waitForPress();
 
         if (! util.checkIfHPZero( prevMon ) ) {
             const ENEMY_MOVE = util.chooseMove( theirMon );
-            //theirMove( typeTable, activeMon, theirMon );
+            
             useMove( typeTable, theirMon, activeMon, ENEMY_MOVE, false );
             await waitForPress();
         }
@@ -340,10 +356,26 @@ function handleOk() {
     console.log('ok button pressed');
 }
 
+function endFight( fightState ) {
+    util.savePostFightParty( fightState.myParty );
+    getReward( fightState );
+    getNextChallenger( fightState );
+    window.location.href = '../interlude/interlude.html';
+}
+
+function getNextChallenger( fightState ) {
+    sessionStorage.nextLockName = JSON.stringify(fightState.enemyLock.nextFight)
+}
+
+function getReward( fightState ) {
+    sessionStorage.newReward = JSON.stringify(fightState.enemyLock.reward);
+}
+
 export {
-    populateSelect,
     changeHeader,
     generateHeaderFromWarlock,
+    loadMyParty,
+    loadCurrentLock,
     attachButton,
     updateMon,
     handleAttack,

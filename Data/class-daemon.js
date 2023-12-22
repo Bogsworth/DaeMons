@@ -37,6 +37,16 @@ class Daemon {
         }
     }
 
+    copyFromData ( monString ) {
+        //console.log(monData)
+        // monData = JSON.stringify(monData)
+        // console.log(monData)
+        for ( const [ key, val ] of Object.entries( this )) {
+            let parsedData = JSON.parse(monString)
+            this[key] = parsedData[key]
+        }
+    }
+
     returnTotalMovesKnown() {
         let movesKnown = 0;
         this.moves.forEach( move => {
