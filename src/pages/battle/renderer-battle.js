@@ -5,12 +5,18 @@
 - TODO: Add a way to see the stats of your moves
 - TODO: Add a way to see the type of their Daemon
 - TODO: Add a way to see the number of Daemons they have left
-- TODO: Add loss handling
+- TODO: Clean up messages around status effects
+- TODO: Add power points equivalent
 
 ## Nice to have TODOs
 - TODO: A health bar
 - TODO: A health bar with an animation as you lose health
 - TODO: A more polished UI
+
+## TODONE!!!
+- TODONE: Add loss handling
+- TODONE: Make moves that affect status
+- TODONE: Fix bug where 'hp' dissapears (but numbers stay) underneath Daemon's name
 */
 
 import * as util from '../../../lib/utility.js'

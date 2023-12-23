@@ -3,6 +3,10 @@
     "moves": ["Laze", "Show Off", null, null]
 },
 {
+    "name": "Imp",
+    "moves": ["Buyout", "Nibble", "Philanthropy", null]
+},
+{
     "name": "Angy Boy",
     "moves": ["Consecutive Normal Punches", "Chain Whip", null, null]
 }]

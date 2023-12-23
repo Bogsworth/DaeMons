@@ -1,3 +1,4 @@
+import * as calc from '../lib/calculations.js'
 class Daemon {
     constructor( builder = {
         "id": "",
@@ -17,19 +18,31 @@ class Daemon {
 
         this.moves = [null, null, null, null];
         this.currentHP = builder[ 'stats' ][ 'HP' ];
+
+        this.tempStatChange = {
+            "attack": 0,
+            "defense": 0,
+            "speed": 0,
+        }
     }
 
-    testfunc() {
-        return 20;
-    }
     returnID() { return this.id; }
     returnName() { return this.name; }
     returnType() { return this.type; }
     returnStats() { return this.stats; }
+    returnTempStatsModifiers() { return this.tempStatChange; }
     returnMoves() { return this.moves; }
     returnCurrentHP() { return this.currentHP; }
 
     updateHP( damage ) { this.currentHP -= damage }
+
+    returnModifiedStat( stat ) {
+        return calc.modifyStat( this.stats[stat], this.tempStatChange[stat]);
+    }
+
+    updateTempStatChange( stat, change ) {
+        this.tempStatChange[stat] += change;
+    }
 
     copyMon( monToCopy ) {
         for ( const [ key, val ] of Object.entries( this )) {
@@ -38,9 +51,6 @@ class Daemon {
     }
 
     copyFromData ( monString ) {
-        //console.log(monData)
-        // monData = JSON.stringify(monData)
-        // console.log(monData)
         for ( const [ key, val ] of Object.entries( this )) {
             let parsedData = JSON.parse(monString)
             this[key] = parsedData[key]

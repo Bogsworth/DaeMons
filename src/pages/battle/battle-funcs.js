@@ -6,6 +6,7 @@
 import * as calc from '../../../lib/calculations.js';
 import * as util from '../../../lib/utility.js';
 import * as parse from '../../../lib/import.js';
+import { Move } from '../../../lib/import.js'
 
 function changeHeader( newHeader ) {
     document
@@ -85,6 +86,7 @@ function updateMon( mon, isYourMon = true) {
 function handleAttack( fightState ) {
     let typeTable = fightState.TYPE_TABLE;
     let myMon = fightState.myActiveMon;
+    let myParty = fightState.myParty;
     let theirParty = fightState.theirParty;
     let theirMon = fightState.theirActiveMon;
     let chosenMoveIndex = document
@@ -132,30 +134,46 @@ function handleAttack( fightState ) {
         }
 
         console.log(chosenMove);
+        let turnOrder = [];
+        let myTurn = {
+            mon: myMon,
+            move: chosenMove,
+            activeFlag: true
+        };
+        let theirTurn = {
+            mon: theirMon,
+            move: ENEMY_MOVE,
+            activeFlag: false
+        };
 
-        round: if ( myMon.stats.speed >= theirMon.stats.speed ) {
-            useMove( typeTable, myMon, theirMon, chosenMove, true );
-            await waitForPress();
-            if ( util.checkIfHPZero( myMon, theirMon )) {
-                break round;
-            }
-            useMove( typeTable, theirMon, myMon, ENEMY_MOVE, false );
-            await waitForPress();
-            if ( util.checkIfHPZero( myMon, theirMon )) {
-                break round;
-            }
+        if ( myMon.returnModifiedStat('speed') >= theirMon.returnModifiedStat('speed') ) {
+            turnOrder.push(myTurn);
+            turnOrder.push(theirTurn);
         }
         else {
-            useMove( typeTable, theirMon, myMon, ENEMY_MOVE, false );
+            turnOrder.push(theirTurn);
+            turnOrder.push(myTurn);
+        }
+
+        useMove
+        (
+            typeTable,
+            turnOrder[0].mon,
+            turnOrder[1].mon,
+            turnOrder[0].move,
+            turnOrder[0].activeFlag
+        );
+        await waitForPress();
+        if (! util.checkIfHPZero( myMon, theirMon )) {
+            useMove
+            (
+                typeTable,
+                turnOrder[1].mon,
+                turnOrder[0].mon,
+                turnOrder[1].move,
+                turnOrder[1].activeFlag
+            );
             await waitForPress();
-            if ( util.checkIfHPZero( myMon, theirMon )) {
-                break round;
-            }
-            useMove( typeTable, myMon, theirMon, chosenMove, true );
-            await waitForPress();
-            if ( util.checkIfHPZero (myMon, theirMon )) {
-                break round;
-            }
         }
 
         // TODO: check for loss state for player
@@ -164,11 +182,21 @@ function handleAttack( fightState ) {
             {
                 util.writeToMessageBox( 'Your dude has died, RIP');
                 await waitForPress();
+                if (util.checkIfWipe( myParty )) {
+                    util.writeToMessageBox( `You have no more Daemons to connect to` );
+                    await waitForPress();
+                    util.writeToMessageBox( `Without the protection of any Daemons you cannot go on`);
+                    await waitForPress();
+                    util.writeToMessageBox( `You lose.` );
+                    await waitForPress();
+                    endGame();
+                    break hpCheck;
+                }
             }
             else {
                 util.writeToMessageBox( 'Their dude has died, hell yeah!');
                 await waitForPress();
-                if ( util.checkIfEnemyWipe( theirParty )) {
+                if ( util.checkIfWipe( theirParty )) {
                     util.writeToMessageBox( `You've defeated this dingus!` )
                     await waitForPress();
                     if ( fightState.enemyLock.reward != "" ) {
@@ -198,28 +226,32 @@ function handleAttack( fightState ) {
     } 
 }
 
-function useMove( typeTable, attackingMon, defendingMon, chosenMove, playerActiveFlag ) {
+function useMove( typeTable, attackingMon, defendingMon, chosenMoveObject, playerActiveFlag ) {
     class MessageClass {
         constructor(playerMessage, enemyMessage) {
             this['player'] = playerMessage;
             this['enemy'] = enemyMessage;
         }
     }
+    let message = '';
+    let chosenMove = new Move( chosenMoveObject );
     const TYPE_MOD = calc.calculateTypeModifier
     (
         typeTable,
-        chosenMove.type, 
-        defendingMon.type
+        chosenMove.returnType(), 
+        defendingMon.returnType()
     );
-    let message = '';
-    let activeLock = '';
-    let damage = calc.calculateDamage(
-    {
-        attack_stat: attackingMon.stats.attack,
-        defense_stat: defendingMon.stats.defense,
-        power_stat: chosenMove.power,
-        type_modifier: TYPE_MOD
-    });
+
+    const ROUND_INFO = {
+        attacker: attackingMon,
+        defender: defendingMon,
+        move: chosenMove,
+        typeModifier: TYPE_MOD
+    };
+    let damage = calc.calculateDamage( ROUND_INFO );
+    let statsAffectedArray = chosenMove.returnStatsAffectedArray();
+    let activeLock = setActiveLock( playerActiveFlag );
+
     const templates = {
         didDamage: new MessageClass(
             `Your ${attackingMon.name} did ${damage} using ${chosenMove.name}`,
@@ -229,11 +261,23 @@ function useMove( typeTable, attackingMon, defendingMon, chosenMove, playerActiv
             `Your ${attackingMon.name} used ${chosenMove.name} but it missed...`,
             `Enemy ${attackingMon.name} used ${chosenMove.name} but it missed!`
         ),
-        failed: new MessageClass ( 'but it failed...', 'but it failed!' ),
+        failed: new MessageClass (
+            'but it failed...',
+            'but it failed!'
+        ),
         superEffective: new MessageClass (
             ` - it's super effective!`,
             ` - it's super effective!`
         ),
+        // affectedEnemyStat: new MessageClass (
+        //     `Your ${attackingMon.name} reduced opponent's ${defendingMon} ${stat} stat`,
+        //     `Enemy ${attackingMon.name} reduced your ${defendingMon.name}'s ${stat} stat`
+        // ),
+        // affectedOwnStat: new MessageClass (
+        //     `Your ${attackingMon.name} increased its ${stat} stat`,
+        //     `Enemy ${attackingMon.name} increased its ${stat} stat`
+        // ),
+
         // elementName seems backwards, but it's to apply damage to enemy Mon
         elementName: new MessageClass ('theirMonHP', 'yourMonHP' ) ,
         usedMove: new MessageClass ( '', '' )
@@ -241,17 +285,11 @@ function useMove( typeTable, attackingMon, defendingMon, chosenMove, playerActiv
 
     console.log('attacking Mon: ')
     console.log(attackingMon)
-    console.log('chosen move: ' + chosenMove.name)
-    console.log('chosen move type: ' + chosenMove.type)
-    console.log('defendingMon type: ' + defendingMon.type)
+    console.log('defending Mon: ')
+    console.log(defendingMon)
+    console.log('chosen move: ') 
+    console.log(chosenMove)
     console.log('type modifier: ' + TYPE_MOD)
-
-    if (playerActiveFlag) {
-        activeLock = 'player';
-    }
-    else {
-        activeLock = 'enemy';
-    }
 
     if ( ! calc.checkIfHit( chosenMove )) {
         message += templates.missed[ activeLock ];
@@ -259,13 +297,55 @@ function useMove( typeTable, attackingMon, defendingMon, chosenMove, playerActiv
         return;
     }
 
-    message += templates.didDamage[ activeLock ];
+    if (chosenMove.power != 0) {
+        message += templates.didDamage[ activeLock ];
+    }
+
+    if ( statsAffectedArray.length != 0 ) {
+        console.log(statsAffectedArray)
+        statsAffectedArray.forEach( effect => {
+            let target = effect[0]
+            let stat = effect[1];
+            let change = effect[2];
+
+            if ( target == 'self' ) {
+                attackingMon.updateTempStatChange( stat, change );
+
+                if ( playerActiveFlag ) {
+                    message += `Your ${attackingMon.name} increased its ${stat} stat`
+                }
+                else {
+                    message += `Enemy ${attackingMon.name} increased its ${stat} stat`
+                }
+            }
+            else {
+                defendingMon.updateTempStatChange( stat, change );
+                if ( playerActiveFlag ) {
+                    message += `Your ${attackingMon.name} reduced opponent's ${defendingMon.name} ${stat} stat`
+                }
+                else {
+                    message += `Enemy ${attackingMon.name} reduced your ${defendingMon.name}'s ${stat} stat`
+                }
+            }
+        });
+    }
+
     if ( TYPE_MOD > 1 ) {
         message += templates.superEffective[ activeLock ];
     }
+
     defendingMon.updateHP( damage );
     util.updateShownHP( templates.elementName[ activeLock ], defendingMon)
     util.writeToMessageBox( message );
+}
+
+function setActiveLock( activeFlag ) {
+    if (activeFlag) {
+        return 'player';
+    }
+    else {
+        return 'enemy';
+    }
 }
 
 function handleSwitch( fightState ) {   
@@ -369,6 +449,11 @@ function getNextChallenger( fightState ) {
 
 function getReward( fightState ) {
     sessionStorage.newReward = JSON.stringify(fightState.enemyLock.reward);
+}
+
+function endGame() {
+    sessionStorage.clear();
+    window.location.href = '../../../index.html';
 }
 
 export {

@@ -3,6 +3,12 @@
 ## Brainstorming
 - Maybe use Tarot instead of sins
 - Maybe add 7 virtues as well as 7 sins
+
+### Moves
+- More damage if you go first
+- Increase the monID by 1
+- Increase a moveID by 1
+
 ### Linux Daemon Ideas
  - Init
  - BioD
@@ -12,6 +18,7 @@
  - SysLogD
  - SyncD
  - Reap Children as a move, normally killing a process's children but... it sounds terrible lol
+
 ## Current Type Counter Table
 |           | Lust  | Gluttony  | Greed | Sloth | Wrath | Envy  | Pride |
 | :--:      | :---: | :------:  | :---: | :---: | :---: | :---: | :---: |

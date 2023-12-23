@@ -1,128 +1,370 @@
-[
+[{
+    "name": "Bind",
+    "type": "lust",
+    "power": 20,
+    "accuracy": 100,
+    "uses": 30,
+    "statsAffected": {
+        "self": {
+            "attack": 0,
+            "defense": 0,
+            "speed": 0
+        },
+        "enemy": {
+            "attack": 0,
+            "defense": 0,
+            "speed": 0
+        }
+    }
+},    
 {
     "name": "Chain Whip",
     "type": "lust",
     "power": 50,
     "accuracy": 95,
-    "uses": 20
+    "uses": 20,
+    "statsAffected": {
+        "self": {
+            "attack": 0,
+            "defense": 0,
+            "speed": 0
+        },
+        "enemy": {
+            "attack": 0,
+            "defense": 0,
+            "speed": 0
+        }
+    }
 
 },
+
 {
-    "name": "Bind",
-    "type": "lust",
+    "name": "Nibble",
+    "type": "gluttony",
     "power": 20,
     "accuracy": 100,
-    "uses": 30
-},
-
-{
-    "name": "Vore",
-    "type": "gluttony",
-    "power": 130,
-    "accuracy": 80,
-    "uses": 5
+    "uses": 30,
+    "statsAffected": {
+        "self": {
+            "attack": 0,
+            "defense": 0,
+            "speed": 0
+        },
+        "enemy": {
+            "attack": 0,
+            "defense": 0,
+            "speed": 0
+        }
+    }
 },
 {
     "name": "Bite",
     "type": "gluttony",
     "power": 55,
     "accuracy": 95,
-    "uses": 20
+    "uses": 20,
+    "statsAffected": {
+        "self": {
+            "attack": 0,
+            "defense": 0,
+            "speed": 0
+        },
+        "enemy": {
+            "attack": 0,
+            "defense": 0,
+            "speed": 0
+        }
+    }
 },
 {
-    "name": "Nibble",
+    "name": "Vore",
     "type": "gluttony",
-    "power": 20,
-    "accuracy": 100,
-    "uses": 30
+    "power": 130,
+    "accuracy": 80,
+    "uses": 5,
+    "statsAffected": {
+        "self": {
+            "attack": 0,
+            "defense": 0,
+            "speed": 0
+        },
+        "enemy": {
+            "attack": 0,
+            "defense": 0,
+            "speed": 0
+        }
+    }
 },
 
-{
-    "name": "Fuck You Money",
-    "type": "greed",
-    "power": 70,
-    "accuracy": 100,
-    "uses": 10
-},
 {
     "name": "Buyout",
     "type": "greed",
     "power": 35,
     "accuracy": 90,
-    "uses": 25
+    "uses": 25,
+    "statsAffected": {
+        "self": {
+            "attack": 0,
+            "defense": 0,
+            "speed": 0
+        },
+        "enemy": {
+            "attack": 0,
+            "defense": 0,
+            "speed": 0
+        }
+    }
+},
+{
+    "name": "Fuck You Money",
+    "type": "greed",
+    "power": 70,
+    "accuracy": 100,
+    "uses": 10,
+    "statsAffected": {
+        "self": {
+            "attack": 0,
+            "defense": 0,
+            "speed": 0
+        },
+        "enemy": {
+            "attack": 0,
+            "defense": 0,
+            "speed": 0
+        }
+    }
+},
+{
+    "name": "Philanthropy",
+    "type": "greed",
+    "power": 0,
+    "accuracy": 100,
+    "uses": 20,
+    "statsAffected": {
+        "self": {
+            "attack": 0,
+            "defense": 0,
+            "speed": 0
+        },
+        "enemy": {
+            "attack": 0,
+            "defense": -2,
+            "speed": 0
+        }
+    }
 },
 
 {
-    "name": "Convince to Stay In",
+    "name": "Laze",
     "type": "sloth",
-    "power": 80,
-    "accuracy": 90,
-    "uses": 10
+    "power": 15,
+    "accuracy": 100,
+    "uses": 30,
+    "statsAffected": {
+        "self": {
+            "attack": 0,
+            "defense": 0,
+            "speed": 0
+        },
+        "enemy": {
+            "attack": 0,
+            "defense": 0,
+            "speed": 0
+        }
+    }
 },
 {
     "name": "Remove FOMO",
     "type": "sloth",
     "power": 50,
     "accuracy": 95,
-    "uses": 20
+    "uses": 20,
+    "statsAffected": {
+        "self": {
+            "attack": 0,
+            "defense": 0,
+            "speed": 0
+        },
+        "enemy": {
+            "attack": 0,
+            "defense": 0,
+            "speed": 0
+        }
+    }
 },
 {
-    "name": "Laze",
+    "name": "Convince to Stay In",
     "type": "sloth",
-    "power": 15,
-    "accuracy": 100,
-    "uses": 30
+    "power": 80,
+    "accuracy": 90,
+    "uses": 10,
+    "statsAffected": {
+        "self": {
+            "attack": 0,
+            "defense": 0,
+            "speed": 0
+        },
+        "enemy": {
+            "attack": 0,
+            "defense": 0,
+            "speed": 0
+        }
+    }
 },
 
+
+{
+    "name": "Do You Lift?",
+    "type": "wrath",
+    "power": 0,
+    "accuracy": 100,
+    "uses": 10,
+    "statsAffected": {
+        "self": {
+            "attack": 1,
+            "defense": 0,
+            "speed": 0
+        },
+        "enemy": {
+            "attack": 0,
+            "defense": 0,
+            "speed": 0
+        }
+    }
+},
 {
     "name": "Normal Punch",
     "type": "wrath",
     "power": 30,
     "accuracy": 100,
-    "uses": 30
+    "uses": 30,
+    "statsAffected": {
+        "self": {
+            "attack": 0,
+            "defense": 0,
+            "speed": 0
+        },
+        "enemy": {
+            "attack": 0,
+            "defense": 0,
+            "speed": 0
+        }
+    }
 },
 {
     "name": "Consecutive Normal Punches",
     "type": "wrath",
     "power": 70,
     "accuracy": 100,
-    "uses": 15
+    "uses": 15,
+    "statsAffected": {
+        "self": {
+            "attack": 0,
+            "defense": 0,
+            "speed": 0
+        },
+        "enemy": {
+            "attack": 0,
+            "defense": 0,
+            "speed": 0
+        }
+    }
 },
 
-{
-    "name": "Sabotage",
-    "type": "envy",
-    "power": 70,
-    "accuracy": 70,
-    "uses": 15
-},
 {
     "name": "Lash Out",
     "type": "envy",
     "power": 40,
     "accuracy": 100,
-    "uses": 30
+    "uses": 30,
+    "statsAffected": {
+        "self": {
+            "attack": 0,
+            "defense": 0,
+            "speed": 0
+        },
+        "enemy": {
+            "attack": 0,
+            "defense": 0,
+            "speed": 0
+        }
+    }
 },
+{
+    "name": "Sabotage",
+    "type": "envy",
+    "power": 70,
+    "accuracy": 70,
+    "uses": 15,
+    "statsAffected": {
+        "self": {
+            "attack": 0,
+            "defense": 0,
+            "speed": 0
+        },
+        "enemy": {
+            "attack": 0,
+            "defense": 0,
+            "speed": 0
+        }
+    }
+},
+
 
 {
     "name": "Show Off",
     "type": "pride",
     "power": 40,
     "accuracy": 90,
-    "uses": 20
-},
-{
-    "name": "The Pants Stay Brown",
-    "type": "pride",
-    "power": 140,
-    "accuracy": 50,
-    "uses": 5
+    "uses": 20,
+    "statsAffected": {
+        "self": {
+            "attack": 0,
+            "defense": 0,
+            "speed": 0
+        },
+        "enemy": {
+            "attack": 0,
+            "defense": 0,
+            "speed": 0
+        }
+    }
 },
 {
     "name": "Lord Over",
     "type": "pride",
     "power": 110,
     "accuracy": 80,
-    "uses": 5
-}
-]
+    "uses": 5,
+    "statsAffected": {
+        "self": {
+            "attack": 0,
+            "defense": 0,
+            "speed": 0
+        },
+        "enemy": {
+            "attack": 0,
+            "defense": 0,
+            "speed": 0
+        }
+    }
+},
+{
+    "name": "The Pants Stay Brown",
+    "type": "pride",
+    "power": 140,
+    "accuracy": 50,
+    "uses": 5,
+    "statsAffected": {
+        "self": {
+            "attack": 0,
+            "defense": 0,
+            "speed": 0
+        },
+        "enemy": {
+            "attack": 0,
+            "defense": 0,
+            "speed": 0
+        }
+    }
+}]
