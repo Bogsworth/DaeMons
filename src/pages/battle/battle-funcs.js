@@ -1,12 +1,15 @@
 /*
 # TODO List
+## Required TODOs
+
+## TODONE!!!
 - TODONE: Split this file up into battle-funcs.js and more general functions into utility.js
 */
 
 import * as calc from '../../../lib/calculations.js';
 import * as util from '../../../lib/utility.js';
 import * as parse from '../../../lib/import.js';
-import { Move } from '../../../lib/import.js'
+import { Move } from '../../../data/class-move.js'
 
 function changeHeader( newHeader ) {
     document
@@ -21,18 +24,6 @@ function generateHeaderFromWarlock ( warlock ) {
 
     console.log(TITLE);
     return TITLE;
-}
-
-function attachButton( doFunction, elementID ) {
-    let el = document.getElementsByName( elementID );
-
-    document.addEventListener("DOMContentLoaded", () => {
-
-        //if (el.addEventListener)
-            el[0].addEventListener("click", doFunction, false);
-        //else if (el.attachEvent)
-            //el.attachEvent('onclick', doFunction);
-    })
 }
 
 function loadMyParty() {
@@ -83,6 +74,98 @@ function updateMon( mon, isYourMon = true) {
     document.getElementById(ID.HP).innerHTML = HP + '/' + MAX_HP + ' hp';
 }
 
+function handleSwitch( fightState ) {   
+    let typeTable = fightState.TYPE_TABLE;
+    let myParty = fightState.myParty;
+    let theirMon = fightState.theirActiveMon;
+    let activeMon = fightState.myActiveMon;
+    let chosenMonIndex = document
+        .getElementById( 'selectMons' )
+        .options
+        .selectedIndex - 1;
+    const btn = document.getElementsByName('ok')[0];
+    
+    let waitForPressResolve;
+
+    console.log('switch button pressed');
+    console.log(myParty)
+
+    switchMons();
+
+    function waitForPress() {
+        return new Promise(resolve => waitForPressResolve = resolve);
+    }
+
+    function btnResolver() {
+        if (waitForPressResolve) {
+            waitForPressResolve();
+        }
+    }
+
+    async function switchMons() {
+        preGame();
+
+        // Weed out exceptions
+        if ( chosenMonIndex == -1 ) {
+            util.writeToMessageBox( 'Pick a Daemon to choose for before switching.'); 
+            await waitForPress();
+            cleanUp();
+            return;
+        }
+        if ( myParty[ chosenMonIndex ].returnCurrentHP() <= 0 ) {
+            util.writeToMessageBox( `That Daemon is dead and gone, you cannot switch to them.` );
+            await waitForPress();
+            cleanUp();
+            return;
+        }
+        if ( chosenMonIndex == myParty.indexOf( activeMon ) ) {
+            util.writeToMessageBox( 'Pick a Daemon that is not currently active.' );
+            await waitForPress();
+            cleanUp();
+            return;
+        }
+
+        const CURRENT_NAME = activeMon.name;
+        const NEW_NAME = myParty[ chosenMonIndex ].name;
+        let prevMon = activeMon;
+
+        util.writeToMessageBox( `You sever your mind link with ${CURRENT_NAME}` );
+        await waitForPress();
+
+        util.writeToMessageBox( `You turn your mind's eye to ${NEW_NAME}` );
+        fightState.myActiveMon.resetTempStatModifiers();
+        fightState.myActiveMon = myParty[ chosenMonIndex ];
+        activeMon = fightState.myActiveMon;
+
+        // Update UI
+        updateMon( activeMon, true );
+        util.updateShownHP( 'yourMonHP', activeMon )
+        util.populateSelect( activeMon.moves, 'selectMoves' );
+        util.populateSelect( myParty, 'selectMons' );
+        await waitForPress();
+
+        if (! util.checkIfHPZero( prevMon ) ) {
+            const ENEMY_MOVE = util.chooseMove( theirMon );
+            
+            useMove( typeTable, theirMon, activeMon, ENEMY_MOVE, false );
+            await waitForPress();
+        }
+        
+        cleanUp();
+    }
+
+    function preGame() {
+        btn.addEventListener( 'click', btnResolver );
+        disableButtons();
+    }
+
+    function cleanUp() {
+        enableButtons();
+        btn.removeEventListener( 'click', btnResolver );
+        util.writeToMessageBox( 'What do you want to do?' );
+    }
+}
+
 function handleAttack( fightState ) {
     let typeTable = fightState.TYPE_TABLE;
     let myMon = fightState.myActiveMon;
@@ -93,6 +176,7 @@ function handleAttack( fightState ) {
         .getElementById( 'selectMoves' )
         .options
         .selectedIndex;
+    
     let waitForPressResolve;
     const btn = document.getElementsByName('ok')[0];
 
@@ -112,13 +196,10 @@ function handleAttack( fightState ) {
         }
     }
 
-    // TODO: detach attack and switch buttons to prevent doing extra attacks
     async function roundRunner() {
-        let chosenMove = myMon.moves[ chosenMoveIndex - 1 ];
-        const ENEMY_MOVE = util.chooseMove( theirMon );
-
-        btn.addEventListener( 'click', btnResolver );
-
+        preGame();
+        
+        // Weed out exceptions
         if ( chosenMoveIndex == 0 ) {
             util.writeToMessageBox('Pick a move before attacking.')
             await waitForPress();
@@ -133,20 +214,32 @@ function handleAttack( fightState ) {
             return;
         }
 
-        console.log(chosenMove);
+        let chosenMove = myMon.moves[chosenMoveIndex - 1]
+        console.log(chosenMove)
+        if ( chosenMove.returnUses() <= 0 ) {
+            util.writeToMessageBox( `You have no more uses of that move` );
+            await waitForPress();
+            cleanUp();
+            return;
+        }
+ 
         let turnOrder = [];
         let myTurn = {
             mon: myMon,
+
             move: chosenMove,
             activeFlag: true
         };
         let theirTurn = {
             mon: theirMon,
-            move: ENEMY_MOVE,
+            move: util.chooseMove( theirMon ),
             activeFlag: false
         };
 
-        if ( myMon.returnModifiedStat('speed') >= theirMon.returnModifiedStat('speed') ) {
+        if (
+            myMon.returnModifiedStat('speed') >=
+            theirMon.returnModifiedStat('speed')
+        ) {
             turnOrder.push(myTurn);
             turnOrder.push(theirTurn);
         }
@@ -163,7 +256,9 @@ function handleAttack( fightState ) {
             turnOrder[0].move,
             turnOrder[0].activeFlag
         );
+        turnOrder[0].move.decrementRemainingUses();
         await waitForPress();
+
         if (! util.checkIfHPZero( myMon, theirMon )) {
             useMove
             (
@@ -173,6 +268,7 @@ function handleAttack( fightState ) {
                 turnOrder[1].move,
                 turnOrder[1].activeFlag
             );
+            turnOrder[1].move.decrementRemainingUses();
             await waitForPress();
         }
 
@@ -220,7 +316,13 @@ function handleAttack( fightState ) {
         cleanUp();
     }
 
+    function preGame() {
+        btn.addEventListener( 'click', btnResolver );
+        disableButtons();
+    }
+
     function cleanUp() {
+        enableButtons();
         btn.removeEventListener( 'click', btnResolver );
         util.writeToMessageBox( 'What do you want to do?' );
     } 
@@ -337,103 +439,31 @@ function useMove( typeTable, attackingMon, defendingMon, chosenMoveObject, playe
     defendingMon.updateHP( damage );
     util.updateShownHP( templates.elementName[ activeLock ], defendingMon)
     util.writeToMessageBox( message );
-}
 
-function setActiveLock( activeFlag ) {
-    if (activeFlag) {
-        return 'player';
-    }
-    else {
-        return 'enemy';
-    }
-}
-
-function handleSwitch( fightState ) {   
-    let typeTable = fightState.TYPE_TABLE;
-    let myParty = fightState.myParty;
-    let theirMon = fightState.theirActiveMon;
-    let activeMon = fightState.myActiveMon;
-    let chosenMonIndex = document
-        .getElementById( 'selectMons' )
-        .options
-        .selectedIndex - 1;
-    const btn = document.getElementsByName('ok')[0];
-    
-    let waitForPressResolve;
-
-    console.log('switch button pressed');
-    console.log(myParty)
-
-    switchMons();
-
-    function waitForPress() {
-        return new Promise(resolve => waitForPressResolve = resolve);
-    }
-
-    function btnResolver() {
-        if (waitForPressResolve) {
-            waitForPressResolve();
+    function setActiveLock( activeFlag ) {
+        if (activeFlag) {
+            return 'player';
         }
-    }
-
-    async function switchMons() {
-        const CURRENT_NAME = activeMon.name;
-        const NEW_NAME = myParty[ chosenMonIndex ].name;
-        let prevMon = activeMon;
-
-        btn.addEventListener( 'click', btnResolver );
-
-        if ( chosenMonIndex == -1 ) {
-            util.writeToMessageBox( 'Pick a Daemon to choose for before switching.'); 
-            await waitForPress();
-            cleanUp();
-            return;
+        else {
+            return 'enemy';
         }
-        if ( myParty[ chosenMonIndex ].returnCurrentHP() <= 0 ) {
-            util.writeToMessageBox( `That Daemon is dead and gone, you cannot switch to them.` );
-            await waitForPress();
-            cleanUp();
-            return;
-        }
-        if ( chosenMonIndex == myParty.indexOf( activeMon ) ) {
-            util.writeToMessageBox( 'Pick a Daemon that is not currently active.' );
-            await waitForPress();
-            cleanUp();
-            return;
-        }
-
-        util.writeToMessageBox( `You sever your mind link with ${CURRENT_NAME}` );
-        await waitForPress();
-
-        util.writeToMessageBox( `You turn your mind's eye to ${NEW_NAME}` );
-        fightState.myActiveMon = myParty[ chosenMonIndex ];
-        activeMon = fightState.myActiveMon;
-
-        // Update UI
-        updateMon( activeMon, true );
-        util.updateShownHP( 'yourMonHP', activeMon )
-        util.populateSelect( activeMon.moves, 'selectMoves' );
-        util.populateSelect( myParty, 'selectMons' );
-        await waitForPress();
-
-        if (! util.checkIfHPZero( prevMon ) ) {
-            const ENEMY_MOVE = util.chooseMove( theirMon );
-            
-            useMove( typeTable, theirMon, activeMon, ENEMY_MOVE, false );
-            await waitForPress();
-        }
-        
-        cleanUp();
-    }
-
-    function cleanUp() {
-        btn.removeEventListener( 'click', btnResolver );
-        util.writeToMessageBox( 'What do you want to do?' );
     }
 }
 
 function handleOk() {
     console.log('ok button pressed');
+}
+
+function disableButtons(buttNames = [ 'attack', 'switch']) {
+    buttNames.forEach( name => {
+        util.disableButton(name);
+    })
+}
+
+function enableButtons(buttNames = [ 'attack', 'switch']) {
+    buttNames.forEach( name => {
+        util.enableButton(name);
+    })
 }
 
 function endFight( fightState ) {
@@ -461,7 +491,6 @@ export {
     generateHeaderFromWarlock,
     loadMyParty,
     loadCurrentLock,
-    attachButton,
     updateMon,
     handleAttack,
     handleSwitch,

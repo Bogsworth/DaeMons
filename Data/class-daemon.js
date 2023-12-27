@@ -34,7 +34,9 @@ class Daemon {
     returnMoves() { return this.moves; }
     returnCurrentHP() { return this.currentHP; }
 
-    updateHP( damage ) { this.currentHP -= damage }
+    updateHP( damage ) {
+        this.currentHP -= damage;
+    }
 
     returnModifiedStat( stat ) {
         return calc.modifyStat( this.stats[stat], this.tempStatChange[stat]);
@@ -42,6 +44,12 @@ class Daemon {
 
     updateTempStatChange( stat, change ) {
         this.tempStatChange[stat] += change;
+    }
+
+    resetTempStatModifiers() {
+        for (let [stat, mod] of Object.entries(this.tempStatChange)) {
+            this.tempStatChange[stat] = 0;
+        }
     }
 
     copyMon( monToCopy ) {
@@ -69,6 +77,4 @@ class Daemon {
     }
 };
 
-export {
-    Daemon
-}
+export { Daemon }
