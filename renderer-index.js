@@ -1,3 +1,17 @@
+/*
+# TODO List
+## Required TODOs
+- [ ] TODO: A basic landing page
+- [ ] TODO: Ability to choose your "starter"
+
+## Nice to have TODOs
+- [ ] TODO: A nicer landing page
+- [ ] TODO: Creating semi-random enemies with semi-random teams
+
+## TODONE!!!
+
+*/
+
 const information = document.getElementById('info')
 information.innerText = `This app is using Chrome (v${window.versions.chrome()}), Node.js (v${window.versions.node()}), and Electron (v${window.versions.electron()})`
 

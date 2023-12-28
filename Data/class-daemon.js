@@ -106,6 +106,7 @@ class Daemon {
             let parsedData = JSON.parse(monString)
             this[key] = parsedData[key]
         }
+        this.populateMovesWithObjs();
     }
 
     returnTotalMovesKnown() {

@@ -81,7 +81,7 @@ function updateMoveStats() {
     document.getElementById(MOVE_STATS_EL_ID).textContent = moveToPrintable( SELECTED_MOVE );
 }
 
-// TODO: Make moveToPrintable() actually legible in app
+// - [ ] TODO: Make moveToPrintable() actually legible in app
 function moveToPrintable( move ) {
     let message = '';
 
@@ -121,20 +121,51 @@ function populatePartySelects( state, selectElements ) {
     let i = 0;
     
     state['currentParty'].forEach( mon => {
-        util.setDefaultSelectValue(selectElements[i++], mon.name );
+        let nameStr = mon.returnName();
+        
+        if (util.checkIfHPZero( mon )) {
+            nameStr += ' (dead)';
+        }
+
+        util.setDefaultSelectValue(selectElements[i++], nameStr );
     });
 
     selectElements.forEach ( sel_el => {
         sel_el.addEventListener( 'change', function () {
             importPartyChoices(state);
+            keepSelectsUnique( state, selectElements );
         });
     })
+}
+
+function keepSelectsUnique( state, selectElements ) {
+    let indexArray = [];
+
+    selectElements.forEach( el => {
+        enableAllOptions( el );
+        indexArray.push(el.selectedIndex);
+    });
+    selectElements.forEach( el => {
+        indexArray.forEach( index => {
+            if ( index == 0 ) {
+                return;
+            }
+            el.options[index].disabled = true;
+        })
+    });
+
+    //selEl is Select Element
+    function enableAllOptions( selEl ) {
+        for ( let i = 0; i < selEl.options.length; i++ ) {
+            selEl.options[i].disabled = false;
+        }
+    }
 }
 
 function populateChallenger( name ) {
     let warlocks = parse.createWarlocks();
     let nextLock = warlocks.get( calc.returnIDFromName( name, warlocks));
-    console.log(nextLock)
+    console.log(nextLock);
 
     sessionStorage.nextLock = JSON.stringify(nextLock);
     console.log(sessionStorage)
@@ -144,17 +175,23 @@ function populateChallenger( name ) {
 function healSuperset( interludeState, parameters ) {
     parameters.forEach( parameter => {
         healMons( interludeState, parameter );
-    })
+    });
 }
 
+/**
+ * This function will not heal a Daemon if they're already dead
+ */
 function healMons( interludeState, parameter ) {
     let daemons = interludeState[parameter];
     
     daemons.forEach( mon => {
+        if ( util.checkIfHPZero( mon )) {
+            return;
+        }
         mon.currentHP = mon.returnHPStat();
     })
 
-    interludeState.updateParam( daemons, parameter)
+    interludeState.updateParam( daemons, parameter );
 }
 
 function restoreMoveUsesSuperSet( interludeState, parameters ) {
@@ -194,9 +231,22 @@ function handleReward( rewardString, FULL_DAEMON_LIST, currentParty ) {
 }
 
 function loadBattle() {
+    let party = util.parseDaemonJSON(JSON.parse(sessionStorage.currentParty))
+
     console.log('Im in loadBattle');
-    console.log(sessionStorage)
-    //return;
+    console.log(sessionStorage);
+
+    if ( util.checkIfPartyContainsDeadMon( party )) {
+        const CONFIRMATION_MSG = 'You are bringing a dead Daemon with you, are you sure you want to do that?';
+        
+        if ( confirm( CONFIRMATION_MSG )) {
+            window.location.href = '../battle/battle.html';
+        }
+        else {
+            return;
+        }
+    }
+
     window.location.href = '../battle/battle.html';
 }
 
@@ -207,6 +257,7 @@ export {
     healSuperset,
     restoreMoveUsesSuperSet,
     populatePartySelects,
+    keepSelectsUnique,
     setupReadyButton,
     populateChallenger,
     handleReward,

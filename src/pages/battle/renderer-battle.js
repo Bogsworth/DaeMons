@@ -1,25 +1,25 @@
 /*
 # TODO List
 ## Required TODOs
-- TODO: Add a way to see type and moves of your Daemon
-- TODO: Add a way to see the stats of your moves
-- TODO: Add a way to see the type of their Daemon (maybe)
-- TODO: Add a way to see the number of Daemons they have left
-- TODO: Clean up messages around status effects
-- TODO: Test that status modifiers are removed after Daemon switch
+- [ ] TODO: Add a way to see type and moves of your Daemon
+- [ ] TODO: Add a way to see the stats of your moves
+- [ ] TODO: Add a way to see the type of their Daemon (maybe)
+- [ ] TODO: Add a way to see the number of Daemons they have left
+- [ ] TODO: Clean up messages around status effects
+- [ ] TODO: Test that status modifiers are removed after Daemon switch
 
 ## Nice to have TODOs
-- TODO: A health bar
-- TODO: A health bar with an animation as you lose health
-- TODO: A more polished UI
+- [ ] TODO: A health bar
+- [ ] TODO: A health bar with an animation as you lose health
+- [ ] TODO: A more polished UI
 
 ## TODONE!!!
-- TODONE: On Daemon switch, remove status modifiers
-- TODONE: Add loss handling
-- TODONE: Make moves that affect status
-- TODONE: Fix bug where 'hp' dissapears (but numbers stay) underneath Daemon's name
-- TODONE: Prevent 'stacking' attacks/disable every button except OK when player should not be able to do anything else
-- TODONE: Add power points equivalent
+- [x] TODONE: On Daemon switch, remove status modifiers
+- [x] TODONE: Add loss handling
+- [x] TODONE: Make moves that affect status
+- [x] TODONE: Fix bug where 'hp' dissapears (but numbers stay) underneath Daemon's name
+- [x] TODONE: Prevent 'stacking' attacks/disable every button except OK when player should not be able to do anything else
+- [x] TODONE: Add power points equivalent
 */
 
 import * as util from '../../../lib/utility.js'
