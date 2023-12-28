@@ -3,13 +3,13 @@
     "Daemons": [
         {
             "name": "Imp",
-            "moves": ["Buyout", "Nibble", null, null]
+            "moves": ["Buyout", "Nibble", "Philanthropy", null]
         }
     ],
     "description": "This guy should be a walk in the park",
     "reward": {
         "name": "Imp",
-        "moves": ["Buyout", "Nibble", null, null]
+        "moves": ["Buyout", "Nibble", "Philanthropy", null]
     },
     "nextFight": "Shorts-Wearer"
 },

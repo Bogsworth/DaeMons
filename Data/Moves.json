@@ -37,6 +37,26 @@
     }
 
 },
+{
+    "name": "Charm",
+    "type": "lust",
+    "power": 0,
+    "accuracy": 100,
+    "uses": 20,
+    "statsAffected": {
+        "self": {
+            "attack": 0,
+            "defense": 0,
+            "speed": 0
+        },
+        "enemy": {
+            "attack": -3,
+            "defense": 0,
+            "speed": 0
+        }
+    }
+
+},
 
 {
     "name": "Nibble",
@@ -174,6 +194,25 @@
     }
 },
 {
+    "name": "Cozy Up",
+    "type": "sloth",
+    "power": 0,
+    "accuracy": 100,
+    "uses": 20,
+    "statsAffected": {
+        "self": {
+            "attack": 0,
+            "defense": 3,
+            "speed": 0
+        },
+        "enemy": {
+            "attack": 0,
+            "defense": 0,
+            "speed": 0
+        }
+    }
+},
+{
     "name": "Remove FOMO",
     "type": "sloth",
     "power": 50,
@@ -211,7 +250,6 @@
         }
     }
 },
-
 
 {
     "name": "Do You Lift?",

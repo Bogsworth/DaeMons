@@ -1,4 +1,5 @@
 import * as calc from '../lib/calculations.js'
+import { Move } from '../data/class-move.js'
 class Daemon {
     constructor( builder = {
         "id": "",
@@ -33,6 +34,48 @@ class Daemon {
     returnTempStatsModifiers() { return this.tempStatChange; }
     returnMoves() { return this.moves; }
     returnCurrentHP() { return this.currentHP; }
+
+    returnHPStat() { return this.stats.HP; }
+    returnAttackStat() { return this.stats.attack; }
+    returnDefenseStat() { return this.stats.defense; }
+    returnSpeedStat() { return this.stats.speed; }
+
+    // TODO: Test addMove()
+    addMove( moveString ) {
+        if ( this.returnTotalMovesKnown == 4 ) {
+            throw new Error('MovesFull');
+        }
+
+        this.moves.forEach(move => {
+            if ( move != null ) {
+                return;
+            }
+            move = new Move( moveString );
+        });
+    }
+
+    populateMovesWithObjs() {
+        let i = 0;
+        this.moves.forEach( move => {
+            let tempMove = new Move; 
+            if ( move == null ) {
+                return;
+            }
+            tempMove.copyFromData( JSON.stringify(move ));
+            this.moves[i] = tempMove;
+            i++;
+        })
+    }
+
+    restoreAllMoveUses() {
+        this.moves.forEach( move => {
+            if ( move == null ) {
+                return;
+            }
+
+            move.resetRemainingUses();
+        });
+    }
 
     updateHP( damage ) {
         this.currentHP -= damage;

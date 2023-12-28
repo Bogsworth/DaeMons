@@ -117,7 +117,6 @@ function importPartyChoices( state ) {
     console.log(state.currentParty);
 }
 
-//function populatePartySelects( currentParty, selectElements, state ) { 
 function populatePartySelects( state, selectElements ) {  
     let i = 0;
     
@@ -142,19 +141,35 @@ function populateChallenger( name ) {
     populateNextFight( nextLock );
 }
 
-function healMons( interludeState, parameters ) {
-    healSubset( interludeState, parameters[0] );
-    healSubset( interludeState, parameters[1] );
+function healSuperset( interludeState, parameters ) {
+    parameters.forEach( parameter => {
+        healMons( interludeState, parameter );
+    })
 }
 
-function healSubset( interludeState, parameter ) {
+function healMons( interludeState, parameter ) {
     let daemons = interludeState[parameter];
     
     daemons.forEach( mon => {
-        mon.currentHP = mon.stats.HP;
+        mon.currentHP = mon.returnHPStat();
     })
 
     interludeState.updateParam( daemons, parameter)
+}
+
+function restoreMoveUsesSuperSet( interludeState, parameters ) {
+    parameters.forEach( parameter => {
+        restoreMoveUses( interludeState, parameter );
+    })
+}
+
+function restoreMoveUses( interludeState, parameter ) {
+    let daemons = interludeState[parameter];
+    console.log(daemons)
+
+    daemons.forEach( mon => {
+        mon.restoreAllMoveUses();
+    })
 }
 
 function handleReward( rewardString, FULL_DAEMON_LIST, currentParty ) {
@@ -189,7 +204,8 @@ export {
     populateNextFight,
     updateDaemonSummary,
     loadBattle,
-    healMons,
+    healSuperset,
+    restoreMoveUsesSuperSet,
     populatePartySelects,
     setupReadyButton,
     populateChallenger,

@@ -37,6 +37,14 @@ class Move {
     returnAccuracy() { return this.accuracy; }
     returnUses() { return this.uses; }
     returnStatsAffectedObject() { return this.statsAffected; }
+
+    copyFromData ( moveString ) {
+        let parsedData = JSON.parse(moveString);
+
+        for ( const [ key, val ] of Object.entries( this )) {   
+            this[key] = parsedData[key]
+        }
+    }
     
     returnStatsAffectedArray() {
         let effectArray = [];

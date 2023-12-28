@@ -3,6 +3,7 @@
 ## Required TODOs
 - TODO: Show if your Daemon is dead
 - TODO: Remove dead Daemons
+- TODO: Prevent picking the same Daemon twice
 
 ## Nice to have TODOs
 - TODO: Better format for move information
@@ -38,7 +39,8 @@ console.log('state')
 console.log(interludeState);
 
 intFuncs.handleReward( JSON.stringify(interludeState.newReward), FULL_DAEMON_TABLE, interludeState['allHeldMons'])
-intFuncs.healMons( interludeState, ['currentParty', 'allHeldMons']);
+intFuncs.healSuperset( interludeState, ['currentParty', 'allHeldMons']);
+intFuncs.restoreMoveUsesSuperSet( interludeState, ['currentParty', 'allHeldMons'])
 
 console.log('interludeState post reward handling and healing')
 console.log(interludeState)

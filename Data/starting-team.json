@@ -4,7 +4,7 @@
 },
 {
     "name": "Imp",
-    "moves": ["Buyout", "Nibble", "Philanthropy", null]
+    "moves": ["Buyout", "Nibble", null, null]
 },
 {
     "name": "Angy Boy",
