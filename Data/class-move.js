@@ -28,6 +28,7 @@ class Move {
         this.statsAffected = builder[ 'statsAffected' ];
 
         this.remainingUses = this.uses;
+        this.description = 'Hello! I am a move!';
     }
 
     returnID() { return this.id; }
@@ -36,7 +37,12 @@ class Move {
     returnPower() { return this.power; } 
     returnAccuracy() { return this.accuracy; }
     returnUses() { return this.uses; }
+    returnRemainingUses() { return this.remainingUses; }
     returnStatsAffectedObject() { return this.statsAffected; }
+    returnDescription() { return this.description; }
+    returnUsesReadable() {
+        return this.remainingUses + '/' + this.uses;
+    }
 
     copyFromData ( moveString ) {
         let parsedData = JSON.parse(moveString);

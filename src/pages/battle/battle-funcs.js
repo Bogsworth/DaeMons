@@ -1,9 +1,17 @@
 /*
 # TODO List
 ## Required TODOs
+- [ ] ??
+
+## Nice to have TODOs
+- [ ] ??
 
 ## TODONE!!!
-- TODONE: Split this file up into battle-funcs.js and more general functions into utility.js
+- [x] TODONE: Split this file up into battle-funcs.js and more general functions into utility.js
+- [x] TODO: in expandInfoBox()/updateInfoBox(), remove need for div
+        with id "test" for updating to work
+    - Note: It wasn't removed, but the "test" id was changed to 
+        "buttonMatcher" and the font size is 0px
 */
 
 import * as calc from '../../../lib/calculations.js';
@@ -136,6 +144,7 @@ function handleSwitch( fightState ) {
         fightState.myActiveMon.resetTempStatModifiers();
         fightState.myActiveMon = myParty[ chosenMonIndex ];
         activeMon = fightState.myActiveMon;
+        updateInfoBox(activeMon);
 
         // Update UI
         updateMon( activeMon, true );
@@ -148,6 +157,7 @@ function handleSwitch( fightState ) {
             const ENEMY_MOVE = util.chooseMove( theirMon );
             
             useMove( typeTable, theirMon, activeMon, ENEMY_MOVE, false );
+            updateInfoBox(activeMon)
             await waitForPress();
         }
         
@@ -226,7 +236,6 @@ function handleAttack( fightState ) {
         let turnOrder = [];
         let myTurn = {
             mon: myMon,
-
             move: chosenMove,
             activeFlag: true
         };
@@ -257,6 +266,7 @@ function handleAttack( fightState ) {
             turnOrder[0].activeFlag
         );
         turnOrder[0].move.decrementRemainingUses();
+        updateInfoBox(myMon);
         await waitForPress();
 
         if (! util.checkIfHPZero( myMon, theirMon )) {
@@ -269,6 +279,7 @@ function handleAttack( fightState ) {
                 turnOrder[1].activeFlag
             );
             turnOrder[1].move.decrementRemainingUses();
+            updateInfoBox(myMon);
             await waitForPress();
         }
 
@@ -437,8 +448,14 @@ function useMove( typeTable, attackingMon, defendingMon, chosenMoveObject, playe
     }
 
     defendingMon.updateHP( damage );
-    util.updateShownHP( templates.elementName[ activeLock ], defendingMon)
+    util.updateShownHP( templates.elementName[ activeLock ], defendingMon);
     util.writeToMessageBox( message );
+    // if ( activeLock == 'player' ) {
+    //     updateInfoBox(attackingMon);
+    // }
+    // else {
+    //     updateInfoBox(defendingMon)
+    // }
 
     function setActiveLock( activeFlag ) {
         if (activeFlag) {
@@ -464,6 +481,122 @@ function enableButtons(buttNames = [ 'attack', 'switch']) {
     buttNames.forEach( name => {
         util.enableButton(name);
     })
+}
+
+function generateMonButtons( monArray ) {
+    let infoDiv = document.getElementById('bottomBar');
+    let i = 0;
+    let buttonIdArray = [];
+    
+    monArray.forEach(mon => {
+        let newButt = document.createElement('button');
+        let idText = 'mon' + i++;
+
+        newButt.textContent = mon.name;
+        newButt.name = idText; 
+        newButt.id = idText;
+        infoDiv.appendChild( newButt );
+
+        buttonIdArray.push(idText);
+    })
+
+    return buttonIdArray;
+}
+
+function expandInfoBox( buttonId, state ) {
+    let elBar = document.getElementById( 'expandingBottomBar' );
+    let hiddenElementMatcher = document.getElementById( 'buttonMatcher' );
+    let currentText = hiddenElementMatcher.textContent
+
+    if (
+        ! ( elBar.style.flexGrow == 0 ) &&
+        currentText == buttonId
+    ) {
+        elBar.style.flexGrow = 0;
+    }
+    else {
+        elBar.style.flexGrow = 1;
+        // Update info
+
+        updateInfoBox( state.myParty, buttonId );
+        hiddenElementMatcher.textContent = buttonId;
+    }   
+}
+
+function updateInfoBox( mons, buttId = false) {
+    let myMon;
+    if (buttId == false ) {
+        myMon = mons;
+    }
+    else {
+        let buttNumb = buttId.slice(-1)
+        myMon = mons[ buttNumb ];
+    }
+    let moveArrayId = 
+    [[
+        'moveName0',
+        'moveType0',
+        'movePower0',
+        'moveUses0',
+        'moveAccuracy0',
+        'moveStatsAffected0',
+        'moveDesc0'
+    ],
+    [
+        'moveName1',
+        'moveType1',
+        'movePower1',
+        'moveUses1',
+        'moveAccuracy1',
+        'moveStatsAffected1',
+        'moveDesc1'
+    ],
+    [
+        'moveName2',
+        'moveType2',
+        'movePower2',
+        'moveUses2',
+        'moveAccuracy2',
+        'moveStatsAffected2',
+        'moveDesc2'
+    ],
+    [
+        'moveName3',
+        'moveType3',
+        'movePower3',
+        'moveUses3',
+        'moveAccuracy3',
+        'moveStatsAffected3',
+        'moveDesc3'
+    ]];
+
+    let constructorMap = new Map([
+        ['statInfo0', myMon.returnType()],
+        ['statInfo1', myMon.returnAttackStat()],
+        ['statInfo2', myMon.returnDefenseStat()],
+        ['statInfo3', myMon.returnSpeedStat()],
+        ['expandedMon', myMon.returnName()],
+        ['expandedMonHP', myMon.returnCurrentHPReadable()]
+    ]);
+
+    for (let i = 0; i < myMon.returnTotalMovesKnown(); i++) {
+        let currentMoveIds = moveArrayId[i];
+        let currentMove = myMon.moves[i];
+
+        constructorMap.set(currentMoveIds[0], currentMove.returnName());
+        constructorMap.set(currentMoveIds[1], currentMove.returnType());
+        constructorMap.set(currentMoveIds[2], currentMove.returnPower());
+        constructorMap.set(currentMoveIds[3], currentMove.returnUsesReadable());
+        constructorMap.set(currentMoveIds[4], currentMove.returnAccuracy());
+        constructorMap.set(currentMoveIds[5], currentMove.returnStatsAffectedArray());
+        constructorMap.set(currentMoveIds[6], currentMove.returnDescription());
+    }
+
+    constructorMap.forEach((info, id) => {
+        let el = document.getElementById(id);
+
+        el.textContent = info;
+    }) 
 }
 
 function endFight( fightState ) {
@@ -494,5 +627,7 @@ export {
     updateMon,
     handleAttack,
     handleSwitch,
-    handleOk
+    handleOk,
+    generateMonButtons,
+    expandInfoBox
 }

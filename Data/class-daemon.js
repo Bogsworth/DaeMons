@@ -34,7 +34,9 @@ class Daemon {
     returnTempStatsModifiers() { return this.tempStatChange; }
     returnMoves() { return this.moves; }
     returnCurrentHP() { return this.currentHP; }
-
+    returnCurrentHPReadable() {
+        return this.currentHP + '/' + this.stats.HP + ' hp'
+    }
     returnHPStat() { return this.stats.HP; }
     returnAttackStat() { return this.stats.attack; }
     returnDefenseStat() { return this.stats.defense; }

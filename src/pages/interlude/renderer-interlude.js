@@ -1,7 +1,8 @@
 /*
 # TODO List
 ## Required TODOs
-- [ ] TODO: ???
+- [ ] TODO: See why uses isn't restoring when not changing party
+    before next fight
 
 ## Nice to have TODOs
 - [ ] TODO: Better format for move information ( moveToPrintable() )

@@ -12,13 +12,19 @@
 - [ ] TODO: A health bar
 - [ ] TODO: A health bar with an animation as you lose health
 - [ ] TODO: A more polished UI
+    - [ ] TODO: Better formatting for expandingBottomBar
+        - [ ] TODO: Boxes around sections
+        - [ ] TODO: Consistent sizing so flipping between mons
+                keeps everything in the same place as each other
 
 ## TODONE!!!
 - [x] TODONE: On Daemon switch, remove status modifiers
 - [x] TODONE: Add loss handling
 - [x] TODONE: Make moves that affect status
-- [x] TODONE: Fix bug where 'hp' dissapears (but numbers stay) underneath Daemon's name
-- [x] TODONE: Prevent 'stacking' attacks/disable every button except OK when player should not be able to do anything else
+- [x] TODONE: Fix bug where 'hp' dissapears (but numbers stay)
+        underneath Daemon's name
+- [x] TODONE: Prevent 'stacking' attacks/disable every button except
+        OK when player should not be able to do anything else
 - [x] TODONE: Add power points equivalent
 */
 
@@ -30,7 +36,7 @@ const TYPE_TABLE = parse.createCounterTable();
 
 // Note: myParty[0] always starts as the active Daemon;
 let myParty = scripts.loadMyParty();
-console.log(myParty)
+// console.log(myParty)
 let currentLock = scripts.loadCurrentLock();
 let fightState = {
     TYPE_TABLE: TYPE_TABLE,
@@ -49,6 +55,8 @@ scripts.changeHeader( HEADER );
 util.populateSelect( fightState.myActiveMon.moves, 'selectMoves' );
 util.populateSelect( fightState.myParty, 'selectMons' );
 
+let monButtons = scripts.generateMonButtons(fightState.myParty);
+
 util.attachButton(
     function() {
         scripts.handleAttack( fightState );
@@ -60,6 +68,17 @@ util.attachButton(
     },
     'switch' );
 util.attachButton( scripts.handleOk, 'ok' );
+
+monButtons.forEach( buttId =>{
+    util.attachButton(
+        function() {
+            scripts.expandInfoBox( buttId, fightState );
+        },
+        buttId
+    );
+})
+
+
 
 scripts.updateMon( fightState.myActiveMon, true );
 scripts.updateMon( fightState.theirActiveMon, false );
