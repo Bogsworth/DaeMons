@@ -1,12 +1,12 @@
 /*
 # TODO List
 ## Required TODOs
-- [ ] TODO: Add a way to see type and moves of your Daemon
-- [ ] TODO: Add a way to see the stats of your moves
 - [ ] TODO: Add a way to see the type of their Daemon (maybe)
 - [ ] TODO: Add a way to see the number of Daemons they have left
 - [ ] TODO: Clean up messages around status effects
 - [ ] TODO: Test that status modifiers are removed after Daemon switch
+- [ ] TODO: When changing mon info, if there are 3 moves for the old mon
+    and 2 for the new one, the 3rd move stays even though there should only be 2
 
 ## Nice to have TODOs
 - [ ] TODO: A health bar
@@ -18,6 +18,8 @@
                 keeps everything in the same place as each other
 
 ## TODONE!!!
+- [x] TODONE: Add a way to see type and moves of your Daemon
+- [x] TODONE: Add a way to see the stats of your moves
 - [x] TODONE: On Daemon switch, remove status modifiers
 - [x] TODONE: Add loss handling
 - [x] TODONE: Make moves that affect status
@@ -36,7 +38,6 @@ const TYPE_TABLE = parse.createCounterTable();
 
 // Note: myParty[0] always starts as the active Daemon;
 let myParty = scripts.loadMyParty();
-// console.log(myParty)
 let currentLock = scripts.loadCurrentLock();
 let fightState = {
     TYPE_TABLE: TYPE_TABLE,
@@ -77,8 +78,6 @@ monButtons.forEach( buttId =>{
         buttId
     );
 })
-
-
 
 scripts.updateMon( fightState.myActiveMon, true );
 scripts.updateMon( fightState.theirActiveMon, false );

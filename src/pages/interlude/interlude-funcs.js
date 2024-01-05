@@ -78,7 +78,9 @@ function updateMoveStats() {
         document.getElementById( MOVE_STATS_EL_ID ) = 'move stats';
     }
 
-    document.getElementById(MOVE_STATS_EL_ID).textContent = moveToPrintable( SELECTED_MOVE );
+    document
+        .getElementById(MOVE_STATS_EL_ID)
+        .textContent = moveToPrintable( SELECTED_MOVE );
 }
 
 // - [ ] TODO: Make moveToPrintable() actually legible in app
@@ -89,11 +91,17 @@ function moveToPrintable( move ) {
     message += 'POWER: ' + move.power + '\n';
     message += 'ACCURACY: ' + move.accuracy + '\n';
     message += 'USES: ' + move.uses + '\n';
+
     return message;
 }
 
 function importPartyChoices( state ) {
-    let selectArray = ['partySelect0', 'partySelect1', 'partySelect2', 'daemonListSelect'];
+    let selectArray = [
+        'partySelect0',
+        'partySelect1',
+        'partySelect2',
+        'daemonListSelect'
+    ];
     let partySelects = [
         document.getElementById( selectArray[0] ),
         document.getElementById( selectArray[1] ),
@@ -190,12 +198,12 @@ function healMons( interludeState, parameter ) {
         }
         mon.currentHP = mon.returnHPStat();
     })
-
     interludeState.updateParam( daemons, parameter );
 }
 
 function restoreMoveUsesSuperSet( interludeState, parameters ) {
     parameters.forEach( parameter => {
+        console.log('restoring moves')
         restoreMoveUses( interludeState, parameter );
     })
 }
@@ -203,10 +211,12 @@ function restoreMoveUsesSuperSet( interludeState, parameters ) {
 function restoreMoveUses( interludeState, parameter ) {
     let daemons = interludeState[parameter];
     console.log(daemons)
+    console.log(daemons[0].moves[0].remainingUses)
 
     daemons.forEach( mon => {
         mon.restoreAllMoveUses();
     })
+    interludeState.updateParam( daemons, parameter );
 }
 
 function handleReward( rewardString, FULL_DAEMON_LIST, currentParty ) {

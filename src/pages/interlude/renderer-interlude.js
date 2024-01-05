@@ -1,8 +1,7 @@
 /*
 # TODO List
 ## Required TODOs
-- [ ] TODO: See why uses isn't restoring when not changing party
-    before next fight
+- [ ] When switching Mons, HP didn't get restored for some reason
 
 ## Nice to have TODOs
 - [ ] TODO: Better format for move information ( moveToPrintable() )
@@ -10,6 +9,8 @@
 - [ ] TODO: Make healing depend on difficulty
 
 ## TODONE!!!
+- [x] TODONE: See why uses isn't restoring when not changing party
+    before next fight
 - [x] TODONE: Prevent picking the same Daemon twice
 - [x] TODONE: Show if your Daemon is dead
 - [x] TODONE: Add pop-up asking if you're sure you want to bring a dead Daemon
@@ -55,8 +56,6 @@ selectArray.forEach( select => {
         util.populateSelect( interludeState['allHeldMons'], select, true);
     }
 });
-
-
 
 intFuncs.populatePartySelects( interludeState, partySelects );
 intFuncs.keepSelectsUnique( interludeState, partySelects );

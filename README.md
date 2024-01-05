@@ -8,6 +8,7 @@
 - More damage if you go first
 - Increase the monID by 1
 - Increase a moveID by 1
+- Damage to uses as well as/instead of health, essentially milling
 
 ### Linux Daemon Ideas
  - Init

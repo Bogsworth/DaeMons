@@ -25,6 +25,8 @@ class Daemon {
             "defense": 0,
             "speed": 0,
         }
+
+        this.description = "";
     }
 
     returnID() { return this.id; }
@@ -41,6 +43,7 @@ class Daemon {
     returnAttackStat() { return this.stats.attack; }
     returnDefenseStat() { return this.stats.defense; }
     returnSpeedStat() { return this.stats.speed; }
+    returnDescription() { return this.description; }
 
     // TODO: Test addMove()
     addMove( moveString ) {

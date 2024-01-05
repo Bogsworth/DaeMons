@@ -1,0 +1,12 @@
+[{
+    "name": "Randy",
+    "moves": ["Bind", "Charm", null, null]
+},
+{
+    "name": "Caffeine Headache",
+    "moves": ["Laze", "Cozy Up", null, null]
+},
+{
+    "name": "Imp",
+    "moves": ["Buyout", "Philanthropy", null, null]
+}]

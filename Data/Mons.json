@@ -9,13 +9,33 @@
     }
 },
 {
+    "name": "Randy",
+    "type": ["lust"],
+    "stats": {
+        "HP": 50,
+        "attack": 45,
+        "defense": 42,
+        "speed": 35
+    }
+},
+{
     "name": "Imp",
     "type": ["greed"],
     "stats": {
-        "HP": 25,
-        "attack": 35,
+        "HP": 38,
+        "attack": 41,
         "defense": 30,
         "speed": 90
+    }
+},
+{
+    "name": "Caffeine Headache",
+    "type": ["sloth"],
+    "stats": {
+        "HP": 55,
+        "attack": 40,
+        "defense": 48,
+        "speed": 31
     }
 },
 {
