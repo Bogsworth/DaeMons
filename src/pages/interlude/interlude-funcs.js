@@ -115,14 +115,14 @@ function importPartyChoices( state ) {
         }
         let selectedMonJSON = JSON.parse(select.value);        
         
-        console.log(select.value);
+        //console.log(select.value);
         tempStorage.push(selectedMonJSON);
     })
-    state.currentParty = tempStorage;
+    state.currentParty = util.parseDaemonJSON(tempStorage);
     sessionStorage.currentParty = JSON.stringify(tempStorage);
 
-    console.log(sessionStorage.currentParty);
-    console.log(state.currentParty);
+    //console.log(sessionStorage.currentParty);
+    //console.log(state.currentParty);
 }
 
 function populatePartySelects( state, selectElements ) {  
@@ -191,14 +191,19 @@ function healSuperset( interludeState, parameters ) {
  */
 function healMons( interludeState, parameter ) {
     let daemons = interludeState[parameter];
+    console.log(`Trying to heal in ${parameter}`)
+    console.log(daemons);
     
     daemons.forEach( mon => {
+    // interludeState[parameter].forEach( mon => {
         if ( util.checkIfHPZero( mon )) {
             return;
         }
         mon.currentHP = mon.returnHPStat();
     })
+    console.log(interludeState[parameter])
     interludeState.updateParam( daemons, parameter );
+    console.log(interludeState[parameter])
 }
 
 function restoreMoveUsesSuperSet( interludeState, parameters ) {
@@ -219,7 +224,13 @@ function restoreMoveUses( interludeState, parameter ) {
     interludeState.updateParam( daemons, parameter );
 }
 
-function handleReward( rewardString, FULL_DAEMON_LIST, currentParty ) {
+function handleReward( rewardString, FULL_DAEMON_LIST, state ) {
+    if (rewardString == "") {
+        return;
+    }
+
+    let heldMons = state['allHeldMons'];
+
     let reward = JSON.parse(rewardString);
     let rewardID = calc.returnIDFromName( reward.name, FULL_DAEMON_LIST );
     let moveMap = parse.createMoveTable();
@@ -237,7 +248,10 @@ function handleReward( rewardString, FULL_DAEMON_LIST, currentParty ) {
         }
         parse.addMove( move, newDaemon, reward, moveMap )
     })
-    currentParty.push( newDaemon ) ;
+    // Why is this updating both allHeldMons and currentParty????
+    //state['allHeldMons'].push( newDaemon );
+    heldMons.push( newDaemon )
+    state.updateParam(heldMons, 'allHeldMons');
 }
 
 function loadBattle() {

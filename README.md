@@ -21,6 +21,19 @@
  - Reap Children as a move, normally killing a process's children but... it sounds terrible lol
 
 ## Current Type Counter Table
+|  | Unaligned | Lust | Gluttony | Greed | Sloth | Wrath | Envy | Pride |
+| :--: | :--: | :--: | :--: | :--: | :--: | :--: | :--: | :--: |
+| Unaligned | x1 | x1 | x0 | x1 | x1 | x1 | x1 | x1 |
+| Lust | x1 | x2 | x2 | x2 | x0.5 | x1 | x0.5 | x1 |
+| Gluttony | x1 | x1 | x1 | x2 | x1 | x0.5 | x1 | x1 |
+| Greed | x2 | x0.5 | x0 | x1 | x2 | x1 | x2 | x1 |
+| Sloth | x1 | x2 | x1 | x0.5 | x1 | x1 | x1 | x1 |
+| Wrath | x2 | x1 | x2 | x1 | x1 | x1 | x0.5 | x2 |
+| Envy | x1 | x2 | x1 | x0 | x1 | x2 | x1 | x0.5 |
+| Pride | x2 | x1 | x1 | x1 | x1 | x0.5 | x2 | x1 |
+
+
+#### Old Type Counter Table
 |           | Lust  | Gluttony  | Greed | Sloth | Wrath | Envy  | Pride |
 | :--:      | :---: | :------:  | :---: | :---: | :---: | :---: | :---: |
 |Lust       | x2    | x1        | x1    | x0.5  | x1    | x1    | x2    |

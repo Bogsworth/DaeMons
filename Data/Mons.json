@@ -109,6 +109,16 @@
     }
 },
 {
+    "name": "Normal Guy",
+    "type": ["unaligned"],
+    "stats": {
+        "HP": 36,
+        "attack": 36,
+        "defense": 36,
+        "speed": 36
+    }
+},
+{
     "name": "Vainglory",
     "type": ["pride"],
     "stats": {

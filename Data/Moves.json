@@ -1,4 +1,23 @@
 [{
+    "name": "Smack",
+    "type": "unaligned",
+    "power": 35,
+    "accuracy": 100,
+    "uses": 30,
+    "statsAffected": {
+        "self": {
+            "attack": 0,
+            "defense": 0,
+            "speed": 0
+        },
+        "enemy": {
+            "attack": 0,
+            "defense": 0,
+            "speed": 0
+        }
+    }
+},
+{
     "name": "Bind",
     "type": "lust",
     "power": 20,
@@ -312,7 +331,7 @@
 {
     "name": "Lash Out",
     "type": "envy",
-    "power": 40,
+    "power": 25,
     "accuracy": 100,
     "uses": 30,
     "statsAffected": {

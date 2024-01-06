@@ -70,7 +70,7 @@ util.attachButton(
     'switch' );
 util.attachButton( scripts.handleOk, 'ok' );
 
-monButtons.forEach( buttId =>{
+monButtons.forEach( buttId => {
     util.attachButton(
         function() {
             scripts.expandInfoBox( buttId, fightState );

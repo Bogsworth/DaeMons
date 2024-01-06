@@ -1,16 +1,47 @@
 [{
-    "name": "Pushover",
+    "name": "Tutorial",
     "Daemons": [
         {
-            "name": "Imp",
-            "moves": ["Buyout", "Nibble", "Philanthropy", null]
+            "name": "Normal Guy",
+            "moves": ["Smack", "Philanthropy", null, null]
         }
     ],
     "description": "This guy should be a walk in the park",
     "reward": {
-        "name": "Imp",
-        "moves": ["Buyout", "Nibble", "Philanthropy", null]
+        "name": "Normal Guy",
+        "moves": ["Smack", "Philanthropy", null, null]
     },
+    "nextFight": "Pushover"
+},
+{
+    "name": "Pushover",
+    "Daemons": [
+        {
+            "name": "Precocious Little Shit",
+            "moves": ["Show Off", "Charm", null, null]
+        }
+    ],
+    "description": "This guy should be a walk in the park too",
+    "reward": {
+        "name": "Precocious Little Shit",
+        "moves": ["Show Off", "Charm", null, null]
+    },
+    "nextFight": "Pushover 2"
+},
+{
+    "name": "Pushover 2",
+    "Daemons": [
+        {
+            "name": "Normal Guy",
+            "moves": ["Smack", "Philanthropy", null, null]
+        },
+        {
+            "name": "Normal Guy",
+            "moves": ["Smack", "Philanthropy", null, null]
+        }
+    ],
+    "description": "This guy should be a walk in the park three",
+    "reward": "",
     "nextFight": "Shorts-Wearer"
 },
 {

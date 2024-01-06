@@ -1,7 +1,7 @@
 /*
 # TODO List
 ## Required TODOs
-- [ ] When switching Mons, HP didn't get restored for some reason
+- [ ] TODO: ??
 
 ## Nice to have TODOs
 - [ ] TODO: Better format for move information ( moveToPrintable() )
@@ -9,6 +9,9 @@
 - [ ] TODO: Make healing depend on difficulty
 
 ## TODONE!!!
+- [x] TODONE: When switching Mons, HP didn't get restored for some reason
+    - MON VALUES GET STORED IN THE SELECT OPTIONS, MAKE SURE THEY GET
+      HEALED BEFORE THE OPTIONS ARE POPULATED
 - [x] TODONE: See why uses isn't restoring when not changing party
     before next fight
 - [x] TODONE: Prevent picking the same Daemon twice
@@ -44,13 +47,25 @@ let interludeState = new InterludeState( {
 console.log('state')
 console.log(interludeState);
 
-intFuncs.handleReward( JSON.stringify(interludeState.newReward), FULL_DAEMON_TABLE, interludeState['allHeldMons']);
-console.log('interludeState post reward handling and healing')
+intFuncs.handleReward
+(
+    JSON.stringify(interludeState.newReward),
+    FULL_DAEMON_TABLE,
+    interludeState
+);
+console.log('interludeState post reward handling')
 console.log(interludeState)
+
+// This healing and use restoring has to happen before updating party Selects
+intFuncs.healSuperset( interludeState, ['currentParty', 'allHeldMons']);
+intFuncs.restoreMoveUsesSuperSet( interludeState, ['currentParty', 'allHeldMons']);
+console.log('interludeState post healing')
+console.log(interludeState)
+
 
 selectArray.forEach( select => {
     if (select == 'daemonListSelect') {
-        util.populateSelect( interludeState['allHeldMons'], select);
+        util.populateSelect( interludeState['allHeldMons'], select, true);
     }
     else {
         util.populateSelect( interludeState['allHeldMons'], select, true);
@@ -62,8 +77,5 @@ intFuncs.keepSelectsUnique( interludeState, partySelects );
 intFuncs.populateDaemonInspect();
 intFuncs.setupReadyButton();
 intFuncs.populateChallenger( interludeState.nextLockName );
-
-intFuncs.healSuperset( interludeState, ['currentParty', 'allHeldMons']);
-intFuncs.restoreMoveUsesSuperSet( interludeState, ['currentParty', 'allHeldMons']);
 
 console.log(sessionStorage)

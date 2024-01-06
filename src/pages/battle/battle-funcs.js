@@ -52,9 +52,10 @@ function loadMyParty() {
 function loadCurrentLock() {
     let currentLock;
     let warlocks = parse.createWarlocks();
+    const INIT_LOCK_NAME = 'Tutorial';
 
     if ( sessionStorage.nextLock == undefined ) {
-        currentLock = warlocks.get( calc.returnIDFromName('Pushover', warlocks));
+        currentLock = warlocks.get( calc.returnIDFromName(INIT_LOCK_NAME, warlocks));
     }
     else {
         let lockJSON = JSON.parse(sessionStorage.nextLock);
@@ -603,6 +604,8 @@ function endFight( fightState ) {
     util.savePostFightParty( fightState.myParty );
     getReward( fightState );
     getNextChallenger( fightState );
+    console.log(sessionStorage)
+    // return;
     window.location.href = '../interlude/interlude.html';
 }
 
