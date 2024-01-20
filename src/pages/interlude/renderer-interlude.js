@@ -23,9 +23,11 @@
 import * as parse from '../../../lib/import.js';
 import * as intFuncs from './interlude-funcs.js';
 import * as util from '../../../lib/utility.js';
+import * as calc from '../../../lib/calculations.js';
 import { InterludeState } from '../../../data/class-interludeState.js';
 
 const FULL_DAEMON_TABLE = parse.createMonTable();
+const FULL_LOCK_TABLE = parse.createWarlocks();
 let selectArray = ['partySelect0', 'partySelect1', 'partySelect2', 'daemonListSelect']
 let partySelects = [
     document.getElementById( selectArray[0] ),
@@ -36,7 +38,10 @@ let partySelects = [
 console.log('storage');
 console.log(sessionStorage);
 
-let interludeState = new InterludeState( {
+let testNextLockList = calc.returnWithMatchingParamters( FULL_LOCK_TABLE, 'tier', 1 );
+console.log(testNextLockList)
+
+let interludeState = new InterludeState({
     'currentParty': sessionStorage.currentParty,
     'newReward': sessionStorage.newReward,
     'allHeldMons': sessionStorage.allHeldMons,
@@ -47,20 +52,26 @@ let interludeState = new InterludeState( {
 console.log('state')
 console.log(interludeState);
 
+// set random nextLock
+let randNextLock = intFuncs.returnRandomIndexFromArray(testNextLockList);
+interludeState.updateParam(randNextLock.name, 'nextLock');
+interludeState.updateParam(randNextLock.name, 'nextLockName');
+console.log(interludeState.nextLock);
+
 intFuncs.handleReward
 (
     JSON.stringify(interludeState.newReward),
     FULL_DAEMON_TABLE,
     interludeState
 );
-console.log('interludeState post reward handling')
-console.log(interludeState)
+// console.log('interludeState post reward handling')
+// console.log(interludeState)
 
 // This healing and use restoring has to happen before updating party Selects
 intFuncs.healSuperset( interludeState, ['currentParty', 'allHeldMons']);
 intFuncs.restoreMoveUsesSuperSet( interludeState, ['currentParty', 'allHeldMons']);
-console.log('interludeState post healing')
-console.log(interludeState)
+// console.log('interludeState post healing')
+// console.log(interludeState)
 
 
 selectArray.forEach( select => {
@@ -78,4 +89,4 @@ intFuncs.populateDaemonInspect();
 intFuncs.setupReadyButton();
 intFuncs.populateChallenger( interludeState.nextLockName );
 
-console.log(sessionStorage)
+// console.log(sessionStorage)

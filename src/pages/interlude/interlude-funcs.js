@@ -191,8 +191,8 @@ function healSuperset( interludeState, parameters ) {
  */
 function healMons( interludeState, parameter ) {
     let daemons = interludeState[parameter];
-    console.log(`Trying to heal in ${parameter}`)
-    console.log(daemons);
+    // console.log(`Trying to heal in ${parameter}`)
+    // console.log(daemons);
     
     daemons.forEach( mon => {
     // interludeState[parameter].forEach( mon => {
@@ -201,22 +201,22 @@ function healMons( interludeState, parameter ) {
         }
         mon.currentHP = mon.returnHPStat();
     })
-    console.log(interludeState[parameter])
+    // console.log(interludeState[parameter])
     interludeState.updateParam( daemons, parameter );
-    console.log(interludeState[parameter])
+    // console.log(interludeState[parameter])
 }
 
 function restoreMoveUsesSuperSet( interludeState, parameters ) {
     parameters.forEach( parameter => {
-        console.log('restoring moves')
+        // console.log('restoring moves')
         restoreMoveUses( interludeState, parameter );
     })
 }
 
 function restoreMoveUses( interludeState, parameter ) {
     let daemons = interludeState[parameter];
-    console.log(daemons)
-    console.log(daemons[0].moves[0].remainingUses)
+    // console.log(daemons)
+    // console.log(daemons[0].moves[0].remainingUses)
 
     daemons.forEach( mon => {
         mon.restoreAllMoveUses();
@@ -228,9 +228,7 @@ function handleReward( rewardString, FULL_DAEMON_LIST, state ) {
     if (rewardString == "") {
         return;
     }
-
     let heldMons = state['allHeldMons'];
-
     let reward = JSON.parse(rewardString);
     let rewardID = calc.returnIDFromName( reward.name, FULL_DAEMON_LIST );
     let moveMap = parse.createMoveTable();
@@ -248,10 +246,15 @@ function handleReward( rewardString, FULL_DAEMON_LIST, state ) {
         }
         parse.addMove( move, newDaemon, reward, moveMap )
     })
-    // Why is this updating both allHeldMons and currentParty????
-    //state['allHeldMons'].push( newDaemon );
-    heldMons.push( newDaemon )
+
+    heldMons.push( newDaemon );
     state.updateParam(heldMons, 'allHeldMons');
+}
+
+function returnRandomIndexFromArray( array ) {
+    const INDEX = calc.getRandomInt( array.length );
+
+    return array[INDEX];
 }
 
 function loadBattle() {
@@ -285,5 +288,6 @@ export {
     setupReadyButton,
     populateChallenger,
     handleReward,
+    returnRandomIndexFromArray,
     populateDaemonInspect
 }

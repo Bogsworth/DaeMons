@@ -371,7 +371,7 @@
 {
     "name": "Show Off",
     "type": "pride",
-    "power": 40,
+    "power": 35,
     "accuracy": 90,
     "uses": 20,
     "statsAffected": {
