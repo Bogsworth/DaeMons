@@ -1,64 +1,81 @@
 {
-    "lust": { 
-        "vs_lust": 2,
-        "vs_gluttony": 1,
+    "unaligned" : {
+        "vs_unaligned": 1,
+        "vs_lust": 1,
+        "vs_gluttony": 0,
         "vs_greed": 1,
+        "vs_sloth": 1,
+        "vs_wrath": 1,
+        "vs_envy": 1,
+        "vs_pride": 1
+    },
+    "lust": { 
+        "vs_unaligned": 1,
+        "vs_lust": 2,
+        "vs_gluttony": 2,
+        "vs_greed": 2,
         "vs_sloth": 0.5,
         "vs_wrath": 1,
-        "vs_envy": 1,
-        "vs_pride": 2
+        "vs_envy": 0.5,
+        "vs_pride": 1
     },
     "gluttony": { 
-        "vs_lust": 0.5,
+        "vs_unaligned": 1,
+        "vs_lust": 1,
         "vs_gluttony": 1,
         "vs_greed": 2,
-        "vs_sloth": 2,
-        "vs_wrath": 1,
-        "vs_envy": 0.5,
-        "vs_pride": 2
+        "vs_sloth": 1,
+        "vs_wrath": 0.5,
+        "vs_envy": 1,
+        "vs_pride": 1
     },
     "greed": { 
-        "vs_lust": 1,
-        "vs_gluttony": 0.5,
+        "vs_unaligned": 2,
+        "vs_lust": 0.5,
+        "vs_gluttony": 0,
         "vs_greed": 1,
-        "vs_sloth": 1,
+        "vs_sloth": 2,
         "vs_wrath": 1,
         "vs_envy": 2,
-        "vs_pride": 2
+        "vs_pride": 1
     },
     "sloth": { 
+        "vs_unaligned": 1,
         "vs_lust": 2,
-        "vs_gluttony": 0.5,
-        "vs_greed": 2,
+        "vs_gluttony": 1,
+        "vs_greed": 0.5,
         "vs_sloth": 1,
         "vs_wrath": 1,
         "vs_envy": 1,
-        "vs_pride": 0.5
+        "vs_pride": 1
     },
     "wrath": { 
+        "vs_unaligned": 2,
         "vs_lust": 1,
         "vs_gluttony": 2,
         "vs_greed": 1,
         "vs_sloth": 1,
-        "vs_wrath": 0.5,
-        "vs_envy": 1,
+        "vs_wrath": 1,
+        "vs_envy": 0.5,
         "vs_pride": 2
     },
     "envy": { 
+        "vs_unaligned": 1,
         "vs_lust": 2,
         "vs_gluttony": 1,
         "vs_greed": 0,
         "vs_sloth": 1,
-        "vs_wrath": 1,
+        "vs_wrath": 2,
         "vs_envy": 1,
         "vs_pride": 0.5
     },
     "pride": { 
+        "vs_unaligned": 2,
         "vs_lust": 1,
         "vs_gluttony": 1,
-        "vs_greed": 0.5,
-        "vs_sloth": 2,
-        "vs_wrath": 1,
+        "vs_greed": 1,
+        "vs_sloth": 1,
+        "vs_wrath": 0.5,
         "vs_envy": 2,
         "vs_pride": 1
     }

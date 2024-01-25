@@ -1,16 +1,98 @@
 [{
-    "name": "Pushover",
+    "name": "Tutorial",
     "Daemons": [
         {
-            "name": "Imp",
-            "moves": ["Buyout", "Nibble", null, null]
+            "name": "Normal Guy",
+            "moves": ["Smack", "Philanthropy", null, null]
         }
     ],
     "description": "This guy should be a walk in the park",
     "reward": {
-        "name": "Imp",
-        "moves": ["Buyout", "Nibble", null, null]
+        "name": "Normal Guy",
+        "moves": ["Smack", "Philanthropy", null, null]
     },
+    "tier": 0,
+    "nextFight": "Pushover"
+},
+{
+    "name": "Pushover",
+    "Daemons": [
+        {
+            "name": "Precocious Little Shit",
+            "moves": ["Show Off", "Charm", null, null]
+        }
+    ],
+    "description": "This guy should be a walk in the park too",
+    "reward": {
+        "name": "Precocious Little Shit",
+        "moves": ["Show Off", "Charm", null, null]
+    },
+    "tier": 1,
+    "nextFight": "Pushover 2"
+},
+{
+    "name": "Pushover 2",
+    "Daemons": [
+        {
+            "name": "Normal Guy",
+            "moves": ["Smack", "Philanthropy", null, null]
+        },
+        {
+            "name": "Normal Guy",
+            "moves": ["Smack", "Philanthropy", null, null]
+        }
+    ],
+    "description": "This guy should be a walk in the park three",
+    "reward": "",
+    "tier": 1,
+    "nextFight": "Pushover 3"
+},
+{
+    "name": "Pushover 3",
+    "Daemons": [
+        {
+            "name": "Wretched",
+            "moves": ["Lash Out", "Cozy Up", null, null]
+        }
+    ],
+    "description": "This guy should be a walk in the park three",
+    "reward": {
+        "name": "Wretched",
+        "moves": ["Lash Out", "Cozy Up", null, null]
+    },
+    "tier": 1,
+    "nextFight": "Shorts-Wearer"
+},
+{
+    "name": "Slightly Tougher Guy",
+    "Daemons": [
+        {
+            "name": "Succubus",
+            "moves": ["Chain Whip", "Charm", null, null]
+        }
+    ],
+    "description": "This guy is a little tougher than a pushover, but still tier 1",
+    "reward": {
+        "name": "Succubus",
+        "moves": ["Chain Whip", "Charm", null, null]
+    },
+    "tier": 1,
+    "nextFight": "Shorts-Wearer"
+},
+{
+    "name": "Slightly Tougher Guy 2",
+    "Daemons": [
+        {
+            "name": "Angy Boy",
+            "moves": ["Do You Lift?", "Normal Punch", "Smack", null]
+        }
+    ],
+    "description": "This guy is a little tougher than a pushover, but still tier 1",
+    "reward": {
+        "name": "Angy Boy",
+        "moves": ["Do You Lift?", "Normal Punch", "Smack", null]
+    },
+    "tier": 1,
     "nextFight": "Shorts-Wearer"
 },
 {
@@ -34,6 +116,7 @@
         "name": "Damned",
         "moves": ["Lash Out", "Remove FOMO", null, null]
     },
+    "tier": 2,
     "nextFight": "Mirror-You"
 },
 {
@@ -57,6 +140,7 @@
         "name": "Angy Boy",
         "moves": ["Consecutive Normal Punches", "Chain Whip", null, null]
     },
+    "tier": 2,
     "nextFight": "Moneybags"
 },
 {
@@ -79,5 +163,6 @@
     "reward": {
         "name": "Dragon",
         "moves": ["Fuck You Money", "Consecutive Normal Punches", null, null]
-    }
+    },
+    "tier": 3
 }]

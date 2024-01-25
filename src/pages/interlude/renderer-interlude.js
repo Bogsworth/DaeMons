@@ -1,21 +1,33 @@
 /*
 # TODO List
 ## Required TODOs
-- TODO: Show if your Daemon is dead
-- TODO: Remove dead Daemons
+- [ ] TODO: ??
 
 ## Nice to have TODOs
-- TODO: Better format for move information
-- TODO: Better formatting in general
-- TODO: Make healing depend on difficulty
+- [ ] TODO: Better format for move information ( moveToPrintable() )
+- [ ] TODO: Better formatting in general
+- [ ] TODO: Make healing depend on difficulty
+
+## TODONE!!!
+- [x] TODONE: When switching Mons, HP didn't get restored for some reason
+    - MON VALUES GET STORED IN THE SELECT OPTIONS, MAKE SURE THEY GET
+      HEALED BEFORE THE OPTIONS ARE POPULATED
+- [x] TODONE: See why uses isn't restoring when not changing party
+    before next fight
+- [x] TODONE: Prevent picking the same Daemon twice
+- [x] TODONE: Show if your Daemon is dead
+- [x] TODONE: Add pop-up asking if you're sure you want to bring a dead Daemon
+    ~~- [ ] TODO: Remove dead Daemons~~
 */
 
 import * as parse from '../../../lib/import.js';
 import * as intFuncs from './interlude-funcs.js';
 import * as util from '../../../lib/utility.js';
+import * as calc from '../../../lib/calculations.js';
 import { InterludeState } from '../../../data/class-interludeState.js';
 
 const FULL_DAEMON_TABLE = parse.createMonTable();
+const FULL_LOCK_TABLE = parse.createWarlocks();
 let selectArray = ['partySelect0', 'partySelect1', 'partySelect2', 'daemonListSelect']
 let partySelects = [
     document.getElementById( selectArray[0] ),
@@ -26,7 +38,10 @@ let partySelects = [
 console.log('storage');
 console.log(sessionStorage);
 
-let interludeState = new InterludeState( {
+let testNextLockList = calc.returnWithMatchingParamters( FULL_LOCK_TABLE, 'tier', 1 );
+console.log(testNextLockList)
+
+let interludeState = new InterludeState({
     'currentParty': sessionStorage.currentParty,
     'newReward': sessionStorage.newReward,
     'allHeldMons': sessionStorage.allHeldMons,
@@ -37,19 +52,41 @@ let interludeState = new InterludeState( {
 console.log('state')
 console.log(interludeState);
 
-intFuncs.handleReward( JSON.stringify(interludeState.newReward), FULL_DAEMON_TABLE, interludeState['allHeldMons'])
-intFuncs.healMons( interludeState, ['currentParty', 'allHeldMons']);
+// set random nextLock
+let randNextLock = intFuncs.returnRandomIndexFromArray(testNextLockList);
+interludeState.updateParam(randNextLock.name, 'nextLock');
+interludeState.updateParam(randNextLock.name, 'nextLockName');
+console.log(interludeState.nextLock);
 
-console.log('interludeState post reward handling and healing')
-console.log(interludeState)
+intFuncs.handleReward
+(
+    JSON.stringify(interludeState.newReward),
+    FULL_DAEMON_TABLE,
+    interludeState
+);
+// console.log('interludeState post reward handling')
+// console.log(interludeState)
+
+// This healing and use restoring has to happen before updating party Selects
+intFuncs.healSuperset( interludeState, ['currentParty', 'allHeldMons']);
+intFuncs.restoreMoveUsesSuperSet( interludeState, ['currentParty', 'allHeldMons']);
+// console.log('interludeState post healing')
+// console.log(interludeState)
+
 
 selectArray.forEach( select => {
-    util.populateSelect( interludeState['allHeldMons'], select)
+    if (select == 'daemonListSelect') {
+        util.populateSelect( interludeState['allHeldMons'], select, true);
+    }
+    else {
+        util.populateSelect( interludeState['allHeldMons'], select, true);
+    }
 });
 
-intFuncs.populatePartySelects( interludeState, partySelects )
+intFuncs.populatePartySelects( interludeState, partySelects );
+intFuncs.keepSelectsUnique( interludeState, partySelects );
 intFuncs.populateDaemonInspect();
 intFuncs.setupReadyButton();
-intFuncs.populateChallenger( interludeState.nextLockName )
+intFuncs.populateChallenger( interludeState.nextLockName );
 
-console.log(sessionStorage)
+// console.log(sessionStorage)

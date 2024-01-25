@@ -11,17 +11,48 @@
       http-equiv="X-Content-Security-Policy"
       content="default-src 'self'; script-src 'self'"
     />
-    <title>Hello from Electron renderer!</title>
+    <link rel="stylesheet" href="./index.css">
+    <title>Daemon-'lock Battles</title>
   </head>
   <body>
-    <h1>Hello from Electron renderer!</h1>
-    <p>👋</p>
-    <p id="info"></p>
-    <a href="./src/pages/battle/battle.html">
+    <h1>Daemon-'lock (short for warlock) Challenge</h1>
+    <p>😈😈😈😈</p>
+
+    <!-- <a href="./src/pages/battle/battle.html">
         <div>
             <button type="button" name="startGame">Click here to start the game!</button>
         </div>
-    </a>
+    </a> -->
+    <div class="starterMenu">
+      <div id="starterHeader">Choose a starter!</div>
+      <div class="starterOptions">
+        <div class="starterOption" id="option0">
+          <div class="name" id="name0">Name</div>
+          <div class="type" id="type0">type</div>
+          <div class="desc" id="desc0">description</div>
+          <a href="./src/pages/battle/battle.html">
+            <button type="button" id="startButt0">Pick me!</button>
+          </a>
+        </div>
+        <div class="starterOption" id="option1">
+          <div class="name" id="name1">Name</div>
+          <div class="type" id="type1">type</div>
+          <div class="desc" id="desc1">description</div>
+          <a href="./src/pages/battle/battle.html">
+            <button type="button" id="startButt1">Pick me!</button>
+          </a>
+        </div>
+        <div class="starterOption" id="option2">
+          <div class="name" id="name2">Name</div>
+          <div class="type" id="type2">type</div>
+          <div class="desc" id="desc2">description</div>
+          <a href="./src/pages/battle/battle.html">
+            <button type="button" id="startButt2">Pick me!</button>
+          </a>
+        </div>
+      </div>
+    </div>
+    <p id="info"></p>
   </body>
-  <script src="./renderer-index.js"></script>
+  <script type="module" src="./renderer-index.js"></script>
 </html>

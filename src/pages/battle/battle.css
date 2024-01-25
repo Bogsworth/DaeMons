@@ -1,5 +1,13 @@
+html, body {
+    margin: 0;
+    height: 100%;
+}
+
 body {
     background-color: lightblue;
+    display: flex;
+    flex-direction: column;
+    align-content: space-between;
 }
 
 h1 {
@@ -8,12 +16,22 @@ h1 {
     align-self: center;
 }
 
+.battleScreenContainer {
+    display: flex;
+    flex-grow: 1;
+    flex-direction: column;
+    justify-content: space-between;
+
+}
+
 .battleScreen {
     display: flex;
     flex-direction: column;
     align-items: center;
     align-items: stretch;
-    justify-content: space-around;
+    padding-left: 20px;
+    padding-right: 20px;
+    flex-grow: 0;
 }
 
 .battleMenu {
@@ -66,3 +84,56 @@ h1 {
     display: flex;
     align-self: center;
 }
+
+.bottomBar {
+    display: flex;
+    flex-grow: 0;
+    justify-content: space-evenly;
+    background-color: rgb(10, 19, 19);
+    padding-top: 12px;
+    padding-bottom: 12px;
+}
+
+.expandingBottomBar {
+    display: flex;
+    align-self: flex-end;
+    align-self: stretch;
+    flex-grow: 1;
+    max-height: 250px;
+    justify-content: space-evenly;
+    align-items: center;
+
+    height: 0px; /* 0 width - change this with JavaScript */
+    width: 100%; /* 100% Full-width */
+    
+    background-color: red; /* red */
+    overflow-y: hidden; /* Disable verticle scroll */
+    padding-bottom: 0px; /* Place content 60px from the top */
+    transition: 0.5s; /* 0.5 second transition effect to slide in the sidebar */
+
+}
+
+.moveStats {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+#monStats1 {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.statSection {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+#buttonMatcher {
+    font-size: 0px;
+}
+
+
+/* Following example in link below 
+    https://www.w3schools.com/howto/howto_js_collapse_sidebar.asp
+*/

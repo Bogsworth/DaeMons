@@ -1,30 +1,46 @@
 /*
 # TODO List
 ## Required TODOs
-- TODO: Add a way to see type and moves of your Daemon
-- TODO: Add a way to see the stats of your moves
-- TODO: Add a way to see the type of their Daemon
-- TODO: Add a way to see the number of Daemons they have left
-- TODO: Add loss handling
+- [ ] TODO: Add a way to see the type of their Daemon (maybe)
+- [ ] TODO: Add a way to see the number of Daemons they have left
+- [ ] TODO: Clean up messages around status effects
+    - [ ] TODO: Make sure messages are clear if stats can no longer
+        be increased or decreased
+- [ ] TODO: Test that status modifiers are removed after Daemon switch
+- [ ] TODO: When changing mon info, if there are 3 moves for the old mon
+    and 2 for the new one, the 3rd move stays even though there should only be 2
 
 ## Nice to have TODOs
-- TODO: A health bar
-- TODO: A health bar with an animation as you lose health
-- TODO: A more polished UI
+- [ ] TODO: A health bar
+- [ ] TODO: A health bar with an animation as you lose health
+- [ ] TODO: A more polished UI
+    - [ ] TODO: Better formatting for expandingBottomBar
+        - [ ] TODO: Boxes around sections
+        - [ ] TODO: Consistent sizing so flipping between mons
+                keeps everything in the same place as each other
+
+## TODONE!!!
+- [x] TODONE: Add a way to see type and moves of your Daemon
+- [x] TODONE: Add a way to see the stats of your moves
+- [x] TODONE: On Daemon switch, remove status modifiers
+- [x] TODONE: Add loss handling
+- [x] TODONE: Make moves that affect status
+- [x] TODONE: Fix bug where 'hp' dissapears (but numbers stay)
+        underneath Daemon's name
+- [x] TODONE: Prevent 'stacking' attacks/disable every button except
+        OK when player should not be able to do anything else
+- [x] TODONE: Add power points equivalent
 */
 
 import * as util from '../../../lib/utility.js'
 import * as parse from '../../../lib/import.js'
 import * as scripts from './battle-funcs.js'
 
-const MON_TABLE = parse.createMonTable();
-const MOVE_TABLE = parse.createMoveTable();
 const TYPE_TABLE = parse.createCounterTable();
 
-// Note: myParty[0] is always the active Daemon;
+// Note: myParty[0] always starts as the active Daemon;
 let myParty = scripts.loadMyParty();
 let currentLock = scripts.loadCurrentLock();
-
 let fightState = {
     TYPE_TABLE: TYPE_TABLE,
     myParty: myParty,
@@ -33,28 +49,37 @@ let fightState = {
     theirParty: currentLock.party,
     theirActiveMon: currentLock.party[0]
 }
+const HEADER = scripts.generateHeaderFromWarlock( fightState.enemyLock );
+
 console.log(sessionStorage)
 console.log(fightState)
 
-scripts.changeHeader
-(
-    scripts.generateHeaderFromWarlock( fightState.enemyLock )
-);
-
+scripts.changeHeader( HEADER );
 util.populateSelect( fightState.myActiveMon.moves, 'selectMoves' );
 util.populateSelect( fightState.myParty, 'selectMons' );
 
-scripts.attachButton(
+let monButtons = scripts.generateMonButtons(fightState.myParty);
+
+util.attachButton(
     function() {
         scripts.handleAttack( fightState );
     },
     'attack' );
-scripts.attachButton(
+util.attachButton(
     function () {
         scripts.handleSwitch( fightState )
     },
     'switch' );
-scripts.attachButton( scripts.handleOk, 'ok' );
+util.attachButton( scripts.handleOk, 'ok' );
+
+monButtons.forEach( buttId => {
+    util.attachButton(
+        function() {
+            scripts.expandInfoBox( buttId, fightState );
+        },
+        buttId
+    );
+})
 
 scripts.updateMon( fightState.myActiveMon, true );
 scripts.updateMon( fightState.theirActiveMon, false );

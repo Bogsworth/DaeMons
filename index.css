@@ -1,0 +1,43 @@
+.starterMenu {
+    display: flex;
+    flex-direction: column;
+    background-color: blueviolet;
+    padding: 5px;
+    border-width: 2px;
+    border-color: black;
+}
+
+.starterOptions {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;    
+}
+
+.starterOption {
+    display: flex;
+    align-items: center;
+    flex-grow: 1;
+    justify-content: space-around;
+    flex-direction: column;
+}
+
+#starterHeader {
+    display: flex;
+    flex-grow: 1;
+    align-self: center;
+    font-size: 30px;
+}
+
+.name {
+    font-size: 20px;
+}
+
+h1 {
+    display: flex;
+    justify-content: center;
+}
+
+p {
+    display: flex;
+    justify-content: center;
+}

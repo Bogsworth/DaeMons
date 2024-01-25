@@ -16,9 +16,8 @@
 
   </head>
   <body>
-
-    <div>
-      <div class = "battleScreen">
+    <div class="battleScreenContainer">
+      <div class="battleScreen">
         <h1 id="header">You are fighting!!</h1>
         
         <div class="theirs">
@@ -61,10 +60,96 @@
             <div class="messageBox" id="messageBox">What do you want to do?</div>
             <button type="button" name="ok">Ok</button>
           </div>
-
         </div>
       </div>
+
+      <div class="expandingBottomBar" id="expandingBottomBar">
+        <div class="monSection">
+          <div id="buttonMatcher">monSection</div>
+          <div class="monImage" id="expandedMon">Daemon Info</div>
+          <div class="healthDisplay" id="expandedMonHP">20/20 hp</div>
+        </div>
+        <div class="statSection">
+          <div class="monStats" id="monStats0">
+            <div class="statTitle" id="statTitle0">Type:</div>
+            <div class="statTitle" id="statTitle1">Attack:</div>
+            <div class="statTitle" id="statTitle2">Defense:</div>
+            <div class="statTitle" id="statTitle3">Speed:</div>
+          </div>
+          <div class="monStats" id="monStats1">
+            <div class="statInfo" id="statInfo0">Ghost</div>
+            <div class="statInfo" id="statInfo1">9001</div>
+            <div class="statInfo" id="statInfo2">Pretty Good!</div>
+            <div class="statInfo" id="statInfo3">Molasses</div>
+          </div>
+        </div>
+        <div class="moveSection" id="move0">
+          <div class="moveStats" id="moveStats0">
+            <div class="moveCol" id="moveColL0">
+              <div class="moveName" id="moveName0">Move Name</div>
+              <div class="moveType" id="moveType0">Type</div>
+              <div class="movePower" id="movePower0">Power</div>
+            </div>
+            <div class="moveCol" id="moveColR0">
+              <div class="moveUses" id="moveUses0">Uses: 5/5</div>
+              <div class="moveAccuracy" id="moveAccuracy0">Accuracy</div>
+              <div class="moveStatsAffected" id="moveStatsAffected0">Stats Affected</div>
+            </div>
+          </div>
+          <div class="moveDesc" id="moveDesc0">Description</div>
+        </div>
+        <div class="moveSection" id="move1">
+          <div class="moveStats" id="moveStats1">
+            <div class="moveCol" id="moveColL1">
+              <div class="moveName" id="moveName1">Move Name</div>
+              <div class="moveType" id="moveType1">Type</div>
+              <div class="movePower" id="movePower1">Power</div>
+            </div>
+            <div class="moveCol" id="moveColR1">
+              <div class="moveUses" id="moveUses1">Uses: 5/5</div>
+              <div class="moveAccuracy" id="moveAccuracy1">Accuracy</div>
+              <div class="moveStatsAffected" id="moveStatsAffected1">Stats Affected</div>
+            </div>
+          </div>
+          <div class="moveDesc" id="moveDesc1">Description</div>
+        </div>
+        <div class="moveSection" id="move2">
+          <div class="moveStats" id="moveStats2">
+            <div class="moveCol" id="moveColL2">
+              <div class="moveName" id="moveName2">Move Name</div>
+              <div class="moveType" id="moveType2">Type</div>
+              <div class="movePower" id="movePower2">Power</div>
+            </div>
+            <div class="moveCol" id="moveColR2">
+              <div class="moveUses" id="moveUses2">Uses: 5/5</div>
+              <div class="moveAccuracy" id="moveAccuracy2">Accuracy</div>
+              <div class="moveStatsAffected" id="moveStatsAffected2">Stats Affected</div>
+            </div>
+          </div>
+          <div class="moveDesc" id="moveDesc2">Description</div>
+        </div>
+        <div class="moveSection" id="move3">
+          <div class="moveStats" id="moveStats3">
+            <div class="moveCol" id="moveColL3">
+              <div class="moveName" id="moveName3">Move Name</div>
+              <div class="moveType" id="moveType3">Type</div>
+              <div class="movePower" id="movePower3">Power</div>
+            </div>
+            <div class="moveCol" id="moveColR3">
+              <div class="moveUses" id="moveUses3">Uses: 5/5</div>
+              <div class="moveAccuracy" id="moveAccuracy3">Accuracy</div>
+              <div class="moveStatsAffected" id="moveStatsAffected3">Stats Affected</div>
+            </div>
+          </div>
+          <div class="moveDesc" id="moveDesc3">Description</div>
+        </div>
+      </div>
+
+      <div class="bottomBar" id="bottomBar">
+
+      </div>
     </div>
+         
     
     <script type="module" src="./renderer-battle.js"></script>
   </body>

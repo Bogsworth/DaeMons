@@ -1,0 +1,163 @@
+[{
+    "tier": 0,
+    "warlocks": [{
+        "name": "Tutorial",
+        "Daemons": [
+            {
+                "name": "Normal Guy",
+                "moves": ["Smack", "Philanthropy", null, null]
+            }
+        ],
+        "description": "This guy should be a walk in the park",
+        "reward": {
+            "name": "Normal Guy",
+            "moves": ["Smack", "Philanthropy", null, null]
+        }
+    }]
+},
+{
+    "tier": 1,
+    "warlocks": [{
+        "name": "Pushover",
+        "Daemons": [
+            {
+                "name": "Precocious Little Shit",
+                "moves": ["Show Off", "Charm", null, null]
+            }
+        ],
+        "description": "This guy should be a walk in the park too",
+        "reward": {
+            "name": "Precocious Little Shit",
+            "moves": ["Show Off", "Charm", null, null]
+        }
+    },
+    {
+        "name": "Pushover 2",
+        "Daemons": [
+            {
+                "name": "Normal Guy",
+                "moves": ["Smack", "Philanthropy", null, null]
+            },
+            {
+                "name": "Normal Guy",
+                "moves": ["Smack", "Philanthropy", null, null]
+            }
+        ],
+        "description": "This guy should be a walk in the park three",
+        "reward": ""
+    },
+    {
+        "name": "Pushover 3",
+        "Daemons": [
+            {
+                "name": "Wretched",
+                "moves": ["Lash Out", "Cozy Up", null, null]
+            }
+        ],
+        "description": "This guy should be a walk in the park three",
+        "reward": {
+            "name": "Wretched",
+            "moves": ["Lash Out", "Cozy Up", null, null]
+        }
+    },
+    {
+        "name": "Slightly Tougher Guy",
+        "Daemons": [
+            {
+                "name": "Succubus",
+                "moves": ["Chain Whip", "Charm", null, null]
+            }
+        ],
+        "description": "This guy is a little tougher than a pushover, but still tier 1",
+        "reward": {
+            "name": "Succubus",
+            "moves": ["Chain Whip", "Charm", null, null]
+        }
+    },
+    {
+        "name": "Slightly Tougher Guy 2",
+        "Daemons": [
+            {
+                "name": "Angy Boy",
+                "moves": ["Do You Lift?", "Normal Punch", "Smack", null]
+            }
+        ],
+        "description": "This guy is a little tougher than a pushover, but still tier 1",
+        "reward": {
+            "name": "Angy Boy",
+            "moves": ["Do You Lift?", "Normal Punch", "Smack", null]
+        }
+    }]
+},
+{
+    "tier": 2,
+    "warlocks": [{
+        "name": "Mirror-You",
+        "Daemons": [
+            {
+                "name": "Fuckboy",
+                "moves": ["Laze", "Show Off", null, null]
+            },
+            {
+                "name": "Imp",
+                "moves": ["Nibble", "Buyout", null, null]
+            },
+            {
+                "name": "Angy Boy",
+                "moves": ["Consecutive Normal Punches", "Chain Whip", null, null]
+            }
+        ],
+        "description": "You may be strong, but are you strong enough to face.... Yourself?",
+        "reward": {
+            "name": "Angy Boy",
+            "moves": ["Consecutive Normal Punches", "Chain Whip", null, null]
+        }
+    },
+    {
+        "name": "Shorts-Wearer",
+        "Daemons": [
+            {
+                "name": "Damned",
+                "moves": ["Lash Out", "Remove FOMO", null, null]
+            },
+            {
+                "name": "Lay-Z-Boy",
+                "moves": ["Normal Punch", "Convince to Stay In", null, null]
+            },
+            {
+                "name": "Damned",
+                "moves": ["Lash Out", "Remove FOMO", null, null]
+            }
+        ],
+        "description": "Shorts are comfy, and easy to wear!",
+        "reward": {
+            "name": "Damned",
+            "moves": ["Lash Out", "Remove FOMO", null, null]
+        }
+    }]
+},
+{
+    "tier": 3,
+    "warlocks": [{
+        "name": "Moneybags",
+        "Daemons": [
+            {
+                "name": "Imp",
+                "moves": ["Nibble", "Buyout", null, null]
+            },
+            {
+                "name": "Imp",
+                "moves": ["Nibble", "Buyout", null, null]
+            },
+            {
+                "name": "Dragon",
+                "moves": ["Fuck You Money", "Consecutive Normal Punches", null, null]
+            }
+        ],
+        "description": "He looks like the kind of guy who made his fortune from his parents' emerald mine.",
+        "reward": {
+            "name": "Dragon",
+            "moves": ["Fuck You Money", "Consecutive Normal Punches", null, null]
+        }
+    }]
+}]

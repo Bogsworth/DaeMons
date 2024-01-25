@@ -1,8 +1,13 @@
 [{
+    "name": "Angy Boy",
+    "moves": ["Consecutive Normal Punches", "Chain Whip", null, null]
+},
+{
     "name": "Fuckboy",
     "moves": ["Laze", "Show Off", null, null]
 },
 {
-    "name": "Angy Boy",
-    "moves": ["Consecutive Normal Punches", "Chain Whip", null, null]
-}]
+    "name": "Imp",
+    "moves": ["Buyout", "Nibble", null, null]
+}
+]

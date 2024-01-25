@@ -78,10 +78,12 @@ function updateMoveStats() {
         document.getElementById( MOVE_STATS_EL_ID ) = 'move stats';
     }
 
-    document.getElementById(MOVE_STATS_EL_ID).textContent = moveToPrintable( SELECTED_MOVE );
+    document
+        .getElementById(MOVE_STATS_EL_ID)
+        .textContent = moveToPrintable( SELECTED_MOVE );
 }
 
-// TODO: Make moveToPrintable() actually legible in app
+// - [ ] TODO: Make moveToPrintable() actually legible in app
 function moveToPrintable( move ) {
     let message = '';
 
@@ -89,11 +91,17 @@ function moveToPrintable( move ) {
     message += 'POWER: ' + move.power + '\n';
     message += 'ACCURACY: ' + move.accuracy + '\n';
     message += 'USES: ' + move.uses + '\n';
+
     return message;
 }
 
 function importPartyChoices( state ) {
-    let selectArray = ['partySelect0', 'partySelect1', 'partySelect2', 'daemonListSelect'];
+    let selectArray = [
+        'partySelect0',
+        'partySelect1',
+        'partySelect2',
+        'daemonListSelect'
+    ];
     let partySelects = [
         document.getElementById( selectArray[0] ),
         document.getElementById( selectArray[1] ),
@@ -107,57 +115,120 @@ function importPartyChoices( state ) {
         }
         let selectedMonJSON = JSON.parse(select.value);        
         
-        console.log(select.value);
+        //console.log(select.value);
         tempStorage.push(selectedMonJSON);
     })
-    state.currentParty = tempStorage;
+    state.currentParty = util.parseDaemonJSON(tempStorage);
     sessionStorage.currentParty = JSON.stringify(tempStorage);
 
-    console.log(sessionStorage.currentParty);
-    console.log(state.currentParty);
+    //console.log(sessionStorage.currentParty);
+    //console.log(state.currentParty);
 }
 
-//function populatePartySelects( currentParty, selectElements, state ) { 
 function populatePartySelects( state, selectElements ) {  
     let i = 0;
     
     state['currentParty'].forEach( mon => {
-        util.setDefaultSelectValue(selectElements[i++], mon.name );
+        let nameStr = mon.returnName();
+        
+        if (util.checkIfHPZero( mon )) {
+            nameStr += ' (dead)';
+        }
+
+        util.setDefaultSelectValue(selectElements[i++], nameStr );
     });
 
     selectElements.forEach ( sel_el => {
         sel_el.addEventListener( 'change', function () {
             importPartyChoices(state);
+            keepSelectsUnique( state, selectElements );
         });
     })
+}
+
+function keepSelectsUnique( state, selectElements ) {
+    let indexArray = [];
+
+    selectElements.forEach( el => {
+        enableAllOptions( el );
+        indexArray.push(el.selectedIndex);
+    });
+    selectElements.forEach( el => {
+        indexArray.forEach( index => {
+            if ( index == 0 ) {
+                return;
+            }
+            el.options[index].disabled = true;
+        })
+    });
+
+    //selEl is Select Element
+    function enableAllOptions( selEl ) {
+        for ( let i = 0; i < selEl.options.length; i++ ) {
+            selEl.options[i].disabled = false;
+        }
+    }
 }
 
 function populateChallenger( name ) {
     let warlocks = parse.createWarlocks();
     let nextLock = warlocks.get( calc.returnIDFromName( name, warlocks));
-    console.log(nextLock)
+    console.log(nextLock);
 
     sessionStorage.nextLock = JSON.stringify(nextLock);
     console.log(sessionStorage)
     populateNextFight( nextLock );
 }
 
-function healMons( interludeState, parameters ) {
-    healSubset( interludeState, parameters[0] );
-    healSubset( interludeState, parameters[1] );
+function healSuperset( interludeState, parameters ) {
+    parameters.forEach( parameter => {
+        healMons( interludeState, parameter );
+    });
 }
 
-function healSubset( interludeState, parameter ) {
+/**
+ * This function will not heal a Daemon if they're already dead
+ */
+function healMons( interludeState, parameter ) {
     let daemons = interludeState[parameter];
+    // console.log(`Trying to heal in ${parameter}`)
+    // console.log(daemons);
     
     daemons.forEach( mon => {
-        mon.currentHP = mon.stats.HP;
+    // interludeState[parameter].forEach( mon => {
+        if ( util.checkIfHPZero( mon )) {
+            return;
+        }
+        mon.currentHP = mon.returnHPStat();
     })
-
-    interludeState.updateParam( daemons, parameter)
+    // console.log(interludeState[parameter])
+    interludeState.updateParam( daemons, parameter );
+    // console.log(interludeState[parameter])
 }
 
-function handleReward( rewardString, FULL_DAEMON_LIST, currentParty ) {
+function restoreMoveUsesSuperSet( interludeState, parameters ) {
+    parameters.forEach( parameter => {
+        // console.log('restoring moves')
+        restoreMoveUses( interludeState, parameter );
+    })
+}
+
+function restoreMoveUses( interludeState, parameter ) {
+    let daemons = interludeState[parameter];
+    // console.log(daemons)
+    // console.log(daemons[0].moves[0].remainingUses)
+
+    daemons.forEach( mon => {
+        mon.restoreAllMoveUses();
+    })
+    interludeState.updateParam( daemons, parameter );
+}
+
+function handleReward( rewardString, FULL_DAEMON_LIST, state ) {
+    if (rewardString == "") {
+        return;
+    }
+    let heldMons = state['allHeldMons'];
     let reward = JSON.parse(rewardString);
     let rewardID = calc.returnIDFromName( reward.name, FULL_DAEMON_LIST );
     let moveMap = parse.createMoveTable();
@@ -175,13 +246,34 @@ function handleReward( rewardString, FULL_DAEMON_LIST, currentParty ) {
         }
         parse.addMove( move, newDaemon, reward, moveMap )
     })
-    currentParty.push( newDaemon ) ;
+
+    heldMons.push( newDaemon );
+    state.updateParam(heldMons, 'allHeldMons');
+}
+
+function returnRandomIndexFromArray( array ) {
+    const INDEX = calc.getRandomInt( array.length );
+
+    return array[INDEX];
 }
 
 function loadBattle() {
+    let party = util.parseDaemonJSON(JSON.parse(sessionStorage.currentParty))
+
     console.log('Im in loadBattle');
-    console.log(sessionStorage)
-    //return;
+    console.log(sessionStorage);
+
+    if ( util.checkIfPartyContainsDeadMon( party )) {
+        const CONFIRMATION_MSG = 'You are bringing a dead Daemon with you, are you sure you want to do that?';
+        
+        if ( confirm( CONFIRMATION_MSG )) {
+            window.location.href = '../battle/battle.html';
+        }
+        else {
+            return;
+        }
+    }
+
     window.location.href = '../battle/battle.html';
 }
 
@@ -189,10 +281,13 @@ export {
     populateNextFight,
     updateDaemonSummary,
     loadBattle,
-    healMons,
+    healSuperset,
+    restoreMoveUsesSuperSet,
     populatePartySelects,
+    keepSelectsUnique,
     setupReadyButton,
     populateChallenger,
     handleReward,
+    returnRandomIndexFromArray,
     populateDaemonInspect
 }

@@ -9,13 +9,33 @@
     }
 },
 {
+    "name": "Randy",
+    "type": ["lust"],
+    "stats": {
+        "HP": 50,
+        "attack": 45,
+        "defense": 42,
+        "speed": 35
+    }
+},
+{
     "name": "Imp",
     "type": ["greed"],
     "stats": {
-        "HP": 25,
-        "attack": 35,
+        "HP": 38,
+        "attack": 41,
         "defense": 30,
         "speed": 90
+    }
+},
+{
+    "name": "Caffeine Headache",
+    "type": ["sloth"],
+    "stats": {
+        "HP": 55,
+        "attack": 40,
+        "defense": 48,
+        "speed": 31
     }
 },
 {
@@ -32,7 +52,17 @@
     "name": "Angy Boy",
     "type": ["wrath"],
     "stats": {
-        "HP": 40,
+        "HP": 33,
+        "attack": 55,
+        "defense": 30,
+        "speed": 30
+    }
+},
+{
+    "name": "Barbarian",
+    "type": ["wrath"],
+    "stats": {
+        "HP": 50,
         "attack": 94,
         "defense": 45,
         "speed": 50
@@ -76,6 +106,16 @@
         "attack": 40,
         "defense": 40,
         "speed": 40
+    }
+},
+{
+    "name": "Normal Guy",
+    "type": ["unaligned"],
+    "stats": {
+        "HP": 36,
+        "attack": 36,
+        "defense": 36,
+        "speed": 36
     }
 },
 {
@@ -146,5 +186,15 @@
         "attack": 55,
         "defense": 80,
         "speed": 36
+    }
+},
+{
+    "name": "Lion Yiffer",
+    "type": ["lust", "pride"],
+    "stats": {
+        "HP": 30,
+        "attack": 50,
+        "defense": 30,
+        "speed": 50
     }
 }]

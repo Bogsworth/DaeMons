@@ -15,23 +15,37 @@ class InterludeState {
             }
         }
 
+        console.log(builder)
+
         this.currentParty = util.parseDaemonJSON
         (
             JSON.parse(builder['currentParty'])
         );
         this.newReward = JSON.parse(builder['newReward']);
-        this.allHeldMons = JSON.parse(builder['allHeldMons']);
+
+
         this.nextLock = JSON.parse(builder['nextLock']);
         this.nextLockName = JSON.parse(builder['nextLockName']);
 
         if (builder['allHeldMons'] == '""') {
-            this.updateParam( this.currentParty, 'allHeldMons' )
+            this.allHeldMons = Object.assign( [], this.currentParty)
+        }
+        else {
+            this.allHeldMons = util.parseDaemonJSON (
+                JSON.parse(builder['allHeldMons'])
+            );
         }
     }
 
-    updateParam( newPartyJSON, param ) {
-        this[param] = util.parseDaemonJSON( newPartyJSON );
-        sessionStorage[param] = JSON.stringify( this[param] );
+    updateParam( data, param ) {
+        this[param] = data;
+
+        if (typeof(data) == 'object' ) {
+            sessionStorage[param] = JSON.stringify( this[param] );
+        }
+        else {
+            sessionStorage[param] = this[param];
+        }
     }
 };
 
