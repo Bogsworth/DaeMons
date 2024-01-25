@@ -69,7 +69,7 @@
             "speed": 0
         },
         "enemy": {
-            "attack": -3,
+            "attack": -2,
             "defense": 0,
             "speed": 0
         }
@@ -187,7 +187,7 @@
         },
         "enemy": {
             "attack": 0,
-            "defense": -2,
+            "defense": -1,
             "speed": 0
         }
     }
@@ -221,7 +221,7 @@
     "statsAffected": {
         "self": {
             "attack": 0,
-            "defense": 3,
+            "defense": 1,
             "speed": 0
         },
         "enemy": {
@@ -278,7 +278,7 @@
     "uses": 10,
     "statsAffected": {
         "self": {
-            "attack": 1,
+            "attack": 2,
             "defense": 0,
             "speed": 0
         },

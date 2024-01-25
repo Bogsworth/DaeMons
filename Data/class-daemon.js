@@ -91,7 +91,37 @@ class Daemon {
     }
 
     updateTempStatChange( stat, change ) {
-        this.tempStatChange[stat] += change;
+        const MAX_OFFSET = 6
+
+        if (
+            this.tempStatChange[stat] >= MAX_OFFSET ||
+            this.tempStatChange[stat] <= 0 - MAX_OFFSET
+        ) {
+            return false;
+        }
+
+        if (this.checkStatChangeInRange( stat, change, MAX_OFFSET )) {
+            this.tempStatChange[stat] += change;
+            return true;
+        }
+
+        if (change >= 0) {
+            this.tempStatChange[stat] = MAX_OFFSET;
+        }
+        else {
+            this.tempStatChange[stat] = 0 - MAX_OFFSET;
+        }
+        return true;
+    }
+
+    checkStatChangeInRange( stat, change, maxOffset ) {
+        const MAX_VAL = maxOffset
+        const MIN_VAL = 0 - maxOffset;
+
+        return (
+            this.tempStatChange[stat] + change <= MAX_VAL &&
+            this.tempStatChange[stat] + change >= MIN_VAL
+        );
     }
 
     resetTempStatModifiers() {

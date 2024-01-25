@@ -4,6 +4,8 @@
 - [ ] TODO: Add a way to see the type of their Daemon (maybe)
 - [ ] TODO: Add a way to see the number of Daemons they have left
 - [ ] TODO: Clean up messages around status effects
+    - [ ] TODO: Make sure messages are clear if stats can no longer
+        be increased or decreased
 - [ ] TODO: Test that status modifiers are removed after Daemon switch
 - [ ] TODO: When changing mon info, if there are 3 moves for the old mon
     and 2 for the new one, the 3rd move stays even though there should only be 2
