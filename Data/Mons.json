@@ -56,8 +56,26 @@
         "attack": 55,
         "defense": 30,
         "speed": 30
+    },
+    "movesKnown": {
+        "tier 1": {
+           "normalLock": ["Do You Lift?", "Normal Punch", "Smack", null],
+           "boss": ["Do You Lift?", "Normal Punch", "Consecutive Normal Punches", null]
+        },
+        "tier 2": []
     }
 },
+{
+    "name": "Punch Goblin",
+    "type": ["wrath"],
+    "stats": {
+        "HP": 25,
+        "attack": 50,
+        "defense": 40,
+        "speed": 25
+    }
+},
+
 {
     "name": "Barbarian",
     "type": ["wrath"],

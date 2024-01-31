@@ -106,7 +106,7 @@ h1 {
     height: 0px; /* 0 width - change this with JavaScript */
     width: 100%; /* 100% Full-width */
     
-    background-color: red; /* red */
+    background-color: rgba(217, 255, 0, 0.87); /* red */
     overflow-y: hidden; /* Disable verticle scroll */
     padding-bottom: 0px; /* Place content 60px from the top */
     transition: 0.5s; /* 0.5 second transition effect to slide in the sidebar */
