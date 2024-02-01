@@ -2,6 +2,7 @@ import * as parse from './lib/import.js';
 import * as indexFuncs from './index-funcs.js';
 import * as util from './lib/utility.js';
 import starterJSON from './data/starting-options.json' assert { type: "json" };
+import { Daemon } from './data/class-daemon.js';
 
 /*
 # TODO List
@@ -21,17 +22,19 @@ import starterJSON from './data/starting-options.json' assert { type: "json" };
 */
 
 const information = document.getElementById('info')
-information.innerText = `This app is using Chrome (v${window.versions.chrome()}), Node.js (v${window.versions.node()}), and Electron (v${window.versions.electron()})`
+information.innerText = `This app is using Chrome (v${window.versions.chrome()}),` +
+    ` Node.js (v${window.versions.node()}), and Electron` +
+    ` (v${window.versions.electron()})`;
 
-// async function func() {
-//     const response = await window.versions.ping()
-//     console.log(response) // prints out 'pong'
-// }
-
-// func()
+const STARTER_IDS = ['monID000', 'monID001','monID002']
 
 
-let starterOptionArray = parse.createParty( starterJSON );
+//let starterOptionArray = parse.createParty( starterJSON );
+let starterOptionArray = [
+    new Daemon(STARTER_IDS[0]),
+    new Daemon(STARTER_IDS[1]),
+    new Daemon(STARTER_IDS[2])
+]
 console.log(starterOptionArray);
 
 indexFuncs.createStarterSection(starterOptionArray[0], 'option0' );

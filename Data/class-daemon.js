@@ -1,24 +1,39 @@
 import * as calc from '../lib/calculations.js'
+import * as parse from '../lib/Import.js'
 import { Move } from '../data/class-move.js'
 class Daemon {
-    constructor( builder = {
-        "id": "",
-        "name": "",
-        "type": [""],
-        "stats": {
-            "HP": 1,
-            "attack": 1,
-            "defense": 1,
-            "speed": 1
-        }
-    }) {
-        this.id = builder[ 'id' ];
-        this.name = builder[ 'name' ];
-        this.type = builder[ 'type' ];
-        this.stats = builder[ 'stats' ];
+    // constructor( builder = {
+    //     "id": "",
+    //     "name": "",
+    //     "type": [""],
+    //     "stats": {
+    //         "HP": 1,
+    //         "attack": 1,
+    //         "defense": 1,
+    //         "speed": 1
+    //     }
+    // }) {
+    constructor( id = "monID000", tier = 1, bossFlag = false) {
+        const TIER = 'tier ' + tier;
+        const LOCK_TYPE = this.bossFlagBoolToStr(bossFlag);        
+        let table = new Map(parse.createMonTable())
+        let initDaemon = table.get(id)
 
-        this.moves = [null, null, null, null];
-        this.currentHP = builder[ 'stats' ][ 'HP' ];
+        this.id = initDaemon[ 'id' ];
+        this.name = initDaemon[ 'name' ];
+        this.type = initDaemon[ 'type' ];
+        this.stats = initDaemon[ 'stats' ];
+
+        this.moves = [];
+        initDaemon.movesKnown[TIER][LOCK_TYPE].forEach( move => {
+            if (move == null) {
+                this.moves.push( move )
+                return;
+            }
+            this.moves.push(new Move(move))
+        }
+        );
+        this.currentHP = initDaemon[ 'stats' ][ 'HP' ];
 
         this.tempStatChange = {
             "attack": 0,
@@ -32,6 +47,14 @@ class Daemon {
     returnID() { return this.id; }
     returnName() { return this.name; }
     returnType() { return this.type; }
+    returnTypeAsString() {
+        if ( this.type.length == 1 ) {
+            return this.type[0];
+        }
+        else if ( this.type.length == 2) {
+            return `${this.type[0]}, ${this.type[1]}`;
+        }
+    }
     returnStats() { return this.stats; }
     returnTempStatsModifiers() { return this.tempStatChange; }
     returnMoves() { return this.moves; }
@@ -46,7 +69,7 @@ class Daemon {
     returnDescription() { return this.description; }
 
     // TODO: Test addMove()
-    addMove( moveString ) {
+    addMove( newMove ) {
         if ( this.returnTotalMovesKnown == 4 ) {
             throw new Error('MovesFull');
         }
@@ -55,7 +78,7 @@ class Daemon {
             if ( move != null ) {
                 return;
             }
-            move = new Move( moveString );
+            move = newMove;
         });
     }
 
@@ -153,6 +176,13 @@ class Daemon {
         });
 
         return movesKnown;
+    }
+
+    bossFlagBoolToStr(bossFlag) {
+        if ( bossFlag ) {
+            return 'boss';
+        }
+        return 'normalLock';
     }
 };
 

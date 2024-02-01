@@ -2,7 +2,8 @@ import * as util from './lib/utility.js'
 
 function createStarterSection( daemon, optionId ) {
     const NAME = daemon.returnName();
-    const TYPE = typeToReadable(daemon.returnType());
+    //const TYPE = typeToReadable(daemon.returnType());
+    const TYPE = daemon.returnTypeAsString();
     const DESC = `The daemon ${NAME} is a pretty cool dude.`      
     let elIdMap = new Map([
         ['option0', ['name0', 'type0', 'desc0']],
@@ -22,16 +23,6 @@ function createStarterSection( daemon, optionId ) {
 
 function startGame( chosenMon ) {
     util.savePostFightParty( [chosenMon] );
-}
-
-// Helper functions
-function typeToReadable( typeArray ) {
-    if ( typeArray.length == 1 ) {
-        return typeArray[0];
-    }
-    else if ( typeArray.length == 2) {
-        return `${typeArray[0]}, ${typeArray[1]}`;
-    }
 }
 
 export {

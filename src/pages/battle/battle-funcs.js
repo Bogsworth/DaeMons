@@ -16,7 +16,7 @@
 
 import * as calc from '../../../lib/calculations.js';
 import * as util from '../../../lib/utility.js';
-import * as parse from '../../../lib/import.js';
+import * as parse from '../../../lib/Import.js';
 import { Move } from '../../../data/class-move.js'
 
 function changeHeader( newHeader ) {

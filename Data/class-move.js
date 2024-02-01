@@ -1,31 +1,45 @@
+import * as parse from '../lib/Import.js'
+import * as calc from '../lib/Calculations.js'
+
 class Move {
-    constructor( builder = {
-        "id": "",
-        "name": "",
-        "type": "",
-        "power": 1,
-        "accuracy": 1,
-        "uses": 1,
-        "statsAffected": {
-            "self": {
-                "attack": 0,
-                "defense": 0,
-                "speed": 0
-            },
-            "enemy": {
-                "attack": 0,
-                "defense": 0,
-                "speed": 0
-            }
+    // constructor( builder = {
+    //     "id": "",
+    //     "name": "",
+    //     "type": [""],
+    //     "power": 1,
+    //     "accuracy": 1,
+    //     "uses": 1,
+    //     "statsAffected": {
+    //         "self": {
+    //             "attack": 0,
+    //             "defense": 0,
+    //             "speed": 0
+    //         },
+    //         "enemy": {
+    //             "attack": 0,
+    //             "defense": 0,
+    //             "speed": 0
+    //         }
+    //     }
+    // }) {
+    constructor ( builder = 'Smack' ) {
+        let moveTable = new Map(parse.createMoveTable())
+        let moveData;
+
+        if ( typeof( builder ) == 'string') {
+            let ID = calc.returnIDFromName(builder, moveTable)
+            moveData = moveTable.get(ID);    
         }
-    }) {
-        this.id = builder[ 'id' ];
-        this.name = builder[ 'name' ];
-        this.type = builder[ 'type' ];
-        this.power = builder[ 'power' ];
-        this.accuracy = builder[ 'accuracy' ];
-        this.uses = builder[ 'uses' ];
-        this.statsAffected = builder[ 'statsAffected' ];
+        else {
+            moveData = builder;
+        }
+        this.id = moveData[ 'id' ];
+        this.name = moveData[ 'name' ];
+        this.type = moveData[ 'type' ];
+        this.power = moveData[ 'power' ];
+        this.accuracy = moveData[ 'accuracy' ];
+        this.uses = moveData[ 'uses' ];
+        this.statsAffected = moveData[ 'statsAffected' ];
 
         this.remainingUses = this.uses;
         this.description = 'Hello! I am a move!';
@@ -51,6 +65,25 @@ class Move {
             this[key] = parsedData[key]
         }
     }
+
+    returnStatAffectedBool() {
+        let statsAffected = false;
+        Object.entries( this.statsAffected )
+            .flat( Infinity )
+            .filter( entry => typeof(entry) == 'object')
+            .forEach( entry => {
+                let x = Object.entries( entry )
+                    .flat(Infinity)
+                    .filter(entry => typeof( entry ) == 'number')
+                    .every( num => num === 0 )
+                if (x == false) {
+                    statsAffected = true;
+                    return;
+                }
+            })
+
+        return statsAffected;
+    }
     
     returnStatsAffectedArray() {
         let effectArray = [];
@@ -73,6 +106,36 @@ class Move {
     resetRemainingUses() {
         this.remainingUses = this.uses;
     }
+
+    checkIfHit() {
+        const HIT_CHANCE = this.accuracy / 100;
+        const RAND = Math.random();
+    
+        return (RAND < HIT_CHANCE)
+    }
 }
+
+// let moveTest = new Move (
+//     {
+//         "id": "",
+//         "name": "",
+//         "type": "",
+//         "power": 1,
+//         "accuracy": 1,
+//         "uses": 1,
+//         "statsAffected": {
+//             "self": {
+//                 "attack": 0,
+//                 "defense": 0,
+//                 "speed": 0
+//             },
+//             "enemy": {
+//                 "attack": 0,
+//                 "defense": 0,
+//                 "speed": 0
+//             }
+//         }
+//     });
+
 
 export { Move }

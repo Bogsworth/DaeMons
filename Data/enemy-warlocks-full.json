@@ -1,0 +1,223 @@
+[{
+    "name": "Tutorial",
+    "daemonTypes": ["unaligned"],
+    "allowedDaemons": {
+        "tier 1": [["Normal Guy"]],
+        "tier 2": [["Normal Guy"]],
+        "tier 3": [["Normal Guy"]]
+    },
+    "Daemons": [
+        {
+            "name": "Normal Guy",
+            "moves": ["Smack", "Philanthropy", null, null]
+        }
+    ],
+    "description": "This guy should be a walk in the park",
+    "reward": {
+        "name": "Normal Guy",
+        "moves": ["Smack", "Philanthropy", null, null]
+    },
+    "tier": 0
+},
+{
+    "name": "Fight Guy",
+    "daemonTypes": ["wrath"],
+    "allowedDaemons": {
+        "tier 1": [["Angy Boy"], ["Punch Goblin"]],
+        "tier 2": [["Barbarian"]],
+        "tier 3": [["Jingoist"], ["Dragon"]]
+    },
+    "Daemons": [
+        {
+            "name": "Precocious Little Shit",
+            "moves": ["Show Off", "Charm", null, null]
+        }
+    ],
+    "description": "This guy should be a walk in the park too",
+    "reward": {
+        "name": "Punch Goblin",
+        "moves": ["Do You Lift?", "Smack", null, null]
+    },
+    "tier": 1,
+    "nextFight": "Pushover 2"
+},
+{
+    "name": "Ling Yao",
+    "daemonTypes": ["greed"],
+    "allowedDaemons": {
+        "tier 1": [],
+        "tier 2": [],
+        "tier 3": []
+    },
+    "Daemons": [],
+    "description": "If you turn your back on something you wanted, then you don't deserve to call yourself 'Greed'!",
+    "reward": {
+        "name": "",
+        "moves": []
+    },
+    "tier": 1,
+    "nextFight": "Pushover 2"
+},
+{
+    "name": "Pushover",
+    "daemonTypes": ["unaligned", "pride"],
+    "allowedDaemons": {
+        "tier 1":
+        [
+            ["Precocious Little Shit"],
+            ["Normal Guy", "Normal Guy"],
+            ["Wretched"]
+        ],
+        "tier 2": [["Precocious Little Shit"]],
+        "tier 3": [["Precocious Little Shit"]]
+    },
+    "Daemons": [
+        {
+            "name": "Precocious Little Shit",
+            "moves": ["Show Off", "Charm", null, null]
+        }
+    ],
+    "description": "This guy should be a walk in the park too",
+    "reward": {
+        "name": "Precocious Little Shit",
+        "moves": ["Show Off", "Charm", null, null]
+    },
+    "tier": 1,
+    "nextFight": "Pushover 2"
+},
+{
+    "name": "Pushover 2",
+    "Daemons": [
+        {
+            "name": "Normal Guy",
+            "moves": ["Smack", "Philanthropy", null, null]
+        },
+        {
+            "name": "Normal Guy",
+            "moves": ["Smack", "Philanthropy", null, null]
+        }
+    ],
+    "description": "This guy should be a walk in the park three",
+    "reward": "",
+    "tier": 1,
+    "nextFight": "Pushover 3"
+},
+{
+    "name": "Pushover 3",
+    "Daemons": [
+        {
+            "name": "Wretched",
+            "moves": ["Lash Out", "Cozy Up", null, null]
+        }
+    ],
+    "description": "This guy should be a walk in the park three",
+    "reward": {
+        "name": "Wretched",
+        "moves": ["Lash Out", "Cozy Up", null, null]
+    },
+    "tier": 1,
+    "nextFight": "Shorts-Wearer"
+},
+{
+    "name": "Slightly Tougher Guy",
+    "Daemons": [
+        {
+            "name": "Succubus",
+            "moves": ["Chain Whip", "Charm", null, null]
+        }
+    ],
+    "description": "This guy is a little tougher than a pushover, but still tier 1",
+    "reward": {
+        "name": "Succubus",
+        "moves": ["Chain Whip", "Charm", null, null]
+    },
+    "tier": 1,
+    "nextFight": "Shorts-Wearer"
+},
+{
+    "name": "Slightly Tougher Guy 2",
+    "Daemons": [
+        {
+            "name": "Angy Boy",
+            "moves": ["Do You Lift?", "Normal Punch", "Smack", null]
+        }
+    ],
+    "description": "This guy is a little tougher than a pushover, but still tier 1",
+    "reward": {
+        "name": "Angy Boy",
+        "moves": ["Do You Lift?", "Normal Punch", "Smack", null]
+    },
+    "tier": 1,
+    "nextFight": "Shorts-Wearer"
+},
+{
+    "name": "Shorts-Wearer",
+    "Daemons": [
+        {
+            "name": "Damned",
+            "moves": ["Lash Out", "Remove FOMO", null, null]
+        },
+        {
+            "name": "Lay-Z-Boy",
+            "moves": ["Normal Punch", "Convince to Stay In", null, null]
+        },
+        {
+            "name": "Damned",
+            "moves": ["Lash Out", "Remove FOMO", null, null]
+        }
+    ],
+    "description": "Shorts are comfy, and easy to wear!",
+    "reward": {
+        "name": "Damned",
+        "moves": ["Lash Out", "Remove FOMO", null, null]
+    },
+    "tier": 2,
+    "nextFight": "Mirror-You"
+},
+{
+    "name": "Mirror-You",
+    "Daemons": [
+        {
+            "name": "Fuckboy",
+            "moves": ["Laze", "Show Off", null, null]
+        },
+        {
+            "name": "Imp",
+            "moves": ["Nibble", "Buyout", null, null]
+        },
+        {
+            "name": "Angy Boy",
+            "moves": ["Consecutive Normal Punches", "Chain Whip", null, null]
+        }
+    ],
+    "description": "You may be strong, but are you strong enough to face.... Yourself?",
+    "reward": {
+        "name": "Angy Boy",
+        "moves": ["Consecutive Normal Punches", "Chain Whip", null, null]
+    },
+    "tier": 2,
+    "nextFight": "Moneybags"
+},
+{
+    "name": "Moneybags",
+    "Daemons": [
+        {
+            "name": "Imp",
+            "moves": ["Nibble", "Buyout", null, null]
+        },
+        {
+            "name": "Imp",
+            "moves": ["Nibble", "Buyout", null, null]
+        },
+        {
+            "name": "Dragon",
+            "moves": ["Fuck You Money", "Consecutive Normal Punches", null, null]
+        }
+    ],
+    "description": "He looks like the kind of guy who made his fortune from his parents' emerald mine.",
+    "reward": {
+        "name": "Dragon",
+        "moves": ["Fuck You Money", "Consecutive Normal Punches", null, null]
+    },
+    "tier": 3
+}]
