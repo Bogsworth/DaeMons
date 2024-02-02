@@ -2,7 +2,7 @@ import * as parse from './lib/import.js';
 import * as indexFuncs from './index-funcs.js';
 import * as util from './lib/utility.js';
 import starterJSON from './data/starting-options.json' assert { type: "json" };
-import { Daemon } from './data/class-daemon.js';
+import { Daemon } from './classes/class-daemon.js';
 
 /*
 # TODO List

@@ -35,30 +35,48 @@
 import * as util from '../../../lib/utility.js'
 import * as parse from '../../../lib/import.js'
 import * as scripts from './battle-funcs.js'
+import { BattleState } from '../../../classes/class-battle-state.js';
+import { Atlas } from '../../../classes/class-atlas.js'
+import { UIHandler } from '../../../classes/class-UI-handler.js';
 
 const TYPE_TABLE = parse.createCounterTable();
 
 // Note: myParty[0] always starts as the active Daemon;
 let myParty = scripts.loadMyParty();
 let currentLock = scripts.loadCurrentLock();
-let fightState = {
-    TYPE_TABLE: TYPE_TABLE,
-    myParty: myParty,
-    myActiveMon: myParty[0],
-    enemyLock: currentLock,
-    theirParty: currentLock.party,
-    theirActiveMon: currentLock.party[0]
+
+
+let levels = new Atlas([1,2]);
+console.log(levels)
+let fightState;
+
+if ( sessionStorage.currentRoomID == undefined) {
+    fightState = new BattleState( levels.battleOrder.get('roomID000').lock)
 }
+else {
+    fightState = new BattleState( sessionStorage.currentRoomID )
+}
+
+// let fightState = {
+//     TYPE_TABLE: TYPE_TABLE,
+//     myParty: myParty,
+//     myActiveMon: myParty[0],
+//     enemyLock: currentLock,
+//     theirParty: currentLock.party,
+//     theirActiveMon: currentLock.party[0]
+// }
 const HEADER = scripts.generateHeaderFromWarlock( fightState.enemyLock );
 
 console.log(sessionStorage)
 console.log(fightState)
 
 scripts.changeHeader( HEADER );
-util.populateSelect( fightState.myActiveMon.moves, 'selectMoves' );
-util.populateSelect( fightState.myParty, 'selectMons' );
 
-let monButtons = scripts.generateMonButtons(fightState.myParty);
+console.log(fightState.playerParty.activeMon)
+util.populateSelect( fightState.playerParty.activeMon.returnMoves(), 'selectMoves' );
+util.populateSelect( fightState.playerParty.fullParty, 'selectMons' );
+
+let monButtons = scripts.generateMonButtons(fightState.playerParty.fullParty);
 
 util.attachButton(
     function() {
@@ -81,5 +99,5 @@ monButtons.forEach( buttId => {
     );
 })
 
-scripts.updateMon( fightState.myActiveMon, true );
-scripts.updateMon( fightState.theirActiveMon, false );
+scripts.updateMon( fightState.playerParty.activeMon, true );
+scripts.updateMon( fightState.enemyLock.activeMon, false );

@@ -1,10 +1,11 @@
-import { Daemon } from '../data/class-daemon.js'
-import { Move } from '../data/class-move.js'
+import { Daemon } from './class-daemon.js'
+import { Move } from './class-move.js'
 
 class Party {
     constructor(builder = [ new Daemon() ]) {
         
         this.fullParty = builder;
+        this.activeMon = this.fullParty[0];
     }
 
     checkIfWipe() {

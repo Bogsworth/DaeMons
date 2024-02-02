@@ -1,6 +1,6 @@
 import * as calc from '../lib/calculations.js'
 import * as parse from '../lib/Import.js'
-import { Move } from '../data/class-move.js'
+import { Move } from './class-move.js'
 class Daemon {
     // constructor( builder = {
     //     "id": "",

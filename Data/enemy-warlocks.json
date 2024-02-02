@@ -2,22 +2,13 @@
     "name": "Tutorial",
     "daemonTypes": ["unaligned"],
     "allowedDaemons": {
-        "tier 1": [["Normal Guy"]],
-        "tier 2": [["Normal Guy"]],
-        "tier 3": [["Normal Guy"]]
+        "tier 0": [["Normal Guy"]]
     },
-    "Daemons": [
-        {
-            "name": "Normal Guy",
-            "moves": ["Smack", "Philanthropy", null, null]
-        }
-    ],
     "description": "This guy should be a walk in the park",
     "reward": {
         "name": "Normal Guy",
         "moves": ["Smack", "Philanthropy", null, null]
-    },
-    "tier": 0
+    }
 },
 {
     "name": "Fight Guy",
@@ -27,36 +18,26 @@
         "tier 2": [["Barbarian"]],
         "tier 3": [["Jingoist"], ["Dragon"]]
     },
-    "Daemons": [
-        {
-            "name": "Precocious Little Shit",
-            "moves": ["Show Off", "Charm", null, null]
-        }
-    ],
     "description": "This guy should be a walk in the park too",
     "reward": {
         "name": "Punch Goblin",
         "moves": ["Do You Lift?", "Smack", null, null]
-    },
-    "tier": 1,
-    "nextFight": "Pushover 2"
+    }
 },
 {
     "name": "Ling Yao",
     "daemonTypes": ["greed"],
     "allowedDaemons": {
-        "tier 1": [],
-        "tier 2": [],
-        "tier 3": []
+        "tier 1": [["Imp"]],
+        "tier 2": [["Imp"]],
+        "tier 3": [["Imp"]]
     },
     "Daemons": [],
     "description": "If you turn your back on something you wanted, then you don't deserve to call yourself 'Greed'!",
     "reward": {
-        "name": "",
-        "moves": []
-    },
-    "tier": 1,
-    "nextFight": "Pushover 2"
+        "name": "Imp",
+        "moves": [null, null, null, null]
+    }
 },
 {
     "name": "Pushover",
@@ -71,17 +52,9 @@
         "tier 2": [["Precocious Little Shit"]],
         "tier 3": [["Precocious Little Shit"]]
     },
-    "Daemons": [
-        {
-            "name": "Precocious Little Shit",
-            "moves": ["Show Off", "Charm", null, null]
-        }
-    ],
     "description": "This guy should be a walk in the park too",
     "reward": {
         "name": "Precocious Little Shit",
         "moves": ["Show Off", "Charm", null, null]
-    },
-    "tier": 1,
-    "nextFight": "Pushover 2"
+    }
 }]
