@@ -4,7 +4,7 @@
 import roomJSON from '../data/enemy-warlocks-by-tier.json' assert { type: "json" };
 import lockJSON from '../data/enemy-warlocks.json' assert { type: "json"};
 import * as parse from '../lib/Import.js'
-import * as calc from '../lib/calculations.js'
+import * as calc from '../lib/Calculations.js'
 import { Warlock } from './class-warlock.js'
 
 

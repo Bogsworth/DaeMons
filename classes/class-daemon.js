@@ -1,4 +1,4 @@
-import * as calc from '../lib/calculations.js'
+import * as calc from '../lib/Calculations.js'
 import * as parse from '../lib/Import.js'
 import { Move } from './class-move.js'
 class Daemon {
@@ -67,6 +67,8 @@ class Daemon {
     returnDefenseStat() { return this.stats.defense; }
     returnSpeedStat() { return this.stats.speed; }
     returnDescription() { return this.description; }
+
+    returnTrueIfDead() { return this.returnCurrentHP() <= 0; }
 
     // TODO: Test addMove()
     addMove( newMove ) {

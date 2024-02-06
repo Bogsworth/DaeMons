@@ -4,25 +4,30 @@ import { Move } from './class-move.js'
 class Party {
     constructor(builder = [ new Daemon() ]) {
         
-        this.fullParty = builder;
-        this.activeMon = this.fullParty[0];
+        this.members = builder;
+        this.activeMon = this.members[0];
     }
 
     checkIfWipe() {
         return (
-            this.fullParty
+            this.members
                 .every( mon => mon.returnCurrentHP() <= 0 )
         );
     }
 
     saveToLocation( location = sessionStorage.currentParty ) {
-        location = JSON.stringify(this.fullParty);
+        location = JSON.stringify(this.members);
+    }
+
+    switchActiveDaemonToIndex( index ) {
+        this.activeMon.resetTempStatModifiers();
+        this.activeMon = this.members[ index ];
     }
 
 }
 // let party = new Party()
 // party.saveToLocation();
-// party.fullParty[0].updateHP(20)
+// party.members[0].updateHP(20)
 
 // console.log(party.checkIfWipe())
 

@@ -67,7 +67,7 @@ class Warlock {
             )
         }
 
-        this.activeMon = this.party.fullParty[0];
+        this.activeMon = this.party.members[0];
     }
 
     partyCreator(allowedDaemonsOfTier) {
