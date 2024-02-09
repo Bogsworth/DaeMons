@@ -19,37 +19,37 @@ import * as util from '../../../lib/utility.js';
 import * as parse from '../../../lib/Import.js';
 import { Move } from '../../../classes/class-move.js'
 
-function loadMyParty() {
-    let myParty = [];
+// function loadMyParty() {
+//     let myParty = [];
 
-    if (sessionStorage.currentParty == undefined ) {
-        myParty = parse.createParty();
-    } 
-    else {
-        let partyJSON = JSON.parse(sessionStorage.currentParty);
+//     if (sessionStorage.currentParty == undefined ) {
+//         myParty = parse.createParty();
+//     } 
+//     else {
+//         let partyJSON = JSON.parse(sessionStorage.currentParty);
 
-        myParty = util.parseDaemonJSON(partyJSON);
-    }
+//         myParty = util.parseDaemonJSON(partyJSON);
+//     }
 
-    return myParty;
-}
+//     return myParty;
+// }
 
-function loadCurrentLock() {
-    let currentLock;
-    let warlocks = parse.createWarlocks();
-    const INIT_LOCK_NAME = 'Tutorial';
+// function loadCurrentLock() {
+//     let currentLock;
+//     let warlocks = parse.createWarlocks();
+//     const INIT_LOCK_NAME = 'Tutorial';
 
-    if ( sessionStorage.nextLock == undefined ) {
-        currentLock = warlocks.get( calc.returnIDFromName(INIT_LOCK_NAME, warlocks));
-    }
-    else {
-        let lockJSON = JSON.parse(sessionStorage.nextLock);
-        console.log(lockJSON)
-        currentLock = warlocks.get( calc.returnIDFromName( lockJSON.name, warlocks))
-    }
+//     if ( sessionStorage.nextLock == undefined ) {
+//         currentLock = warlocks.get( calc.returnIDFromName(INIT_LOCK_NAME, warlocks));
+//     }
+//     else {
+//         let lockJSON = JSON.parse(sessionStorage.nextLock);
+//         console.log(lockJSON)
+//         currentLock = warlocks.get( calc.returnIDFromName( lockJSON.name, warlocks))
+//     }
 
-    return currentLock;
-}
+//     return currentLock;
+// }
 
 // function updateMon( mon, isYourMon = true) {
 //     const NAME = mon.name;
@@ -512,8 +512,8 @@ function loadCurrentLock() {
 // }
 
 export {
-    loadMyParty,
-    loadCurrentLock,
+    //loadMyParty,
+    //loadCurrentLock,
     //pdateMon,
     //handleAttack,
     //handleSwitch

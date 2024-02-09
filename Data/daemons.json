@@ -252,6 +252,10 @@
         "speed": 36
     },
     "movesKnown": {
+        "tier 0": {
+            "normalLock":  ["Smack", "Philanthropy", null, null],
+            "boss": ["Smack", "Philanthropy", null, null]
+        },
         "tier 1": {
            "normalLock":  ["Smack", "Philanthropy", null, null],
            "boss": ["Smack", "Philanthropy", null, null]

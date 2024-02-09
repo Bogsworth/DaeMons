@@ -1,85 +1,77 @@
 import { Daemon } from './class-daemon.js'
 import { Party } from './class-party.js'
+import lockJSON from '../data/enemy-warlocks.json' assert { type: "json"};
 import * as calc from '../lib/Calculations.js'
 import * as parse from '../lib/Import.js'
 
 class Warlock {
     /**
-     * 
-     * @param {*} name 
-     * @param {*} daemonTypes 
-     * @param {*} allowedDaemons 
-     * @param {*} party 
-     * @param {*} description 
-     * @param {*} reward 
-     * @param {*} id 
-     * @param {*} tier 
+     * If builder is a string, it will assume it is a lockID and pull the
+     * specified Warlock
+     * @param {*} builder 
      */
-    // constructor(builder = {
-    //     "name": "Fight Guy",
-    //     "daemonTypes": ["wrath"],
-    //     "allowedDaemons": {
-    //         "tier 1": [["Angy Boy"], ["Punch Goblin"]],
-    //         "tier 2": [["Barbarian"]],
-    //         "tier 3": [["Jingoist"], ["Dragon"]]
-    //     },
-    //     "description": "This guy should be a walk in the park too",
-    //     "reward": {
-    //         "name": "Punch Goblin",
-    //         "moves": ["Do You Lift?", "Smack", null, null]
-    //     }
-    // }) {
-    // ----------
-    // constructor( builder = parse.createWarlocks().get('lockID000')) {
-    //     let monMap = parse.createMonTable();
-    //     console.log(monMap)
-
-        // this.party = [ new Daemon(builder["allowedDaemons"]["tier 1"][0]) ];
-    // -------------
-    // constructor(builder = new Party([
-    //     new Daemon('monID000'),
-    //     new Daemon('monID001'),
-    //     new Daemon('monID002')
-    // ])) {
-    // -------------
-    constructor(
-        name = '',
-        daemonTypes = [ 'unaligned' ],
-        allowedDaemons = null,
-        party = new Party(),
-        description = '',
-        reward = null,
-        id = 'lockID999',
-        tier = null
+    constructor( builder = 
+        {
+            id: 'lockID69420',
+            name: 'EmptyLock',
+            daemonTypes: [ 'unaligned' ],
+            tier: 'tier 1',
+            party: new Party(),
+            description: 'empty Warlock builder description',
+            reward: {}
+        }
     ) {
-        this.name = name;
-        this.daemonTypes = daemonTypes;
-        this.allowedDaemons = allowedDaemons;
-        this.party = party;
-        this.description = description;
-        this.reward = reward;
-        this.id = id;
-        this.tier = tier;
+        let formattedBuilder = builder;
 
-        if ( tier && allowedDaemons ) {
-            this.party = new Party(
-                this.partyCreator(allowedDaemons[tier])
-            )
+        if ( typeof( builder ) === 'string') {
+            formattedBuilder = this.returnBuildObjFromLockID( builder, 0 );
         }
 
-        this.activeMon = this.party.members[0];
+        this.id = formattedBuilder.id;
+        this.name = formattedBuilder.name;
+        this.daemonTypes = formattedBuilder.daemonTypes;
+        this.tier = formattedBuilder.tier;
+        this.party = new Party( formattedBuilder.party );
+        this.description = formattedBuilder.description;
+        this.reward = formattedBuilder.reward;
     }
 
-    partyCreator(allowedDaemonsOfTier) {
-        let tempParty = [];
+    returnBuildObjFromLockID( ID, tier = 1, isBossFlag = false ) {
+        const LOCK_MAP = parse.createWarlocks(lockJSON);
+        const LOCK_INFO = LOCK_MAP.get( ID );
+        const TIER = 'tier ' + tier;
+        const PARTY_CREATOR = this.partyCreator(LOCK_INFO.allowedDaemons[TIER], tier, isBossFlag)
+        let builder = {};
+
+        builder.id = ID;
+        builder.tier = TIER;
+        builder.name = LOCK_INFO.name;
+        builder.daemonTypes = LOCK_INFO.daemonTypes;
+        builder.description = LOCK_INFO.description;
+        builder.reward = LOCK_INFO.reward;
+
+        builder.party = new Party();
+        builder.party.setParty( PARTY_CREATOR );
+
+        return builder;
+    }
+
+    partyCreator(allowedDaemonsOfTier, tier, isBossFlag) {
         const LENGTH = allowedDaemonsOfTier.length;
         const INDEX = calc.getRandomInt(LENGTH);
-        const RANDOM_PARTY = allowedDaemonsOfTier[INDEX];
+        const SELECTED_DAEMON_NAMES = allowedDaemonsOfTier[INDEX];
 
-        RANDOM_PARTY.forEach(daemon => {
-            tempParty.push( new Daemon( calc.returnIDFromName(daemon, parse.createMonTable()) ));
-        })
-        return tempParty;
+        return SELECTED_DAEMON_NAMES
+            .map( daemonName => createDaemonFromName( daemonName, tier, isBossFlag ));
+
+        function createDaemonFromName( name, tier, isBossFlag ) {
+            const MON_TABLE = parse.createMonTable()
+            const DAEMON_ID = calc.returnIDFromName( name, MON_TABLE );
+            const DAEMON = new Daemon();
+
+            DAEMON.generateDaemonFromID( DAEMON_ID, tier, isBossFlag )
+            return DAEMON;
+        }
     }
 
     chooseMove() {
@@ -88,7 +80,18 @@ class Warlock {
     
         return this.activeMon.moves[ chosenMoveIndex ];
     }
-
 }
+
+// console.log('hello world!')
+// let lock = new Warlock('lockID000');
+// console.log(lock)
+
+// let convertedLock = JSON.stringify(lock);
+// console.log(convertedLock)
+
+// let revivedLock = new Warlock(JSON.parse(convertedLock))
+// // console.log(revivedLock);
+// console.dir(revivedLock, {depth: null})
+
 
 export { Warlock }

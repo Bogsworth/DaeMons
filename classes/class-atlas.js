@@ -8,6 +8,7 @@ import * as calc from '../lib/Calculations.js'
 import { Warlock } from './class-warlock.js'
 
 
+
 class Atlas {
     constructor(requiredLocksPerTier = [1, 3, 1, 1]) {
         this.lockMap = parse.createWarlocks(lockJSON);
@@ -197,10 +198,57 @@ function randArrayNoRepeats(length, availableOptions) {
     return array;
 }
 
-// let atlas = new Atlas([1, 2])
+
+
+
+function replacer(key, value) {
+    if ( value instanceof Map ) {
+        console.log('value is instanceofMap')
+        console.log(value)
+        return {
+            dataType: 'Map',
+            value: Array.from(value.entries()), // or with spread: value: [...value]
+        };
+    } else if ( value instanceof Warlock) {
+        console.log('value is instaceof Warlock')
+        console.log(value)
+        return {
+            dataType: 'Warlock',
+            value: Array.from(value.entries()),
+        }
+    } else {
+        return value;
+    }
+}
+
+function reviver(key, value) {
+    if (typeof value === 'object' && value !== null) {
+        if (value.dataType === 'Map') {
+            return new Map(value.value);
+        }
+        if (value.dataType === 'Warlock') {
+            console.log(value.value)
+            return new Warlock(value.value)
+        }
+    }
+    return value;
+}
+
+
+let atlas = new Atlas([1, 2]);
 //let lockMap = parse.createWarlocks(lockJSON);
 
-// console.log(atlas)
+console.dir(atlas.battleOrder, {depth: null})
+
+//let atlasStringified = JSON.stringify(atlas, replacer)
+
+//console.log(atlasStringified);
+
+//let revivedAtlas = JSON.parse(atlasStringified, reviver);
+
+// console.log(revivedAtlas.battleOrder.get('roomID00'))
+
+//console.dir( revivedAtlas.battleOrder, {depth: null})
 
 //console.dir(atlas.battleOrder.get('roomID001').lock.party, {depth: null})
 
@@ -212,5 +260,6 @@ function randArrayNoRepeats(length, availableOptions) {
 // let searchedMon = parse.daemonFilter([{param: 'type', value: 'lust'}], 1)
 
 // console.dir(searchedMon)
+
 
 export { Atlas }

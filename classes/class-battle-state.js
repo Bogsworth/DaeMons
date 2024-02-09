@@ -5,7 +5,7 @@ import * as battFuncs from '../src/pages/battle/battle-funcs.js'
 import { Party } from './class-party.js'
 import { Warlock } from './class-warlock.js'
 import { Daemon } from './class-daemon.js'
-import { OnBattleEnd } from './class-on-battle-end.js'
+import { StorageHandler } from './class-on-battle-end.js'
 import { Message } from './class-message.js'
 
 class BattleState {
@@ -15,7 +15,7 @@ class BattleState {
         this.playerParty = this.partyLoader(sessionStorage.currentParty);
         this.enemyLock = enemyLock;
         this.TYPE_TABLE = parse.createCounterTable();
-        this.battleEnder = new OnBattleEnd();
+        // this.battleEnder = new StorageHandler(this);
     }
 
     setHandlerInit(handler) {
@@ -187,6 +187,9 @@ class BattleState {
              */
             //#endregion
     
+            // Currently this is not its own function because I don't know 
+            // how to do the 'await waitForPress()' in a different
+            // function...
             switch (bitTracker) {
                 case '00':
                     // Nothing?
@@ -203,7 +206,8 @@ class BattleState {
                     await waitForPress();
                     HANDLER.writeToMessageBox( `You lose.` );
                     await waitForPress();
-                    state.battleEnder.endGame();
+                    //state.battleEnder.endGame();
+                    state.endFight();
                     break;
                 case '10':
                     if ( state.enemyLock.party.checkIfWipe()) {
@@ -218,7 +222,8 @@ class BattleState {
                             HANDLER.writeToMessageBox( `You've earned a(n) ${reward.name}!`);
                             await waitForPress();
                         }
-                        state.battleEnder.endFight( state );
+                        //state.battleEnder.endFight();
+                        state.endFight();
                         break;
                     }
                     HANDLER.writeToMessageBox( 'Their dude has died, hell yeah!');
@@ -244,7 +249,8 @@ class BattleState {
                         await waitForPress();
                         HANDLER.writeToMessageBox( `You lose.` );
                         await waitForPress();
-                        state.battleEnder.endGame();
+                        //state.battleEnder.endGame();
+                        state.endFight();
                         break;
                     }
                     if (! state.enemyLock.party.members.checkIfWipe()) {
@@ -261,7 +267,7 @@ class BattleState {
                         HANDLER.writeToMessageBox( `You've earned a(n) ${reward.name}!`);
                         await waitForPress();
                     }
-                    state.battleEnder.endFight( state );
+                    state.endFight();
                     break;
             }
             HANDLER.postRoundCleanUp( btnResolver );
@@ -281,9 +287,10 @@ class BattleState {
             move: chosenMove,
             typeModifier: TYPE_MOD
         };
+        
         let damage = calc.calculateDamage( ROUND_INFO );
-        let messageMaker = new Message(this, playerActiveFlag, chosenMove);
-        let message = messageMaker.returnMessage();
+        let moveHit = chosenMove.checkIfHit();
+        let messageMaker = new Message(this, playerActiveFlag, chosenMove, moveHit);
 
         console.log( ROUND_INFO );
 
@@ -303,7 +310,7 @@ class BattleState {
         chosenMove.decrementRemainingUses();
         defendingMon.updateHP( damage );
         this.handler.updateShownHP()
-        this.handler.writeToMessageBox( message );
+        this.handler.writeToMessageBox( messageMaker.returnMessage() );
     }
 
     handleSwitch() {   
@@ -365,6 +372,11 @@ class BattleState {
             }
             HANDLER.postRoundCleanUp(btnResolver)
         }
+    }
+
+    endFight() {
+        console.log(this)
+        let battleEnder = new StorageHandler(this);
     }
 }
 

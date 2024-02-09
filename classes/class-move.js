@@ -2,47 +2,64 @@ import * as parse from '../lib/Import.js'
 import * as calc from '../lib/Calculations.js'
 
 class Move {
-    // constructor( builder = {
-    //     "id": "",
-    //     "name": "",
-    //     "type": [""],
-    //     "power": 1,
-    //     "accuracy": 1,
-    //     "uses": 1,
-    //     "statsAffected": {
-    //         "self": {
-    //             "attack": 0,
-    //             "defense": 0,
-    //             "speed": 0
-    //         },
-    //         "enemy": {
-    //             "attack": 0,
-    //             "defense": 0,
-    //             "speed": 0
-    //         }
-    //     }
-    // }) {
-    constructor ( builder = 'Smack' ) {
-        let moveTable = new Map(parse.createMoveTable())
+    /**
+     * If builder is a string, it looks for a move of the same name,
+     * otherwise it assumes builder is an object
+     * @param {*} builder 
+     */
+    constructor( builder = {
+        "id": "testID69420",
+        "name": "Test Move",
+        "type": "unaligned",
+        "power": 69,
+        "accuracy": 69,
+        "uses": 420,
+        "statsAffected": {
+            "self": {
+                "attack": 2,
+                "defense": 0,
+                "speed": 0
+            },
+            "enemy": {
+                "attack": 0,
+                "defense": -3,
+                "speed": 0
+            }
+        }
+    }) {
+        let formatedBuilder = this.returnBuildObjFromJSON( builder )
+
+        this.id = formatedBuilder[ 'id' ];
+        this.name = formatedBuilder[ 'name' ];
+        this.type = formatedBuilder[ 'type' ];
+        this.power = formatedBuilder[ 'power' ];
+        this.accuracy = formatedBuilder[ 'accuracy' ];
+        this.uses = formatedBuilder[ 'uses' ];
+        this.statsAffected = formatedBuilder[ 'statsAffected' ];
+        this.remainingUses = formatedBuilder[ 'remainingUses' ];
+        this.description = formatedBuilder[ 'description' ];
+    }
+
+    returnBuildObjFromJSON( builder ) {
         let moveData;
 
-        if ( typeof( builder ) == 'string') {
+        if ( typeof( builder ) === 'string') {
+            let moveTable = parse.createMoveTable();
             let ID = calc.returnIDFromName(builder, moveTable)
             moveData = moveTable.get(ID);    
         }
         else {
             moveData = builder;
         }
-        this.id = moveData[ 'id' ];
-        this.name = moveData[ 'name' ];
-        this.type = moveData[ 'type' ];
-        this.power = moveData[ 'power' ];
-        this.accuracy = moveData[ 'accuracy' ];
-        this.uses = moveData[ 'uses' ];
-        this.statsAffected = moveData[ 'statsAffected' ];
 
-        this.remainingUses = this.uses;
-        this.description = 'Hello! I am a move!';
+        if ( moveData[ 'remainingUses' ] === undefined ) {
+            moveData[ 'remainingUses' ] = moveData [ 'uses' ];
+        }
+        if ( ! moveData[ 'description' ]) {
+            moveData[ 'description' ] = 'Hello! I am a move!';
+        }
+
+        return moveData;
     }
 
     returnID() { return this.id; }
@@ -99,8 +116,12 @@ class Move {
         return effectArray;
     }
 
-    decrementRemainingUses() {
-        this.remainingUses--;
+    decrementRemainingUses( decrementBy = 1) {
+        if ( this.remainingUses == 0 ) return false;
+        
+        this.remainingUses = this.remainingUses - decrementBy;
+        if ( this.remainingUses < 0 ) this.remainingUses = 0;
+        return true;
     }
 
     resetRemainingUses() {
@@ -113,29 +134,37 @@ class Move {
     
         return (RAND < HIT_CHANCE)
     }
+
+    // toJSON() {
+    //     return {
+    // 		   id: this.id,
+    //         name: this.name,
+    //         type: this.type,
+    //         power: this.power,
+    //         uses: this.uses,
+    //         accuracy: this.accuracy,
+    //         remainingUses: this.remainingUses,
+    //         statsAffected: this.statsAffected,
+    //         description: this.description
+	// 	};
+    // }
 }
 
-// let moveTest = new Move (
-//     {
-//         "id": "",
-//         "name": "",
-//         "type": "",
-//         "power": 1,
-//         "accuracy": 1,
-//         "uses": 1,
-//         "statsAffected": {
-//             "self": {
-//                 "attack": 0,
-//                 "defense": 0,
-//                 "speed": 0
-//             },
-//             "enemy": {
-//                 "attack": 0,
-//                 "defense": 0,
-//                 "speed": 0
-//             }
-//         }
-//     });
+// let moveTest = new Move()
+
+// moveTest.decrementRemainingUses(421)
+
+// let testString = JSON.stringify(moveTest)
+
+// console.log(moveTest)
+// console.log(testString)
+
+// let recreatedMove = new Move(JSON.parse(testString))
+
+// console.log(recreatedMove)
+// recreatedMove.resetRemainingUses()
+
+// console.log(recreatedMove)
 
 
 export { Move }

@@ -36,16 +36,26 @@ import { BattleState } from '../../../classes/class-battle-state.js';
 import { Atlas } from '../../../classes/class-atlas.js'
 import { UIHandler } from '../../../classes/class-UI-handler.js';
 import { Daemon } from '../../../classes/class-daemon.js';
+import { StorageHandler } from '../../../classes/class-on-battle-end.js';
 
-let levels = new Atlas([1,2]);
-let fightState;
+let battleEnder = new StorageHandler();
 
-if ( sessionStorage.currentRoomID == undefined) {
-    fightState = new BattleState( levels.battleOrder.get('roomID000').lock)
-}
-else {
-    fightState = new BattleState( sessionStorage.currentRoomID )
-}
+// let levels = new Atlas([1,2]);
+let levels = battleEnder.restoreAtlas();
+
+// let fightState;
+
+// if ( sessionStorage.currentRoomID == undefined) {
+//     fightState = new BattleState( levels.battleOrder.get('roomID000').lock)
+// }
+// else {
+//     fightState = new BattleState( sessionStorage.currentRoomID )
+// }
+
+let fightState = battleEnder.loadRoom();
+
+
+battleEnder.restoreAtlas();
 
 // ------
 // Testing with multiple mons
@@ -58,8 +68,6 @@ console.log(fightState.playerParty.members)
 
 let handler = new UIHandler(fightState)
 fightState.setHandlerInit(handler);
-
-
 
 console.log(levels)
 console.log(sessionStorage)

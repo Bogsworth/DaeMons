@@ -1,11 +1,12 @@
 import * as calc from '../lib/Calculations.js'
 
 class Message {
-    constructor(battleState, activeFlag, chosenMove) {
+    constructor(battleState, activeFlag, chosenMove, moveHit) {
         
         this.battleState = battleState;
         this.chosenMove = chosenMove;
         this.activeFlag = activeFlag;
+        this.moveHit = moveHit;
         this.message = '';
 
         this.attackingMon = this.returnAttacker();
@@ -114,12 +115,11 @@ class Message {
 
     returnMessage() {
         let activeLock = this.setActiveLock();
-        let moveHits = this.chosenMove.checkIfHit();
         let moveDoesDamage = ( this.chosenMove.returnPower() != 0 );
         let moveAffectsStats = (this.statsAffectedArray.length != 0);
         let moveSuperEffective = ( this.typeMod > 1 ) && ( this.chosenMove.power != 0 )
 
-        if ( ! moveHits ) {
+        if ( ! this.moveHit ) {
             this.message += this.templates.missed[ activeLock ];
             return this.message;
         }
@@ -141,8 +141,6 @@ class Message {
 
         return this.message;
     }
-
-
 }
 
 export { Message }

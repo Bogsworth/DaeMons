@@ -1,47 +1,84 @@
 import * as calc from '../lib/Calculations.js'
 import * as parse from '../lib/Import.js'
 import { Move } from './class-move.js'
+
 class Daemon {
-    // constructor( builder = {
-    //     "id": "",
-    //     "name": "",
-    //     "type": [""],
-    //     "stats": {
-    //         "HP": 1,
-    //         "attack": 1,
-    //         "defense": 1,
-    //         "speed": 1
-    //     }
-    // }) {
-    constructor( id = "monID000", tier = 1, bossFlag = false) {
+    constructor( builderJSON = {
+            "id": "",
+            "name": "",
+            "type": [""],
+            "stats": {
+                "HP": 1,
+                "attack": 1,
+                "defense": 1,
+                "speed": 1
+            },
+            "moves": [null, null, null, null],
+            "tempStatChange":  {
+                "attack": 0,
+                "defense": 0,
+                "speed": 0
+            },
+            "description": "I am a daemon!!! Grrrr"
+    }) {
+        let formattedBuilder = this.returnBuildObjFromJSON( builderJSON );
+
+        this.id = formattedBuilder[ 'id' ]
+        this.name = formattedBuilder[ 'name' ];
+        this.type = formattedBuilder[ 'type' ];
+        this.stats = formattedBuilder[ 'stats' ];
+        this.moves = formattedBuilder['moves'];
+        this.currentHP = formattedBuilder['currentHP']
+        this.tempStatChange = formattedBuilder['tempStatChange']
+        this.description = formattedBuilder['description']
+    }
+
+    returnBuildObjFromJSON( builder ) {
+        this.initIfUndefined(
+            builder[ 'tempStatChange' ],
+            { attack: 0, defense: 0, speed: 0 }
+        )
+        this.initIfUndefined(
+            builder[ 'currentHP' ],
+            builder['stats']['HP']
+        )
+        builder['moves'] = this.moveMaker(builder['moves'])
+
+        return builder;
+    }
+
+    generateDaemonFromID( id = 'monID000', tier = 1, bossFlag = false ) {
         const TIER = 'tier ' + tier;
         const LOCK_TYPE = this.bossFlagBoolToStr(bossFlag);        
-        let table = new Map(parse.createMonTable())
-        let initDaemon = table.get(id)
+        const MON_TABLE = new Map(parse.createMonTable());
+        const BUILDER = MON_TABLE.get(id);
+        const MOVE_NAMES = BUILDER.movesKnown[TIER][LOCK_TYPE];
 
-        this.id = initDaemon[ 'id' ];
-        this.name = initDaemon[ 'name' ];
-        this.type = initDaemon[ 'type' ];
-        this.stats = initDaemon[ 'stats' ];
-
-        this.moves = [];
-        initDaemon.movesKnown[TIER][LOCK_TYPE].forEach( move => {
-            if (move == null) {
-                this.moves.push( move )
-                return;
-            }
-            this.moves.push(new Move(move))
-        }
+        this.id = BUILDER[ 'id' ];
+        this.name = BUILDER[ 'name' ];
+        this.type = BUILDER[ 'type' ];
+        this.stats = BUILDER[ 'stats' ];
+        this.moves = this.moveMaker( MOVE_NAMES );
+        this.currentHP = BUILDER[ 'stats' ][ 'HP' ];
+        this.tempStatChange = { "attack": 0, "defense": 0, "speed": 0 };
+        this.description = this.initIfUndefined(
+            BUILDER[ 'description' ],
+            'MonTable doesnt have descriptions yet'
         );
-        this.currentHP = initDaemon[ 'stats' ][ 'HP' ];
+    }
 
-        this.tempStatChange = {
-            "attack": 0,
-            "defense": 0,
-            "speed": 0,
-        }
+    initIfUndefined( obj, setValue ) {
+        if ( obj === undefined ) obj = setValue;
+        return obj;
+    }
 
-        this.description = "";
+    moveMaker( moveNameArray ) {
+        let moveArray = moveNameArray.map(moveName => {
+            if (moveName == null) return moveName;
+            return new Move( moveName );
+        })
+
+        return moveArray;
     }
 
     returnID() { return this.id; }
@@ -70,41 +107,39 @@ class Daemon {
 
     returnTrueIfDead() { return this.returnCurrentHP() <= 0; }
 
-    // TODO: Test addMove()
     addMove( newMove ) {
-        if ( this.returnTotalMovesKnown == 4 ) {
+        if ( this.returnTotalMovesKnown() == 4 ) {
             throw new Error('MovesFull');
         }
 
-        this.moves.forEach(move => {
-            if ( move != null ) {
-                return;
+        let isMoveChaged = false;
+        let newMoveArray = this.moves.map(move => {
+            if ( isMoveChaged || move != null) {
+                return move;
             }
-            move = newMove;
+
+            isMoveChaged = true;
+            return newMove;
         });
+
+        this.moves = newMoveArray;
     }
 
     populateMovesWithObjs() {
         let i = 0;
-        this.moves.forEach( move => {
-            let tempMove = new Move; 
-            if ( move == null ) {
-                return;
-            }
-            tempMove.copyFromData( JSON.stringify(move ));
-            this.moves[i] = tempMove;
-            i++;
+        this.moves
+            .filter( move => move != null )
+            .forEach( move => {
+                tempMove.copyFromData( JSON.stringify(move ));
+                this.moves[i] = tempMove;
+                i++;
         })
     }
 
     restoreAllMoveUses() {
-        this.moves.forEach( move => {
-            if ( move == null ) {
-                return;
-            }
-
-            move.resetRemainingUses();
-        });
+        this.moves
+            .filter( move => move != null)
+            .forEach( move => move.resetRemainingUses());
     }
 
     updateHP( damage ) {
@@ -112,7 +147,12 @@ class Daemon {
     }
 
     returnModifiedStat( stat ) {
-        return calc.modifyStat( this.stats[stat], this.tempStatChange[stat]);
+        const STAT_VAL = this.stats[ stat ];
+        const MODIFIER = this.tempStatChange[ stat ];
+        let modifiedStat = STAT_VAL * ( 10 + ( MODIFIER / 2 )) / 10 ;
+
+        return modifiedStat;
+        // return calc.modifyStat( this.stats[stat], this.tempStatChange[stat]);
     }
 
     updateTempStatChange( stat, change ) {
@@ -170,22 +210,45 @@ class Daemon {
     }
 
     returnTotalMovesKnown() {
-        let movesKnown = 0;
-        this.moves.forEach( move => {
-            if ( move != null ) {
-                movesKnown++;
-            }
-        });
-
-        return movesKnown;
+        const doesMoveExist = (move) => move != null;
+        
+        return this.moves.filter( doesMoveExist ).length;
     }
 
-    bossFlagBoolToStr(bossFlag) {
-        if ( bossFlag ) {
+    bossFlagBoolToStr( isBossFlag ) {
+        if ( isBossFlag ) {
             return 'boss';
         }
         return 'normalLock';
     }
 };
+
+
+// This requires a 'sleep' function or else it has trouble initializing the Move class
+// before it needs to use it.
+
+// function sleep(ms) {
+//     return new Promise(resolve => setTimeout(resolve, ms));
+// }
+// console.log('Hello');
+
+// sleep(500).then(() => {
+//     console.log('World!');
+
+//     let tempMon = new Daemon()
+//     tempMon.generateDaemonFromID();
+//     let moveToAdd = new Move();
+
+//     console.log(tempMon)
+//     tempMon.addMove(moveToAdd)
+//     tempMon.moves[2].decrementRemainingUses(69)
+//     console.log(tempMon)
+
+//     let stringifiedMon = JSON.stringify(tempMon);
+//     console.log(stringifiedMon)
+
+//     let restoredMon = new Daemon (JSON.parse(stringifiedMon))
+//     console.log(restoredMon)
+// });
 
 export { Daemon }
