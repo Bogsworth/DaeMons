@@ -1,5 +1,6 @@
 import { Atlas } from "./class-atlas.js";
 import { BattleState } from "./class-battle-state.js";
+import { Warlock } from "./class-warlock.js";
 
 class StorageHandler {
     constructor(battleState = {}) {
@@ -22,12 +23,13 @@ class StorageHandler {
         console.log(sessionStorage);
         console.log('and parsed:')
         console.log(JSON.parse(sessionStorage.currentParty));
-        return;
+        // return;
         window.location.href = this.interludeLocation;
     }
 
     restoreAtlas() {
         let atlasInfoString = this.initialSessionStorage.atlas;
+        console.log(atlasInfoString)
 
         if ( atlasInfoString == undefined ) {
             let newAtlas = new Atlas([1,2]);
@@ -35,12 +37,20 @@ class StorageHandler {
             return newAtlas
         }
 
-        console.log(sessionStorage)
-        console.dir(atlasInfoString, {depth: null})
+        return new Atlas(JSON.parse(atlasInfoString, reviver));
 
-        this.copyFromAtlasString(atlasInfoString)
+        function reviver(key, value) {
+            if (typeof value === 'object' && value !== null) {
+                if (value.dataType === 'Map') {
+                    return new Map(value.value);
+                }
+            }
+            return value;
+        }
+    }
 
-        return new Atlas(JSON.parse(atlasInfoString));
+    createPartyFromStarter( daemon ) {
+        console.log('Im trying to create a party')
     }
 
     copyFromAtlasString(JSONString) {
@@ -50,18 +60,30 @@ class StorageHandler {
     }
 
     saveAtlas(atlas) {
-        sessionStorage.atlas = JSON.stringify(atlas);
+        sessionStorage.atlas = JSON.stringify(atlas, replacer);
+
+        function replacer(key, value) {
+            if ( ! ( value instanceof Map )) {
+                return value;
+            }
+            return {
+                dataType: 'Map',
+                value: [...value]
+            };
+        }
     }
 
     loadRoom() {
+        const INIT_ROOM = 'roomID000';
         let roomID = this.initialSessionStorage.currentRoomID;
         let atlas = this.restoreAtlas();
 
         if ( roomID == undefined ) {
-            return new BattleState( atlas.battleOrder.get('roomID000').lock)
+            roomID = INIT_ROOM;
         }
+        const ROOM_WARLOCK = new Warlock( atlas.battleOrder.get(roomID).lock );
         
-        return  new BattleState( sessionStorage.currentRoomID )
+        return new BattleState( ROOM_WARLOCK );
     }
 
     savePostFightParty() {

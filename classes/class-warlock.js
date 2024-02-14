@@ -30,21 +30,23 @@ class Warlock {
         this.id = formattedBuilder.id;
         this.name = formattedBuilder.name;
         this.daemonTypes = formattedBuilder.daemonTypes;
-        this.tier = formattedBuilder.tier;
+        // this.tier = formattedBuilder.tier;
         this.party = new Party( formattedBuilder.party );
         this.description = formattedBuilder.description;
         this.reward = formattedBuilder.reward;
     }
 
     returnBuildObjFromLockID( ID, tier = 1, isBossFlag = false ) {
+        if ( typeof( tier ) === 'number') {
+            tier = 'tier ' + tier;
+        }
         const LOCK_MAP = parse.createWarlocks(lockJSON);
         const LOCK_INFO = LOCK_MAP.get( ID );
-        const TIER = 'tier ' + tier;
-        const PARTY_CREATOR = this.partyCreator(LOCK_INFO.allowedDaemons[TIER], tier, isBossFlag)
+        const PARTY_CREATOR = this.partyCreator(LOCK_INFO.allowedDaemons[tier], tier, isBossFlag)
         let builder = {};
 
         builder.id = ID;
-        builder.tier = TIER;
+        builder.tier = tier;
         builder.name = LOCK_INFO.name;
         builder.daemonTypes = LOCK_INFO.daemonTypes;
         builder.description = LOCK_INFO.description;
@@ -56,8 +58,30 @@ class Warlock {
         return builder;
     }
 
+    generateWarlockFromID( ID, tier = 1, isBossFlag = false ) {
+        if ( typeof( tier ) === 'number') {
+            tier = 'tier ' + tier;
+        }
+        const LOCK_MAP = parse.createWarlocks(lockJSON);
+        const LOCK_INFO = LOCK_MAP.get( ID );
+        const PARTY_CREATOR = this.partyCreator(LOCK_INFO.allowedDaemons[tier], tier, isBossFlag)
+        
+        this.id = ID;
+        this.tier = tier,
+        this.name = LOCK_INFO.name;
+        this.daemonTypes = LOCK_INFO.daemonTypes;
+        this.description = LOCK_INFO.description;
+        this.reward = LOCK_INFO.reward;
+
+        this.party = new Party();
+        this.party.setParty( PARTY_CREATOR );
+    }
+
     partyCreator(allowedDaemonsOfTier, tier, isBossFlag) {
-        const LENGTH = allowedDaemonsOfTier.length;
+        if ( typeof( tier ) === 'number') {
+            tier = 'tier ' + tier;
+        }
+        const LENGTH = Object.keys(allowedDaemonsOfTier).length;
         const INDEX = calc.getRandomInt(LENGTH);
         const SELECTED_DAEMON_NAMES = allowedDaemonsOfTier[INDEX];
 
@@ -75,10 +99,11 @@ class Warlock {
     }
 
     chooseMove() {
-        let totalMovesKnown = this.activeMon.returnTotalMovesKnown()
+        const ACTIVE_MON = this.party.activeMon;
+        let totalMovesKnown = ACTIVE_MON.returnTotalMovesKnown()
         let chosenMoveIndex = calc.getRandomInt( totalMovesKnown );
     
-        return this.activeMon.moves[ chosenMoveIndex ];
+        return ACTIVE_MON.moves[ chosenMoveIndex ];
     }
 }
 
@@ -92,6 +117,9 @@ class Warlock {
 // let revivedLock = new Warlock(JSON.parse(convertedLock))
 // // console.log(revivedLock);
 // console.dir(revivedLock, {depth: null})
+
+// let lock = new Warlock();
+// console.log(lock)
 
 
 export { Warlock }

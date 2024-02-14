@@ -5,7 +5,7 @@ import * as battFuncs from '../src/pages/battle/battle-funcs.js'
 import { Party } from './class-party.js'
 import { Warlock } from './class-warlock.js'
 import { Daemon } from './class-daemon.js'
-import { StorageHandler } from './class-on-battle-end.js'
+import { StorageHandler } from './class-storage-handler.js'
 import { Message } from './class-message.js'
 
 class BattleState {
@@ -23,19 +23,25 @@ class BattleState {
     }
 
     partyLoader(storage) {
+        console.log(sessionStorage)
+        console.log(sessionStorage.currentParty)
+        console.log(storage)
         let parsedStorage = JSON.parse(storage);
         // console.log(sessionStorage.currentParty);
         // console.log(parsedStorage);
+        let playerParty = new Party(parsedStorage)
+        console.log(playerParty)
 
-        let partyArray = [];
+        return playerParty
+        // let partyArray = [];
         
-        parsedStorage.forEach(daemon => {
-            let newMon = new Daemon();
+        // parsedStorage.forEach(daemon => {
+        //     let newMon = new Daemon();
 
-            newMon.copyFromData(JSON.stringify(daemon));
-            partyArray.push(newMon);
-        })
-        return new Party( partyArray );
+        //     newMon.copyFromData(JSON.stringify(daemon));
+        //     partyArray.push(newMon);
+        // })
+        // return new Party( partyArray );
     }
 
     handleAttack () {
@@ -377,6 +383,7 @@ class BattleState {
     endFight() {
         console.log(this)
         let battleEnder = new StorageHandler(this);
+        battleEnder.endFight()
     }
 }
 

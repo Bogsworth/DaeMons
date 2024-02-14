@@ -20,11 +20,12 @@
     ~~- [ ] TODO: Remove dead Daemons~~
 */
 
-import * as parse from '../../../lib/import.js';
+import * as parse from '../../../lib/Import.js';
 import * as intFuncs from './interlude-funcs.js';
 import * as util from '../../../lib/utility.js';
 import * as calc from '../../../lib/calculations.js';
-import { InterludeState } from '../../../data/class-interludeState.js';
+import { InterludeState } from '../../../classes/class-interludeState.js';
+import { StorageHandler } from '../../../classes/class-storage-handler.js';
 
 const FULL_DAEMON_TABLE = parse.createMonTable();
 const FULL_LOCK_TABLE = parse.createWarlocks();
@@ -40,6 +41,10 @@ console.log(sessionStorage);
 
 let testNextLockList = calc.returnWithMatchingParamters( FULL_LOCK_TABLE, 'tier', 1 );
 console.log(testNextLockList)
+
+let storage = new StorageHandler();
+console.log(storage);
+
 
 let interludeState = new InterludeState({
     'currentParty': sessionStorage.currentParty,

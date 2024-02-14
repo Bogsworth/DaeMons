@@ -36,12 +36,11 @@ import { BattleState } from '../../../classes/class-battle-state.js';
 import { Atlas } from '../../../classes/class-atlas.js'
 import { UIHandler } from '../../../classes/class-UI-handler.js';
 import { Daemon } from '../../../classes/class-daemon.js';
-import { StorageHandler } from '../../../classes/class-on-battle-end.js';
+import { StorageHandler } from '../../../classes/class-storage-handler.js';
 
-let battleEnder = new StorageHandler();
+let storage = new StorageHandler();
 
-// let levels = new Atlas([1,2]);
-let levels = battleEnder.restoreAtlas();
+let levels = storage.restoreAtlas();
 
 // let fightState;
 
@@ -52,16 +51,18 @@ let levels = battleEnder.restoreAtlas();
 //     fightState = new BattleState( sessionStorage.currentRoomID )
 // }
 
-let fightState = battleEnder.loadRoom();
+let fightState = storage.loadRoom();
 
 
-battleEnder.restoreAtlas();
+// battleEnder.restoreAtlas();
 
 // ------
 // Testing with multiple mons
 
 console.log(fightState.playerParty.members)
-fightState.playerParty.members.push(new Daemon('monID002'))
+let tempDaemon = new Daemon()
+tempDaemon.generateDaemonFromID('monID002')
+fightState.playerParty.addMonToParty(tempDaemon)
 console.log(fightState.playerParty.members)
 
 // ------

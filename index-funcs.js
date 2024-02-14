@@ -1,4 +1,5 @@
 import * as util from './lib/utility.js'
+import { Party } from './classes/class-party.js';
 
 function createStarterSection( daemon, optionId ) {
     const NAME = daemon.returnName();
@@ -22,7 +23,14 @@ function createStarterSection( daemon, optionId ) {
 }
 
 function startGame( chosenMon ) {
-    util.savePostFightParty( [chosenMon] );
+    // util.savePostFightParty( [chosenMon] );
+    let party = new Party()
+    party.addMonToParty( chosenMon )
+    party.saveToLocation();
+    console.log( sessionStorage )
+
+    window.location.href = "./src/pages/battle/battle.html"
+
 }
 
 export {

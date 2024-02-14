@@ -54,8 +54,9 @@ class Party {
         );
     }
 
-    saveToLocation( location = sessionStorage.currentParty ) {
-        location = JSON.stringify(this.members);
+    saveToLocation() {
+        sessionStorage.currentParty = JSON.stringify(this);
+        console.log(sessionStorage)
     }
 
     switchActiveDaemonToIndex( index ) {

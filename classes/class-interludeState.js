@@ -47,6 +47,8 @@ class InterludeState {
             sessionStorage[param] = this[param];
         }
     }
+
+    
 };
 
 export {

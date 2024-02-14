@@ -48,11 +48,15 @@ class Daemon {
     }
 
     generateDaemonFromID( id = 'monID000', tier = 1, bossFlag = false ) {
-        const TIER = 'tier ' + tier;
+        if ( typeof( tier ) === 'number') {
+            tier = 'tier ' + tier;
+        }
         const LOCK_TYPE = this.bossFlagBoolToStr(bossFlag);        
         const MON_TABLE = new Map(parse.createMonTable());
         const BUILDER = MON_TABLE.get(id);
-        const MOVE_NAMES = BUILDER.movesKnown[TIER][LOCK_TYPE];
+
+        // console.log(BUILDER.movesKnown)
+        const MOVE_NAMES = BUILDER.movesKnown[tier][LOCK_TYPE];
 
         this.id = BUILDER[ 'id' ];
         this.name = BUILDER[ 'name' ];

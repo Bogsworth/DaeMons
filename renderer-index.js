@@ -3,6 +3,7 @@ import * as indexFuncs from './index-funcs.js';
 import * as util from './lib/utility.js';
 import starterJSON from './data/starting-options.json' assert { type: "json" };
 import { Daemon } from './classes/class-daemon.js';
+import { StorageHandler } from './classes/class-storage-handler.js';
 
 /*
 # TODO List
@@ -31,10 +32,15 @@ const STARTER_IDS = ['monID000', 'monID001','monID002']
 
 //let starterOptionArray = parse.createParty( starterJSON );
 let starterOptionArray = [
-    new Daemon(STARTER_IDS[0]),
-    new Daemon(STARTER_IDS[1]),
-    new Daemon(STARTER_IDS[2])
+    new Daemon(),
+    new Daemon(),
+    new Daemon()
 ]
+
+starterOptionArray[0].generateDaemonFromID(STARTER_IDS[0], 'asStarter')
+starterOptionArray[1].generateDaemonFromID(STARTER_IDS[1], 'asStarter')
+starterOptionArray[2].generateDaemonFromID(STARTER_IDS[2], 'asStarter')
+
 console.log(starterOptionArray);
 
 indexFuncs.createStarterSection(starterOptionArray[0], 'option0' );

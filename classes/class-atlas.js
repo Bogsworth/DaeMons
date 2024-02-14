@@ -11,12 +11,22 @@ import { Warlock } from './class-warlock.js'
 
 class Atlas {
     constructor(requiredLocksPerTier = [1, 3, 1, 1]) {
+        if ( ! Array.isArray( requiredLocksPerTier )) {
+            this.initializeFromMap(requiredLocksPerTier);
+            return;
+        }
         this.lockMap = parse.createWarlocks(lockJSON);
         this.tierMap = this.returnTierMap();
 
         this.battleOrder = new Map();
         this.initBattleOrder( requiredLocksPerTier );
         this.addGauntlets();
+    }
+
+    initializeFromMap( atlasMap ) {
+        this.lockMap = atlasMap.lockMap;
+        this.tierMap = atlasMap.tierMap;
+        this.battleOrder = atlasMap.battleOrder;
     }
 
     returnTierMap() {
@@ -54,69 +64,32 @@ class Atlas {
 
     initBattleOrder( requiredLocksPerTier ) {
         let i = 0;
-        let prevRoomID = null;
-        let gauntletLength = 3;
+        let prevRoomID;
 
         requiredLocksPerTier.forEach( locksRequired => {
-            const TIER = i++;
-            const NUM_LOCKS = this.tierMap.get('tier '+ TIER).length;
+            const TIER = 'tier ' + i++;
+            const NUM_LOCKS = this.tierMap.get( TIER ).length;
             let choices = randArrayNoRepeats( locksRequired, NUM_LOCKS );
 
             choices.forEach( chosenLockIndex => {
-                let LOCK_ID = this.tierMap.get('tier '+ TIER)[chosenLockIndex]
-                let chosenLock = this.lockMap.get(LOCK_ID)
+                const LOCK_ID = this.tierMap.get(TIER)[chosenLockIndex]
+                const LOCK = new Warlock();
+                const NEXT_ROOM_ID = this.generateNextRoomID();
+                let isFirstRoom = this.battleOrder.size == 0;
 
-                if ( this.battleOrder.size == 0 ) {
-                    // this.battleOrder.set(
-                    //     'roomID000', 
-                    //     { lockID: [currentLockID], nextRoomID: [], availableGauntlets: [] }
-                    // );
-                    this.battleOrder.set(
-                        'roomID000',
-                        {
-                            lock: new Warlock(
-                                chosenLock.name,
-                                chosenLock.daemonTypes,
-                                chosenLock.allowedDaemons,
-                                chosenLock.party,
-                                chosenLock.description,
-                                chosenLock.reward,
-                                chosenLock.id,
-                                'tier '+ TIER
-                            ),
-                            nextRoomID: [],
-                            availableGauntlets: []
-                        }
-                    )
-                    prevRoomID = 'roomID000';
-                    return;
+                if ( ! isFirstRoom ) {
+                    this.battleOrder.get( prevRoomID ).nextRoomID.push( NEXT_ROOM_ID );
                 }
-
-                let newRoomID = this.generateNextRoomID();
-
-                this.battleOrder.get( prevRoomID ).nextRoomID.push( newRoomID );
-                // this.battleOrder.set( 
-                //     newRoomID, 
-                //     { lockID: [currentLockID], nextRoomID: [], availableGauntlets: [] }
-                // );
+                LOCK.generateWarlockFromID( LOCK_ID, TIER )
                 this.battleOrder.set(
-                    newRoomID,
+                    NEXT_ROOM_ID,
                     {
-                        lock: new Warlock(
-                            chosenLock.name,
-                            chosenLock.daemonTypes,
-                            chosenLock.allowedDaemons,
-                            chosenLock.party,
-                            chosenLock.description,
-                            chosenLock.reward,
-                            chosenLock.id,
-                           'tier '+ TIER
-                        ),
+                        lock: LOCK,
                         nextRoomID: [],
                         availableGauntlets: []
                     }
                 )
-                prevRoomID = newRoomID;
+                prevRoomID = NEXT_ROOM_ID;
             })
         })
     }
@@ -202,23 +175,13 @@ function randArrayNoRepeats(length, availableOptions) {
 
 
 function replacer(key, value) {
-    if ( value instanceof Map ) {
-        console.log('value is instanceofMap')
-        console.log(value)
-        return {
-            dataType: 'Map',
-            value: Array.from(value.entries()), // or with spread: value: [...value]
-        };
-    } else if ( value instanceof Warlock) {
-        console.log('value is instaceof Warlock')
-        console.log(value)
-        return {
-            dataType: 'Warlock',
-            value: Array.from(value.entries()),
-        }
-    } else {
+    if ( ! ( value instanceof Map )) {
         return value;
     }
+    return {
+        dataType: 'Map',
+        value: [...value]
+    };
 }
 
 function reviver(key, value) {
@@ -226,40 +189,19 @@ function reviver(key, value) {
         if (value.dataType === 'Map') {
             return new Map(value.value);
         }
-        if (value.dataType === 'Warlock') {
-            console.log(value.value)
-            return new Warlock(value.value)
-        }
     }
     return value;
 }
 
 
-let atlas = new Atlas([1, 2]);
-//let lockMap = parse.createWarlocks(lockJSON);
+// let atlas = new Atlas([1, 2]);
+// console.log(atlas)
 
-console.dir(atlas.battleOrder, {depth: null})
+// let atlasStringified = JSON.stringify(atlas, replacer)
+// console.log('stringified atlas')
+// console.log(atlasStringified);
 
-//let atlasStringified = JSON.stringify(atlas, replacer)
-
-//console.log(atlasStringified);
-
-//let revivedAtlas = JSON.parse(atlasStringified, reviver);
-
-// console.log(revivedAtlas.battleOrder.get('roomID00'))
-
-//console.dir( revivedAtlas.battleOrder, {depth: null})
-
-//console.dir(atlas.battleOrder.get('roomID001').lock.party, {depth: null})
-
-//console.log(atlas.battleOrder)
-
-//console.log(atlas.battleOrder)
-//atlas.printGauntlets();
-
-// let searchedMon = parse.daemonFilter([{param: 'type', value: 'lust'}], 1)
-
-// console.dir(searchedMon)
-
+// let revivedAtlas = JSON.parse(atlasStringified, reviver);
+// console.log(revivedAtlas.battleOrder)
 
 export { Atlas }

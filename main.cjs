@@ -17,7 +17,7 @@ app.whenReady().then(() => {
     ipcMain.handle('ping', () => 'pong')
     ipcMain.handle('start', () =>
     {
-        return 'battle.html'
+        // return 'battle.html'
     })
     createWindow();
 

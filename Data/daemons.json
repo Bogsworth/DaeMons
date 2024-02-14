@@ -8,7 +8,9 @@
         "speed": 35
     },
     "movesKnown": {
-        "asStarter": ["Bind", "Charm", null, null],
+        "asStarter": {
+            "normalLock": ["Bind", "Charm", null, null]
+        },
         "tier 1": {
            "normalLock": ["Bind", "Charm", null, null],
            "boss": ["Bind", "Charm", null, null]
@@ -29,7 +31,9 @@
         "speed": 90
     },
     "movesKnown": {
-        "asStarter": ["Buyout", "Philanthropy", null, null],
+        "asStarter": {
+            "normalLock": ["Buyout", "Philanthropy", null, null]
+        },
         "tier 1": {
            "normalLock": ["Nibble", "Buyout", null, null],
            "boss": ["Nibble", "Buyout", null, null]
@@ -50,7 +54,9 @@
         "speed": 31
     },
     "movesKnown": {
-        "asStarter": ["Laze", "Cozy Up", null, null],
+        "asStarter": {
+            "normalLock": ["Laze", "Cozy Up", null, null]
+        },
         "tier 1": {
            "normalLock": ["Laze", "Cozy Up", null, null],
            "boss": ["Laze", "Cozy Up", null, null]
