@@ -15,12 +15,18 @@ class UIHandlerInt {
             document.getElementById( this.partySelectArray[2] ),
         ];
 
+        this.initUI();
+    }
+
+    initUI() {
         this.populatePartySelects();
+        this.setInitialSelectOptions();
+        this.keepSelectsUnique();
     }
 
     populatePartySelects() {
         this.partySelectArray
-            .forEach( select => this.partySelectPopulator( select ))
+            .forEach( select => this.partySelectPopulator( select ));
     }
 
     partySelectPopulator( select ) {
@@ -39,17 +45,15 @@ class UIHandlerInt {
     }
 
     keepSelectsUnique() {
-        const INDEX_ARRAY = [];
         const NON_UNIQUE_INDEX = 0;
         const PARTY_SELECTS = this.partySelects;
-    
+        const INDEX_ARRAY = PARTY_SELECTS
+            .map( element => element.selectedIndex );
+        
         PARTY_SELECTS.forEach( element => {
             enableAllOptions( element );
-            INDEX_ARRAY.push(element.selectedIndex);
-        });
-        PARTY_SELECTS.forEach( element => {
             INDEX_ARRAY
-                .filter( index => index !== NON_UNIQUE_INDEX)
+                .filter( index => index !== NON_UNIQUE_INDEX )
                 .forEach( index => element.options[index].disabled = true )
         });
     
@@ -62,16 +66,24 @@ class UIHandlerInt {
 
     populateSelect(nameArray, uuidArray, selectID) {
         const SELECT = document.getElementById( selectID );
-        let i = 0;
+        let index = 0;
         
         this.removeSelectOptions( SELECT );
         nameArray.forEach( name => {
-            let element = document.createElement('option');
+            const ELEMENT = document.createElement( 'option' );
             
-            element.textContent = name;
-            element.value = uuidArray[i++];
-            SELECT.appendChild( element );
+            ELEMENT.textContent = name;
+            ELEMENT.value = uuidArray[ index++ ];
+            SELECT.appendChild( ELEMENT );
         })
+    }
+
+    setInitialSelectOptions() {
+        let index = 0;
+
+        this.state.currentParty.members
+            .map( daemon => daemon.returnUUID() )
+            .forEach( uuid => this.partySelects[index++].value = uuid );
     }
 
     removeSelectOptions(selectElement) {

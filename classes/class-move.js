@@ -41,17 +41,13 @@ class Move {
     }
 
     returnBuildObjFromJSON( builder ) {
-        let moveData;
+        let moveData = builder;
 
         if ( typeof( builder ) === 'string') {
             let moveTable = parse.createMoveTable();
             let ID = calc.returnIDFromName(builder, moveTable)
             moveData = moveTable.get(ID);    
         }
-        else {
-            moveData = builder;
-        }
-
         if ( moveData[ 'remainingUses' ] === undefined ) {
             moveData[ 'remainingUses' ] = moveData [ 'uses' ];
         }
