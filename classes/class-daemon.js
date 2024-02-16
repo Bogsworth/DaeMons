@@ -23,6 +23,7 @@ class Daemon {
     }) {
         let formattedBuilder = this.returnBuildObjFromJSON( builderJSON );
 
+        this.uuid = formattedBuilder[ 'uuid' ];
         this.id = formattedBuilder[ 'id' ]
         this.name = formattedBuilder[ 'name' ];
         this.type = formattedBuilder[ 'type' ];
@@ -37,14 +38,31 @@ class Daemon {
         this.initIfUndefined(
             builder[ 'tempStatChange' ],
             { attack: 0, defense: 0, speed: 0 }
-        )
+        );
         this.initIfUndefined(
             builder[ 'currentHP' ],
             builder['stats']['HP']
-        )
-        builder['moves'] = this.moveMaker(builder['moves'])
+        );
+        builder['moves'] = this.moveMaker(builder['moves']);
+        if ( builder['uuid'] === undefined ) {
+            builder['uuid'] = uuidv4();
+        }
 
         return builder;
+
+        // FWIW, I don't know how this works
+        function uuidv4() {
+            let regex = /[xy]/g;
+            let defaultStr = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx';
+            return defaultStr.replace(
+                regex,
+                function (c) {
+                    const r = Math.random() * 16 | 0, 
+                        v = c == 'x' ? r : (r & 0x3 | 0x8);
+                    return v.toString(16);
+                }
+            );
+        }
     }
 
     generateDaemonFromID( id = 'monID000', tier = 1, bossFlag = false ) {
@@ -85,6 +103,7 @@ class Daemon {
         return moveArray;
     }
 
+    returnUUID() { return this.uuid; }
     returnID() { return this.id; }
     returnName() { return this.name; }
     returnType() { return this.type; }
@@ -138,6 +157,10 @@ class Daemon {
                 this.moves[i] = tempMove;
                 i++;
         })
+    }
+
+    restoreHP() {
+        this.currentHP = this.stats['HP'];
     }
 
     restoreAllMoveUses() {

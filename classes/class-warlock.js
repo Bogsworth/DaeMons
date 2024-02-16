@@ -105,6 +105,11 @@ class Warlock {
     
         return ACTIVE_MON.moves[ chosenMoveIndex ];
     }
+
+    returnName() { return this.name; }
+    returnID() { return this.id; }
+    returnDescription() { return this.description; }
+    returnParty() { return this.party; }
 }
 
 // console.log('hello world!')

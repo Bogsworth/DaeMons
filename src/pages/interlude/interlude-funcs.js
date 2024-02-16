@@ -208,7 +208,6 @@ function healMons( interludeState, parameter ) {
 
 function restoreMoveUsesSuperSet( interludeState, parameters ) {
     parameters.forEach( parameter => {
-        // console.log('restoring moves')
         restoreMoveUses( interludeState, parameter );
     })
 }

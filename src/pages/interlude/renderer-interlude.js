@@ -26,6 +26,9 @@ import * as util from '../../../lib/utility.js';
 import * as calc from '../../../lib/calculations.js';
 import { InterludeState } from '../../../classes/class-interludeState.js';
 import { StorageHandler } from '../../../classes/class-storage-handler.js';
+import { Atlas } from '../../../classes/class-atlas.js';
+import { Party } from '../../../classes/class-party.js';
+import { UIHandlerInt } from '../../../classes/class-UI-handler-Interlude.js';
 
 const FULL_DAEMON_TABLE = parse.createMonTable();
 const FULL_LOCK_TABLE = parse.createWarlocks();
@@ -36,31 +39,38 @@ let partySelects = [
     document.getElementById( selectArray[2] ),
 ];
 
-console.log('storage');
-console.log(sessionStorage);
-
-let testNextLockList = calc.returnWithMatchingParamters( FULL_LOCK_TABLE, 'tier', 1 );
-console.log(testNextLockList)
-
 let storage = new StorageHandler();
+
+
+let lockAtlas = storage.restoreAtlas();
+let testNextLockList = calc.returnWithMatchingParamters( FULL_LOCK_TABLE, 'tier', 1 );
+
 console.log(storage);
+console.log(lockAtlas);
+console.log(testNextLockList);
 
+let interludeState = new InterludeState(
+    lockAtlas,
+    {
+        //currentParty: playerParty,
+        'newReward': sessionStorage.newReward,
+        'allHeldMons': sessionStorage.allHeldMons,
+        'nextLock': sessionStorage.nextLock,
+        'nextLockName': sessionStorage.nextLockName
+    }
+);
 
-let interludeState = new InterludeState({
-    'currentParty': sessionStorage.currentParty,
-    'newReward': sessionStorage.newReward,
-    'allHeldMons': sessionStorage.allHeldMons,
-    'nextLock': sessionStorage.nextLock,
-    'nextLockName': sessionStorage.nextLockName
-});
+let UIHandler = new UIHandlerInt( interludeState );
 
-console.log('state')
 console.log(interludeState);
 
+interludeState.healParty();
+interludeState.restorePartyMoves();
+
 // set random nextLock
-let randNextLock = intFuncs.returnRandomIndexFromArray(testNextLockList);
-interludeState.updateParam(randNextLock.name, 'nextLock');
-interludeState.updateParam(randNextLock.name, 'nextLockName');
+// let randNextLock = intFuncs.returnRandomIndexFromArray(testNextLockList);
+// interludeState.updateParam(randNextLock.name, 'nextLock');
+// interludeState.updateParam(randNextLock.name, 'nextLockName');
 console.log(interludeState.nextLock);
 
 intFuncs.handleReward
@@ -69,27 +79,10 @@ intFuncs.handleReward
     FULL_DAEMON_TABLE,
     interludeState
 );
-// console.log('interludeState post reward handling')
-// console.log(interludeState)
-
-// This healing and use restoring has to happen before updating party Selects
-intFuncs.healSuperset( interludeState, ['currentParty', 'allHeldMons']);
-intFuncs.restoreMoveUsesSuperSet( interludeState, ['currentParty', 'allHeldMons']);
-// console.log('interludeState post healing')
-// console.log(interludeState)
 
 
-selectArray.forEach( select => {
-    if (select == 'daemonListSelect') {
-        util.populateSelect( interludeState['allHeldMons'], select, true);
-    }
-    else {
-        util.populateSelect( interludeState['allHeldMons'], select, true);
-    }
-});
-
-intFuncs.populatePartySelects( interludeState, partySelects );
-intFuncs.keepSelectsUnique( interludeState, partySelects );
+// intFuncs.populatePartySelects( interludeState, partySelects );
+// intFuncs.keepSelectsUnique( interludeState, partySelects );
 intFuncs.populateDaemonInspect();
 intFuncs.setupReadyButton();
 intFuncs.populateChallenger( interludeState.nextLockName );

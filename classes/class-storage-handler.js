@@ -16,20 +16,15 @@ class StorageHandler {
     endFight() {
         console.log(this.battleState)
         this.savePostFightParty()
-        // this.battleState.playerParty.savePostFightParty();
-        //util.savePostFightParty( fightState.myParty );
         this.getReward();
         this.getNextChallenger();
-        console.log(sessionStorage);
-        console.log('and parsed:')
-        console.log(JSON.parse(sessionStorage.currentParty));
+
         // return;
         window.location.href = this.interludeLocation;
     }
 
     restoreAtlas() {
         let atlasInfoString = this.initialSessionStorage.atlas;
-        console.log(atlasInfoString)
 
         if ( atlasInfoString == undefined ) {
             let newAtlas = new Atlas([1,2]);
@@ -49,16 +44,6 @@ class StorageHandler {
         }
     }
 
-    createPartyFromStarter( daemon ) {
-        console.log('Im trying to create a party')
-    }
-
-    copyFromAtlasString(JSONString) {
-        let myMap = new Map(Object.entries(JSON.parse(JSONString)));
-        console.dir(myMap, {depth: null})
-
-    }
-
     saveAtlas(atlas) {
         sessionStorage.atlas = JSON.stringify(atlas, replacer);
 
@@ -75,13 +60,14 @@ class StorageHandler {
 
     loadRoom() {
         const INIT_ROOM = 'roomID000';
+        const ATLAS = this.restoreAtlas();
         let roomID = this.initialSessionStorage.currentRoomID;
-        let atlas = this.restoreAtlas();
 
         if ( roomID == undefined ) {
             roomID = INIT_ROOM;
+            sessionStorage.previousRoomID = roomID;
         }
-        const ROOM_WARLOCK = new Warlock( atlas.battleOrder.get(roomID).lock );
+        const ROOM_WARLOCK = new Warlock( ATLAS.battleOrder.get(roomID).lock );
         
         return new BattleState( ROOM_WARLOCK );
     }
@@ -106,6 +92,16 @@ class StorageHandler {
         sessionStorage.clear();
         window.location.href = this.homeScreenLocation;
     }
+
+        // createPartyFromStarter( daemon ) {
+    //     console.log('Im trying to create a party')
+    // }
+
+    // copyFromAtlasString(JSONString) {
+    //     let myMap = new Map(Object.entries(JSON.parse(JSONString)));
+    //     console.dir(myMap, {depth: null})
+
+    // }
 }
 
 export { StorageHandler }

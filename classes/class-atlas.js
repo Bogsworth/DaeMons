@@ -196,6 +196,7 @@ function reviver(key, value) {
 
 // let atlas = new Atlas([1, 2]);
 // console.log(atlas)
+// console.log(atlas.lockMap.get('lockID000'))
 
 // let atlasStringified = JSON.stringify(atlas, replacer)
 // console.log('stringified atlas')
