@@ -6,7 +6,7 @@ function setupReadyButton() {
     const READY_BTN_NAME = 'startFight';
     const READY_BTN = document.getElementsByName(READY_BTN_NAME)[0];
     
-    READY_BTN.addEventListener('click', loadBattle);
+    //READY_BTN.addEventListener('click', loadBattle);
 }
 
 function populateNextFight( warlock ) {

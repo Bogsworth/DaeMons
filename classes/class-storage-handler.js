@@ -1,16 +1,27 @@
 import { Atlas } from "./class-atlas.js";
 import { BattleState } from "./class-battle-state.js";
 import { Warlock } from "./class-warlock.js";
+import { Party } from "./class-party.js";
 
 class StorageHandler {
     constructor(battleState = {}) {
         this.battleState = battleState;
+        this.UIHandler;
 
         this.initialSessionStorage = sessionStorage;
-        this.homeScreenLocation = '../../../index.html'
-        this.interludeLocation = '../interlude/interlude.html'
-
+        this.homeScreenLocation = '../../../index.html';
+        this.interludeLocation = '../interlude/interlude.html';
+        this.battleLocation = '../battle/battle.html';
+        
         // this.endFight();
+    }
+
+    setState( newState ) {
+        this.battleState = newState;
+    }
+
+    setHandler(handler) {
+        this.UIHandler = handler;
     }
 
     endFight() {
@@ -21,6 +32,18 @@ class StorageHandler {
 
         // return;
         window.location.href = this.interludeLocation;
+    }
+
+    startFight() {
+        this.savePostInterludeParty();
+        return;
+        window.location.href = this.battleLocation;
+    }
+
+    savePostInterludeParty() {
+        const PARTY = this.UIHandler.returnSelectedParty();
+        console.log(PARTY)
+        //sessionStorage.currentParty = JSON.stringify( SAVED_PARTY );
     }
 
     restoreAtlas() {

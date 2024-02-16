@@ -64,6 +64,7 @@ let UIHandler = new UIHandlerInt( interludeState );
 
 console.log(interludeState);
 
+
 interludeState.healParty();
 interludeState.restorePartyMoves();
 
@@ -79,7 +80,8 @@ intFuncs.handleReward
     FULL_DAEMON_TABLE,
     interludeState
 );
-
+storage.setState( interludeState );
+storage.setHandler(UIHandler)
 
 // intFuncs.populatePartySelects( interludeState, partySelects );
 // intFuncs.keepSelectsUnique( interludeState, partySelects );
@@ -87,4 +89,6 @@ intFuncs.populateDaemonInspect();
 intFuncs.setupReadyButton();
 intFuncs.populateChallenger( interludeState.nextLockName );
 
+
+document.getElementsByName('startFight')[0].addEventListener('click', () => storage.startFight() )
 // console.log(sessionStorage)

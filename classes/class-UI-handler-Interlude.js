@@ -1,4 +1,5 @@
 import { InterludeState } from "./class-interludeState.js";
+import { Party } from "./class-party.js";
 
 class UIHandlerInt {
     constructor( interludeState = new InterludeState() ) {
@@ -93,6 +94,21 @@ class UIHandlerInt {
         }
     }
 
+    returnSelectedParty() {
+        const DEFAULT_STRING = 'Pick a Daemon';
+        const ALL_MONS_ARRAY = this.state.allHeldMons.members;
+        const SELECTED_MONS_UUIDS = this.partySelects
+            .map( select => select.value )
+            .filter( value => value !== DEFAULT_STRING );
+        const SELECTED_MONS = SELECTED_MONS_UUIDS
+            .map( uuid => ALL_MONS_ARRAY
+                .filter( daemon => daemon.returnUUID() === uuid ))
+            .flat();
+        const PARTY = new Party();
+
+        PARTY.setParty( SELECTED_MONS );
+        return PARTY;
+    }
 
 }
 export { UIHandlerInt }
