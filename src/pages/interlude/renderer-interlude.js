@@ -28,7 +28,8 @@ import { InterludeState } from '../../../classes/class-interludeState.js';
 import { StorageHandler } from '../../../classes/class-storage-handler.js';
 import { Atlas } from '../../../classes/class-atlas.js';
 import { Party } from '../../../classes/class-party.js';
-import { UIHandlerInt } from '../../../classes/class-UI-handler-Interlude.js';
+import { InterludeUIHandler } from '../../../classes/class-UI-handler-Interlude.js';
+import { Daemon } from '../../../classes/class-daemon.js';
 
 const FULL_DAEMON_TABLE = parse.createMonTable();
 const FULL_LOCK_TABLE = parse.createWarlocks();
@@ -43,11 +44,11 @@ let storage = new StorageHandler();
 
 
 let lockAtlas = storage.restoreAtlas();
-let testNextLockList = calc.returnWithMatchingParamters( FULL_LOCK_TABLE, 'tier', 1 );
+// let testNextLockList = calc.returnWithMatchingParamters( FULL_LOCK_TABLE, 'tier', 1 );
 
 console.log(storage);
 console.log(lockAtlas);
-console.log(testNextLockList);
+// console.log(testNextLockList);
 
 let interludeState = new InterludeState(
     lockAtlas,
@@ -59,8 +60,13 @@ let interludeState = new InterludeState(
         'nextLockName': sessionStorage.nextLockName
     }
 );
+console.log(interludeState)
 
-let UIHandler = new UIHandlerInt( interludeState );
+let tempDaemon = new Daemon();
+tempDaemon.generateDaemonFromID( 'monID005' );
+interludeState.allHeldMons.push( tempDaemon );
+
+let UIHandler = new InterludeUIHandler( interludeState );
 
 console.log(interludeState);
 
@@ -72,7 +78,7 @@ interludeState.restorePartyMoves();
 // let randNextLock = intFuncs.returnRandomIndexFromArray(testNextLockList);
 // interludeState.updateParam(randNextLock.name, 'nextLock');
 // interludeState.updateParam(randNextLock.name, 'nextLockName');
-console.log(interludeState.nextLock);
+
 
 intFuncs.handleReward
 (
@@ -81,7 +87,7 @@ intFuncs.handleReward
     interludeState
 );
 storage.setState( interludeState );
-storage.setHandler(UIHandler)
+storage.setHandler( UIHandler )
 
 // intFuncs.populatePartySelects( interludeState, partySelects );
 // intFuncs.keepSelectsUnique( interludeState, partySelects );

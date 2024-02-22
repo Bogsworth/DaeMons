@@ -16,43 +16,58 @@ class StorageHandler {
         // this.endFight();
     }
 
-    setState( newState ) {
-        this.battleState = newState;
-    }
-
-    setHandler(handler) {
-        this.UIHandler = handler;
-    }
+    setState( newState ) { this.battleState = newState; }
+    setHandler( handler ) { this.UIHandler = handler; }
 
     endFight() {
-        console.log(this.battleState)
-        this.savePostFightParty()
-        this.getReward();
-        this.getNextChallenger();
-
-        // return;
+        this.savePostFightData();
+        //return;
         window.location.href = this.interludeLocation;
     }
 
     startFight() {
-        this.savePostInterludeParty();
-        return;
+        this.savePostInterludeData();
+        // return;
         window.location.href = this.battleLocation;
+    }
+
+    savePostFightData() {
+        console.log(this.battleState);
+        this.savePostFightParty();
+        this.getReward();
+        this.getNextChallenger();
+    }
+
+    savePostInterludeData() {
+        this.savePostInterludeParty();
+        this.savePostInterludeBillsPC();
     }
 
     savePostInterludeParty() {
         const PARTY = this.UIHandler.returnSelectedParty();
-        console.log(PARTY)
-        //sessionStorage.currentParty = JSON.stringify( SAVED_PARTY );
+
+        console.log(PARTY);
+        sessionStorage.currentParty = JSON.stringify( PARTY );
+    }
+
+    savePostInterludeBillsPC() {
+        const PARTY = this.UIHandler.returnSelectedParty().members;
+        const UUIDs = PARTY.map(daemon => daemon.returnUUID())
+        const BILLS_PC = this.battleState.allHeldMons
+            .filter( daemon => ! UUIDs.includes( daemon.returnUUID() ));
+    
+        console.log(BILLS_PC);
+        sessionStorage.allHeldMons = JSON.stringify(BILLS_PC);
     }
 
     restoreAtlas() {
         let atlasInfoString = this.initialSessionStorage.atlas;
 
-        if ( atlasInfoString == undefined ) {
+        if ( atlasInfoString === undefined ) {
             let newAtlas = new Atlas([1,2]);
+
             this.saveAtlas( newAtlas );
-            return newAtlas
+            return newAtlas;
         }
 
         return new Atlas(JSON.parse(atlasInfoString, reviver));
@@ -67,8 +82,8 @@ class StorageHandler {
         }
     }
 
-    saveAtlas(atlas) {
-        sessionStorage.atlas = JSON.stringify(atlas, replacer);
+    saveAtlas( atlas ) {
+        sessionStorage.atlas = JSON.stringify( atlas, replacer );
 
         function replacer(key, value) {
             if ( ! ( value instanceof Map )) {

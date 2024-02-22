@@ -7,13 +7,14 @@ class Party {
     //     this.members = builder;
     //     this.activeMon = this.members[0];
     // }
-    constructor( builder = {
-        members: [],
-        activeMon: {}
-    } ) {
+    constructor(
+        builder = {
+            members: [],
+            activeMon: {}
+        }
+    ) {
         this.members = createDaemonArray( builder.members );
         this.activeMon;
-
         this.updateActiveMon();
 
         function createDaemonArray(daemonData) {
@@ -23,6 +24,10 @@ class Party {
 
             return daemonData.map(daemon => new Daemon(daemon))
         }
+    }
+
+    returnMembers() {
+        return this.members;
     }
 
     //TODO: Put in an order

@@ -2,6 +2,7 @@ import * as util from '../lib/utility.js';
 import { Party } from './class-party.js';
 import { StorageHandler } from './class-storage-handler.js';
 import { Warlock } from './class-warlock.js';
+import { Daemon } from './class-daemon.js';
 
 class InterludeState {
     constructor ( atlas, builder = {
@@ -25,15 +26,7 @@ class InterludeState {
         this.nextLockName = this.nextLock.returnName();
         
         this.newReward = '';
-
-        if (builder['allHeldMons'] == '""') {
-            this.allHeldMons = Object.assign( [], this.currentParty)
-        }
-        else {
-            this.allHeldMons = util.parseDaemonJSON (
-                JSON.parse(builder['allHeldMons'])
-            );
-        }
+        this.allHeldMons = this.allHeldMonsLoader(sessionStorage.allHeldMons);
     }
 
     returnNextRoomsArray() {
@@ -44,21 +37,29 @@ class InterludeState {
     }
 
     partyLoader(storage) {
-        const PARSED_STORAGE = JSON.parse(storage);
+        const PARSED_STORAGE = JSON.parse( storage );
         let playerParty = new Party( PARSED_STORAGE );
 
         return playerParty;
     }
 
-    updateParam( data, param ) {
-        this[param] = data;
+    allHeldMonsLoader( storage ) {
+        if ( storage === undefined ) {
+            // .map( member => member ) is required or else billsPC ends up pointint at party,
+            // not copying into its own instance
+            return this.currentParty.returnMembers().map( member => member );
+        }
 
-        if (typeof(data) == 'object' ) {
-            sessionStorage[param] = JSON.stringify( this[param] );
+        let billsPC;
+        const PARSED_STORAGE = JSON.parse( storage );
+    
+        if ( ! (PARSED_STORAGE.length === 0 || PARSED_STORAGE === undefined )) {
+            billsPC = PARSED_STORAGE
+                .map( daemonData => new Daemon( daemonData ))
+                .concat(this.currentParty.members);
         }
-        else {
-            sessionStorage[param] = this[param];
-        }
+
+        return billsPC;
     }
 
     healParty() {

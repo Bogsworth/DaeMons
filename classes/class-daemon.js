@@ -65,6 +65,12 @@ class Daemon {
         }
     }
 
+    /**
+     * 
+     * @param {*} id default 'monID000'
+     * @param {*} tier default 1
+     * @param {*} bossFlag default false
+     */
     generateDaemonFromID( id = 'monID000', tier = 1, bossFlag = false ) {
         if ( typeof( tier ) === 'number') {
             tier = 'tier ' + tier;

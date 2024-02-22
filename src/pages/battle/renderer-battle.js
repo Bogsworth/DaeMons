@@ -60,10 +60,10 @@ let fightState = storage.loadRoom();
 // Testing with multiple mons
 
 console.log(fightState.playerParty.members)
-let tempDaemon = new Daemon()
-tempDaemon.generateDaemonFromID('monID002')
-fightState.playerParty.addMonToParty(tempDaemon)
-console.log(fightState.playerParty.members)
+// let tempDaemon = new Daemon()
+// tempDaemon.generateDaemonFromID('monID002')
+// fightState.playerParty.addMonToParty(tempDaemon)
+// console.log(fightState.playerParty.members)
 
 // ------
 

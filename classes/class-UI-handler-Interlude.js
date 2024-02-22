@@ -1,7 +1,7 @@
 import { InterludeState } from "./class-interludeState.js";
 import { Party } from "./class-party.js";
 
-class UIHandlerInt {
+class InterludeUIHandler {
     constructor( interludeState = new InterludeState() ) {
         this.state = interludeState;
         this.partySelectArray = [
@@ -32,11 +32,11 @@ class UIHandlerInt {
 
     partySelectPopulator( select ) {
         const UUID_ARRAY = this.state
-            .currentParty
-            .members.map( daemon => daemon.returnUUID() );
+            .allHeldMons
+            .map( daemon => daemon.returnUUID() );
         const NAME_ARRAY = this.state
-            .currentParty
-            .members.map( daemon => daemon.returnName() );
+            .allHeldMons
+            .map( daemon => daemon.returnName() );
         const ELEMENT = document.getElementById( select );
         
         this.populateSelect( NAME_ARRAY, UUID_ARRAY, select );
@@ -59,6 +59,7 @@ class UIHandlerInt {
         });
     
         function enableAllOptions( selectElement ) {
+            // This is just from StackOverflow >_<
             for ( let i = 0; i < selectElement.options.length; i++ ) {
                 selectElement.options[i].disabled = false;
             }
@@ -81,6 +82,7 @@ class UIHandlerInt {
 
     setInitialSelectOptions() {
         let index = 0;
+        console.log(this.state.currentParty.members)
 
         this.state.currentParty.members
             .map( daemon => daemon.returnUUID() )
@@ -96,7 +98,7 @@ class UIHandlerInt {
 
     returnSelectedParty() {
         const DEFAULT_STRING = 'Pick a Daemon';
-        const ALL_MONS_ARRAY = this.state.allHeldMons.members;
+        const ALL_MONS_ARRAY = this.state.allHeldMons;
         const SELECTED_MONS_UUIDS = this.partySelects
             .map( select => select.value )
             .filter( value => value !== DEFAULT_STRING );
@@ -111,4 +113,4 @@ class UIHandlerInt {
     }
 
 }
-export { UIHandlerInt }
+export { InterludeUIHandler }
