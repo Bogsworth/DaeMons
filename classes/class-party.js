@@ -69,6 +69,11 @@ class Party {
         this.activeMon = this.members[ index ];
     }
 
+    switchActiveDaemonByUUID( uuid ) {
+        this.activeMon.resetTempStatModifiers();
+        this.activeMon = this.members.find( daemon => daemon.uuid === uuid );
+    }
+
 }
 
 // let daemon = new Daemon()

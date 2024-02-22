@@ -7,8 +7,6 @@ import * as parse from '../lib/Import.js'
 import * as calc from '../lib/Calculations.js'
 import { Warlock } from './class-warlock.js'
 
-
-
 class Atlas {
     constructor(requiredLocksPerTier = [1, 3, 1, 1]) {
         if ( ! Array.isArray( requiredLocksPerTier )) {

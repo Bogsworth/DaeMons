@@ -81,6 +81,7 @@ class BattleState {
             const CHOSEN_MOVE = ACTIVE_MON.returnMoves()[ CHOSEN_MOVE_INDEX - 1];
             const THEIR_MON = state.enemyLock.party.activeMon;
             const THEIR_MOVE = state.enemyLock.chooseMove();
+            const ENEMY_LOCK = state.enemyLock;
             
             let turnOrder = [];
             let myTurn = {
@@ -236,16 +237,12 @@ class BattleState {
                     await waitForPress();
                     HANDLER.writeToMessageBox( `They lost connection with their ${THEIR_MON.name}`)
                     await waitForPress();
-                    
-                    // TODO: This doesn't properly handle enemies switching, fix it
-                    THEIR_MON = theirParty[theirParty.indexOf(THEIR_MON) + 1];
-                    fightState.theirActiveMon = THEIR_MON;
+                    ENEMY_LOCK.switchToRandomMon();
                     HANDLER.writeToMessageBox( `They connect with ${THEIR_MON.name}` );
                     HANDLER.updateMons();
                     await waitForPress();
                     break;
                 case '11':
-
                     HANDLER.writeToMessageBox( 'Your dude has died, RIP');
                     await waitForPress();
                     if ( state.playerParty.checkIfWipe() ) {

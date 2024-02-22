@@ -106,6 +106,15 @@ class Warlock {
         return ACTIVE_MON.moves[ chosenMoveIndex ];
     }
 
+    switchToRandomMon() {
+        const REMAINING_MON = this.party.members
+            .filter(daemon => ! daemon.returnTrueIfDead());
+        const RANDOM_INDEX = Math.floor( Math.random() * REMAINING_MON.length );
+        const CHOSEN_UUID = REMAINING_MON[ RANDOM_INDEX ].returnUUID();
+
+        this.party.switchActiveDaemonByUUID( CHOSEN_UUID );
+    }
+
     returnName() { return this.name; }
     returnID() { return this.id; }
     returnDescription() { return this.description; }

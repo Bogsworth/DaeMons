@@ -41,6 +41,14 @@ class StorageHandler {
     savePostInterludeData() {
         this.savePostInterludeParty();
         this.savePostInterludeBillsPC();
+        this.saveNextRoomID();
+    }
+    
+    saveNextRoomID() {
+        const PREVIOUS_ROOM_ID = this.initialSessionStorage.previousRoomID;
+        const PREVIOUS_ROOM = this.battleState.atlas.battleOrder.get( PREVIOUS_ROOM_ID );
+        
+        sessionStorage.currentRoomID = PREVIOUS_ROOM.nextRoomID[0];
     }
 
     savePostInterludeParty() {
@@ -100,6 +108,7 @@ class StorageHandler {
         const INIT_ROOM = 'roomID000';
         const ATLAS = this.restoreAtlas();
         let roomID = this.initialSessionStorage.currentRoomID;
+        console.log(roomID)
 
         if ( roomID == undefined ) {
             roomID = INIT_ROOM;

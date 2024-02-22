@@ -44,20 +44,24 @@ class InterludeState {
     }
 
     allHeldMonsLoader( storage ) {
-        if ( storage === undefined ) {
-            // .map( member => member ) is required or else billsPC ends up pointint at party,
-            // not copying into its own instance
-            return this.currentParty.returnMembers().map( member => member );
-        }
+        // .map( member => member ) is required or else billsPC ends up pointint at party,
+        // not copying into its own instance
+        let billsPC = this.currentParty.returnMembers().map( member => member );
+        let parsedStorage = undefined;
 
-        let billsPC;
-        const PARSED_STORAGE = JSON.parse( storage );
-    
-        if ( ! (PARSED_STORAGE.length === 0 || PARSED_STORAGE === undefined )) {
-            billsPC = PARSED_STORAGE
+        try { 
+            parsedStorage = JSON.parse( storage ); 
+        } catch( error ) {
+            console.log('storage not parseable as JSON') 
+            return billsPC;
+        } 
+        if ( ! ( parsedStorage.length === 0 || parsedStorage === undefined )) {
+            console.log('passed if statemetn')
+            billsPC = parsedStorage
                 .map( daemonData => new Daemon( daemonData ))
                 .concat(this.currentParty.members);
         }
+        console.log(billsPC)
 
         return billsPC;
     }
