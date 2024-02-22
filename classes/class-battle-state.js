@@ -311,6 +311,9 @@ class BattleState {
                 }
         })
         chosenMove.decrementRemainingUses();
+        if ( ! moveHit ) {
+            damage = 0;
+        }
         defendingMon.updateHP( damage );
         this.handler.updateShownHP()
         this.handler.writeToMessageBox( messageMaker.returnMessage() );

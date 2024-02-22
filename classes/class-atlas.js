@@ -4,7 +4,6 @@
 import roomJSON from '../data/enemy-warlocks-by-tier.json' assert { type: "json" };
 import lockJSON from '../data/enemy-warlocks.json' assert { type: "json"};
 import * as parse from '../lib/Import.js'
-import * as calc from '../lib/Calculations.js'
 import { Warlock } from './class-warlock.js'
 
 class Atlas {
@@ -13,23 +12,32 @@ class Atlas {
             this.initializeFromMap(requiredLocksPerTier);
             return;
         }
-        this.lockMap = parse.createWarlocks(lockJSON);
-        this.tierMap = this.returnTierMap();
+        
+        this._lockMap = parse.createWarlocks(lockJSON);
+        this._tierMap = this.returnTierMap();
+        this._battleOrder = new Map()
 
-        this.battleOrder = new Map();
         this.initBattleOrder( requiredLocksPerTier );
         this.addGauntlets();
     }
 
+    get lockMap() { return this._lockMap; }
+    get tierMap() { return this._tierMap; }
+    get battleOrder() { return this._battleOrder; }
+
+    set lockMap( map ) { this._lockMap = map; }
+    set tierMap( tierMap ) { this._tierMap = tierMap }
+    set battleOrder( battleOrder) { this._battleOrder = battleOrder; }
+
     initializeFromMap( atlasMap ) {
-        this.lockMap = atlasMap.lockMap;
-        this.tierMap = atlasMap.tierMap;
-        this.battleOrder = atlasMap.battleOrder;
+        this._lockMap = atlasMap._lockMap;
+        this._tierMap = atlasMap._tierMap;
+        this._battleOrder = atlasMap._battleOrder;
     }
 
     returnTierMap() {
-        
         let tierMap = new Map();
+
         for (let [ lockID, lockData] of this.lockMap) {
             Object.keys(lockData.allowedDaemons).forEach( tier => {
                 if (! tierMap.has(tier)) {
@@ -39,24 +47,6 @@ class Atlas {
                 tierMap.get(tier).push(lockID)
             })
         }
-        // const tierMap = new Map(
-        //     [...this.lockMap]
-        //     .filter(([key, val]) => val.allowedDaemons.includes('tier 1') )
-        //   );
-
-        // let tierMap = new Map();
-
-        // for ( let [ key, val ] of this.lockMap ) {
-        //     const ID = 'tier ' + val.tier;
-
-        //     if ( ! tierMap.has(ID)) {
-        //         tierMap.set(ID, [key]);
-        //         continue;
-        //     }
-
-        //     tierMap.get(ID).push(key);
-        // }
-
         return tierMap;
     }
 
@@ -90,6 +80,32 @@ class Atlas {
                 prevRoomID = NEXT_ROOM_ID;
             })
         })
+
+        function randArrayNoRepeats(length, availableOptions) {
+            let array = Array.apply(null, Array(length)).map(function () {});
+            let i = 0;
+        
+            array.forEach( val => {
+                val = getRandomInt(availableOptions);
+        
+                if ( i == 0 ) {
+                    array[i++] = val;
+                    return;
+                }
+        
+                array[i] = val;
+                while (array[ i - 1 ] == val) {
+                    val = getRandomInt(availableOptions);
+                    array[i] = val;
+                }
+                i++;
+            })
+            return array;
+        
+            function getRandomInt( max ) {
+                return Math.floor(Math.random() * max);
+            }
+        }
     }
 
     addGauntlets(numberOfGauntlets = 1) {
@@ -147,49 +163,32 @@ class Atlas {
     }
 }
 
-function randArrayNoRepeats(length, availableOptions) {
-    let array = Array.apply(null, Array(length)).map(function () {});
-    let i = 0;
+// function randArrayNoRepeats(length, availableOptions) {
+//     let array = Array.apply(null, Array(length)).map(function () {});
+//     let i = 0;
 
-    array.forEach( val => {
-        val = calc.getRandomInt(availableOptions);
+//     array.forEach( val => {
+//         val = getRandomInt(availableOptions);
 
-        if ( i == 0 ) {
-            array[i++] = val;
-            return;
-        }
+//         if ( i == 0 ) {
+//             array[i++] = val;
+//             return;
+//         }
 
-        array[i] = val;
-        while (array[ i - 1 ] == val) {
-            val = calc.getRandomInt(availableOptions);
-            array[i] = val;
-        }
-        i++;
-    })
-    return array;
-}
+//         array[i] = val;
+//         while (array[ i - 1 ] == val) {
+//             val = getRandomInt(availableOptions);
+//             array[i] = val;
+//         }
+//         i++;
+//     })
+//     return array;
 
+//     function getRandomInt( max ) {
+//         return Math.floor(Math.random() * max);
+//     }
+// }
 
-
-
-function replacer(key, value) {
-    if ( ! ( value instanceof Map )) {
-        return value;
-    }
-    return {
-        dataType: 'Map',
-        value: [...value]
-    };
-}
-
-function reviver(key, value) {
-    if (typeof value === 'object' && value !== null) {
-        if (value.dataType === 'Map') {
-            return new Map(value.value);
-        }
-    }
-    return value;
-}
 
 
 // let atlas = new Atlas([1, 2]);

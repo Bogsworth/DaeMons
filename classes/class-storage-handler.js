@@ -70,22 +70,25 @@ class StorageHandler {
 
     restoreAtlas() {
         let atlasInfoString = this.initialSessionStorage.atlas;
+        console.log(atlasInfoString)
 
         if ( atlasInfoString === undefined ) {
             let newAtlas = new Atlas([1,2]);
-
+            console.log(newAtlas)
             this.saveAtlas( newAtlas );
             return newAtlas;
         }
-
+       
         return new Atlas(JSON.parse(atlasInfoString, reviver));
 
         function reviver(key, value) {
+            console.log(value)
             if (typeof value === 'object' && value !== null) {
                 if (value.dataType === 'Map') {
                     return new Map(value.value);
                 }
             }
+
             return value;
         }
     }
@@ -114,6 +117,8 @@ class StorageHandler {
             roomID = INIT_ROOM;
             sessionStorage.previousRoomID = roomID;
         }
+        console.log(ATLAS)
+        
         const ROOM_WARLOCK = new Warlock( ATLAS.battleOrder.get(roomID).lock );
         
         return new BattleState( ROOM_WARLOCK );
