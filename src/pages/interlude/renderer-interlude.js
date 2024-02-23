@@ -44,7 +44,7 @@ let storage = new StorageHandler();
 
 
 let lockAtlas = storage.restoreAtlas();
-// let testNextLockList = calc.returnWithMatchingParamters( FULL_LOCK_TABLE, 'tier', 1 );
+
 
 console.log(storage);
 console.log(lockAtlas);

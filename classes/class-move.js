@@ -131,6 +131,10 @@ class Move {
         return;
     }
 
+    useMoveFull( defendingMon ) {
+        
+    }
+
     decrementRemainingUses( decrementBy = 1) {
         if ( this._remainingUses == 0 ) return false;
         

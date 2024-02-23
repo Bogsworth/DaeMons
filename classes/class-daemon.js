@@ -222,12 +222,6 @@ class Daemon {
         }
     }
 
-    // copyMon( monToCopy ) {
-    //     for ( const [ key, val ] of Object.entries( this )) {
-    //         this[key] = monToCopy[key]
-    //     }
-    // }
-
     copyFromData ( monString ) {
         for ( const [ key, val ] of Object.entries( this )) {
             let parsedData = JSON.parse(monString)
