@@ -160,8 +160,8 @@ class UIHandler {
                 .playerParty
                 .activeMon
                 .returnMoves()
-                .filter(move => move != null)
-                .map(move => move.returnName()),
+                .filter( move => move !== null )
+                .map( move => move.name ),
             'selectMoves'
         )       
     }
@@ -249,7 +249,7 @@ class UIHandler {
             ['statInfo1', myMon.returnAttackStat()],
             ['statInfo2', myMon.returnDefenseStat()],
             ['statInfo3', myMon.returnSpeedStat()],
-            ['expandedMon', myMon.returnName()],
+            ['expandedMon', myMon.name],
             ['expandedMonHP', myMon.returnCurrentHPReadable()]
         ]);
     
@@ -257,13 +257,13 @@ class UIHandler {
             let currentMoveIds = this.moveArrayId[i];
             let currentMove = myMon.moves[i];
     
-            constructorMap.set(currentMoveIds[0], currentMove.returnName());
-            constructorMap.set(currentMoveIds[1], currentMove.returnType());
-            constructorMap.set(currentMoveIds[2], currentMove.returnPower());
-            constructorMap.set(currentMoveIds[3], currentMove.returnUsesReadable());
-            constructorMap.set(currentMoveIds[4], currentMove.returnAccuracy());
-            constructorMap.set(currentMoveIds[5], currentMove.returnStatsAffectedArray());
-            constructorMap.set(currentMoveIds[6], currentMove.returnDescription());
+            constructorMap.set(currentMoveIds[0], currentMove.name);
+            constructorMap.set(currentMoveIds[1], currentMove.type);
+            constructorMap.set(currentMoveIds[2], currentMove.power);
+            constructorMap.set(currentMoveIds[3], currentMove.usesReadable);
+            constructorMap.set(currentMoveIds[4], currentMove.accuracy);
+            constructorMap.set(currentMoveIds[5], currentMove.statsAffectedArray);
+            constructorMap.set(currentMoveIds[6], currentMove.description);
         }
     
         constructorMap.forEach((info, id) => {
@@ -320,7 +320,7 @@ class UIHandler {
             this.writeToMessageBox( `Your Daemon is dead, choose a new one` );
             return false;
         }
-        else if ( CHOSEN_MOVE.returnUses() <= 0 ) {
+        else if ( CHOSEN_MOVE.usesRemaining <= 0 ) {
             this.writeToMessageBox( `You have no more uses of that move` );
             return false;
         }

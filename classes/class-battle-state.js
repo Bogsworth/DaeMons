@@ -274,7 +274,7 @@ class BattleState {
         const TYPE_MOD = calc.calculateTypeModifier
         (
             this.typeTable,
-            chosenMove.returnType(), 
+            chosenMove.type, 
             defendingMon.returnType()
         );
         const ROUND_INFO = {
@@ -290,8 +290,7 @@ class BattleState {
 
         console.log( ROUND_INFO );
 
-        chosenMove
-            .returnStatsAffectedArray()
+        chosenMove.statsAffectedArray
             .forEach( effect => {
                 const TARGET = effect[ 0 ];
                 const STAT = effect[ 1 ];

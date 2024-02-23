@@ -154,17 +154,6 @@ class Daemon {
         this.moves = newMoveArray;
     }
 
-    populateMovesWithObjs() {
-        let i = 0;
-        this.moves
-            .filter( move => move != null )
-            .forEach( move => {
-                tempMove.copyFromData( JSON.stringify(move ));
-                this.moves[i] = tempMove;
-                i++;
-        })
-    }
-
     restoreHP() {
         this.currentHP = this.stats['HP'];
     }

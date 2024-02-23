@@ -73,14 +73,14 @@ class StorageHandler {
 
         if ( atlasInfoString === undefined ) {
             let newAtlas = new Atlas([1,2]);
-            console.log(newAtlas)
+
             this.saveAtlas( newAtlas );
             return newAtlas;
         }
        
         return new Atlas(JSON.parse(atlasInfoString, reviver));
 
-        function reviver(key, value) {
+        function reviver( key, value ) {
             if ( typeof value === 'object' && value !== null ) {
                 if ( value.dataType === 'Map' ) {
                     return new Map( value.value );

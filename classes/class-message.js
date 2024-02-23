@@ -16,18 +16,18 @@ class Message {
         this.typeMod = calc.calculateTypeModifier
         (
             this.battleState.typeTable,
-            this.chosenMove.returnType(), 
+            this.chosenMove.type, 
             this.defendingMon.returnType()
         );
 
-        this.statsAffectedArray = this.chosenMove.returnStatsAffectedArray();
+        this.statsAffectedArray = this.chosenMove.statsAffectedArray;
         this.activeLock = this.setActiveLock();
 
         this.templates = this.createTemplates();
     }
 
     createTemplates() {
-        let moveAffectsStats = this.chosenMove.returnStatAffectedBool();
+        let moveAffectsStats = this.chosenMove.isStatsAffected;
         let templates = {
             didDamage: {
                 player: `Your ${this.attackingMon.name} did ${this.damage} using ${this.chosenMove.name}`,
@@ -109,18 +109,18 @@ class Message {
 
     returnMessage() {
         let activeLock = this.setActiveLock();
-        let moveDoesDamage = ( this.chosenMove.returnPower() != 0 );
-        let moveAffectsStats = (this.statsAffectedArray.length != 0);
-        let moveSuperEffective = ( this.typeMod > 1 ) && ( this.chosenMove.power != 0 )
+        let isMoveDamaging = this.chosenMove.power !== 0;
+        let isMoveStatAffecting = this.statsAffectedArray.length !== 0;
+        let isMoveSuperEffective = ( this.typeMod > 1 ) && ( this.chosenMove.power != 0 )
 
         if ( ! this.moveHit ) {
             this.message += this.templates.missed[ activeLock ];
             return this.message;
         }
-        if ( moveDoesDamage ) {
+        if ( isMoveDamaging ) {
             this.message += this.templates.didDamage[ activeLock ];
         }
-        if ( moveAffectsStats ) {
+        if ( isMoveStatAffecting ) {
             if ( this.templates.affectSelf ) {
                 console.log(this.templates)
                 this.message += this.templates.affectSelf[ activeLock ];
@@ -129,7 +129,7 @@ class Message {
                 this.message += this.templates.affectOther[ activeLock ];
             }
         }
-        if ( moveSuperEffective ) {
+        if ( isMoveSuperEffective ) {
             this.message += this.templates.superEffective[ activeLock ];
         }
 
