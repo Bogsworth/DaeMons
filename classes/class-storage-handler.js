@@ -60,9 +60,9 @@ class StorageHandler {
 
     savePostInterludeBillsPC() {
         const PARTY = this.UIHandler.returnSelectedParty().members;
-        const UUIDs = PARTY.map(daemon => daemon.returnUUID())
+        const UUIDs = PARTY.map(daemon => daemon.uuid)
         const BILLS_PC = this.battleState.allHeldMons
-            .filter( daemon => ! UUIDs.includes( daemon.returnUUID() ));
+            .filter( daemon => ! UUIDs.includes( daemon.uuid ));
     
         console.log(BILLS_PC);
         sessionStorage.allHeldMons = JSON.stringify(BILLS_PC);

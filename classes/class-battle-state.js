@@ -71,7 +71,7 @@ class BattleState {
                 .getElementById( 'selectMoves' )
                 .options
                 .selectedIndex;
-            const CHOSEN_MOVE = ACTIVE_MON.returnMoves()[ CHOSEN_MOVE_INDEX - 1];
+            const CHOSEN_MOVE = ACTIVE_MON.moves[ CHOSEN_MOVE_INDEX - 1];
             const THEIR_MON = state.enemyLock.party.activeMon;
             const THEIR_MOVE = state.enemyLock.chooseMove();
             const ENEMY_LOCK = state.enemyLock;
@@ -111,8 +111,8 @@ class BattleState {
             await waitForPress();
 
             if (   
-                ! ( myMon.returnCurrentHP() <= 0 ) &&
-                ! ( THEIR_MON.returnCurrentHP() <= 0 )
+                ! ( myMon.isDead ) &&
+                ! ( THEIR_MON.isDead )
             ) {
                 state.useMove
                 (
@@ -125,8 +125,8 @@ class BattleState {
                 await waitForPress();
             }
 
-            let theirMonBitTracker =  + (THEIR_MON.returnTrueIfDead());
-            let myMonBitTracker = + (myMon.returnTrueIfDead());
+            let theirMonBitTracker =  + ( THEIR_MON.isDead );
+            let myMonBitTracker = + ( myMon.isDead );
             let bitTracker = theirMonBitTracker.toString() + myMonBitTracker.toString();
             console.log(bitTracker)
 
@@ -275,7 +275,7 @@ class BattleState {
         (
             this.typeTable,
             chosenMove.type, 
-            defendingMon.returnType()
+            defendingMon.type
         );
         const ROUND_INFO = {
             attacker: attackingMon,
@@ -347,7 +347,7 @@ class BattleState {
             }
             await waitForPress();
 
-            const NEW_NAME = state.playerParty.members[ CHOSEN_MON_INDEX ].returnName();
+            const NEW_NAME = state.playerParty.members[ CHOSEN_MON_INDEX ].name;
             let prevMon = activeMon;
 
             // Actually switch daemons
@@ -362,7 +362,7 @@ class BattleState {
             await waitForPress();
     
             // Enemy gets an attack if you weren't forced to switch
-            if ( prevMon.returnCurrentHP() > 0 ) {
+            if ( ! prevMon.isDead ) {
                 const ENEMY_MOVE = state.enemyLock.chooseMove();
                 
                 state.useMove( theirMon, activeMon, ENEMY_MOVE, false );

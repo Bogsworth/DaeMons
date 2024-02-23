@@ -80,12 +80,12 @@ interludeState.restorePartyMoves();
 // interludeState.updateParam(randNextLock.name, 'nextLockName');
 
 
-intFuncs.handleReward
-(
-    JSON.stringify(interludeState.newReward),
-    FULL_DAEMON_TABLE,
-    interludeState
-);
+// intFuncs.handleReward
+// (
+//     JSON.stringify(interludeState.newReward),
+//     FULL_DAEMON_TABLE,
+//     interludeState
+// );
 storage.setState( interludeState );
 storage.setHandler( UIHandler )
 

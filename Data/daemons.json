@@ -1,13 +1,13 @@
 [{
-    "name": "Randy",
-    "type": ["lust"],
-    "stats": {
+    "_name": "Randy",
+    "_type": ["lust"],
+    "_stats": {
         "HP": 50,
         "attack": 45,
         "defense": 42,
         "speed": 35
     },
-    "movesKnown": {
+    "_movesKnown": {
         "asStarter": {
             "normalLock": ["Bind", "Charm", null, null]
         },
@@ -22,15 +22,15 @@
     }
 },
 {
-    "name": "Imp",
-    "type": ["greed"],
-    "stats": {
+    "_name": "Imp",
+    "_type": ["greed"],
+    "_stats": {
         "HP": 38,
         "attack": 41,
         "defense": 30,
         "speed": 90
     },
-    "movesKnown": {
+    "_movesKnown": {
         "asStarter": {
             "normalLock": ["Buyout", "Philanthropy", null, null]
         },
@@ -45,15 +45,15 @@
     }
 },
 {
-    "name": "Caffeine Headache",
-    "type": ["sloth"],
-    "stats": {
+    "_name": "Caffeine Headache",
+    "_type": ["sloth"],
+    "_stats": {
         "HP": 55,
         "attack": 40,
         "defense": 48,
         "speed": 31
     },
-    "movesKnown": {
+    "_movesKnown": {
         "asStarter": {
             "normalLock": ["Laze", "Cozy Up", null, null]
         },
@@ -68,15 +68,15 @@
     }
 },
 {
-    "name": "Succubus",
-    "type": ["lust"],
-    "stats": {
+    "_name": "Succubus",
+    "_type": ["lust"],
+    "_stats": {
         "HP": 50,
         "attack": 45,
         "defense": 30,
         "speed": 70
     },
-    "movesKnown": {
+    "_movesKnown": {
         "tier 1": {
            "normalLock": ["Chain Whip", "Charm", null, null],
            "boss": ["Chain Whip", "Charm", null, null]
@@ -88,15 +88,15 @@
     }
 },
 {
-    "name": "Lay-Z-Boy",
-    "type": ["sloth"],
-    "stats": {
+    "_name": "Lay-Z-Boy",
+    "_type": ["sloth"],
+    "_stats": {
         "HP": 90,
         "attack": 40,
         "defense": 100,
         "speed": 20
     },
-    "movesKnown": {
+    "_movesKnown": {
         "tier 1": {
            "normalLock": ["Normal Punch", "Convince to Stay In", null, null],
            "boss": ["Normal Punch", "Convince to Stay In", null, null]
@@ -108,15 +108,15 @@
     }
 },
 {
-    "name": "Angy Boy",
-    "type": ["wrath"],
-    "stats": {
+    "_name": "Angy Boy",
+    "_type": ["wrath"],
+    "_stats": {
         "HP": 33,
         "attack": 55,
         "defense": 30,
         "speed": 30
     },
-    "movesKnown": {
+    "_movesKnown": {
         "tier 1": {
            "normalLock": ["Do You Lift?", "Normal Punch", "Smack", null],
            "boss": ["Do You Lift?", "Normal Punch", "Consecutive Normal Punches", null]
@@ -128,15 +128,15 @@
     }
 },
 {
-    "name": "Punch Goblin",
-    "type": ["wrath"],
-    "stats": {
+    "_name": "Punch Goblin",
+    "_type": ["wrath"],
+    "_stats": {
         "HP": 25,
         "attack": 50,
         "defense": 40,
         "speed": 25
     },
-    "movesKnown": {
+    "_movesKnown": {
         "tier 1": {
            "normalLock": ["Do You Lift?", "Smack", null, null],
            "boss": ["Do You Lift?", "smack","Normal Punch", null]
@@ -149,15 +149,15 @@
 },
 
 {
-    "name": "Barbarian",
-    "type": ["wrath"],
-    "stats": {
+    "_name": "Barbarian",
+    "_type": ["wrath"],
+    "_stats": {
         "HP": 50,
         "attack": 94,
         "defense": 45,
         "speed": 50
     },
-    "movesKnown": {
+    "_movesKnown": {
         "tier 1": {
            "normalLock": ["Do You Lift?", "Normal Punch", "Smack", null],
            "boss": ["Do You Lift?", "Normal Punch", "Consecutive Normal Punches", null]
@@ -169,15 +169,15 @@
     }
 },
 {
-    "name": "Precocious Little Shit",
-    "type": ["pride"],
-    "stats": {
+    "_name": "Precocious Little Shit",
+    "_type": ["pride"],
+    "_stats": {
         "HP": 40,
         "attack": 40,
         "defense": 40,
         "speed": 40
     },
-    "movesKnown": {
+    "_movesKnown": {
         "tier 1": {
            "normalLock": ["Show Off", "Charm", null, null],
            "boss": ["Show Off", "Charm", null, null]
@@ -189,15 +189,15 @@
     }
 },
 {
-    "name": "Slaanesh",
-    "type": ["gluttony"],
-    "stats": {
+    "_name": "Slaanesh",
+    "_type": ["gluttony"],
+    "_stats": {
         "HP": 60,
         "attack": 35,
         "defense": 80,
         "speed": 30
     },
-    "movesKnown": {
+    "_movesKnown": {
         "tier 1": {
            "normalLock": null,
            "boss": null
@@ -209,15 +209,15 @@
     }
 },
 {
-    "name": "Wretched",
-    "type": ["envy"],
-    "stats": {
+    "_name": "Wretched",
+    "_type": ["envy"],
+    "_stats": {
         "HP": 40,
         "attack": 40,
         "defense": 40,
         "speed": 40
     },
-    "movesKnown": {
+    "_movesKnown": {
         "tier 1": {
            "normalLock": ["Lash Out", "Cozy Up", null, null],
            "boss": ["Lash Out", "Cozy Up", null, null]
@@ -229,15 +229,15 @@
     }
 },
 {
-    "name": "Depression",
-    "type": ["envy", "pride"],
-    "stats": {
+    "_name": "Depression",
+    "_type": ["envy", "pride"],
+    "_stats": {
         "HP": 40,
         "attack": 40,
         "defense": 40,
         "speed": 40
     },
-    "movesKnown": {
+    "_movesKnown": {
         "tier 1": {
            "normalLock": null,
            "boss": null
@@ -249,15 +249,15 @@
     }
 },
 {
-    "name": "Normal Guy",
-    "type": ["unaligned"],
-    "stats": {
+    "_name": "Normal Guy",
+    "_type": ["unaligned"],
+    "_stats": {
         "HP": 36,
         "attack": 36,
         "defense": 36,
         "speed": 36
     },
-    "movesKnown": {
+    "_movesKnown": {
         "tier 0": {
             "normalLock":  ["Smack", "Philanthropy", null, null],
             "boss": ["Smack", "Philanthropy", null, null]
@@ -273,15 +273,15 @@
     }
 },
 {
-    "name": "Vainglory",
-    "type": ["pride"],
-    "stats": {
+    "_name": "Vainglory",
+    "_type": ["pride"],
+    "_stats": {
         "HP": 70,
         "attack": 60,
         "defense": 35,
         "speed": 45
     },
-    "movesKnown": {
+    "_movesKnown": {
         "tier 1": {
            "normalLock": null,
            "boss": null
@@ -293,15 +293,15 @@
     }
 },
 {
-    "name": "Damned",
-    "type": ["sloth", "envy"],
-    "stats": {
+    "_name": "Damned",
+    "_type": ["sloth", "envy"],
+    "_stats": {
         "HP": 70,
         "attack": 35,
         "defense": 35,
         "speed": 45
     },
-    "movesKnown": {
+    "_movesKnown": {
         "tier 1": {
            "normalLock": ["Lash Out", "Remove FOMO", null, null],
            "boss": ["Lash Out", "Remove FOMO", null, null]
@@ -313,15 +313,15 @@
     }
 },
 {
-    "name": "Jingoist",
-    "type": ["pride", "wrath"],
-    "stats": {
+    "_name": "Jingoist",
+    "_type": ["pride", "wrath"],
+    "_stats": {
         "HP": 50,
         "attack": 60,
         "defense": 60,
         "speed": 30
     },
-    "movesKnown": {
+    "_movesKnown": {
         "tier 1": {
            "normalLock":null,
            "boss": null
@@ -333,15 +333,15 @@
     }
 },
 {
-    "name": "Ignorance",
-    "type": ["sloth", "pride"],
-    "stats": {
+    "_name": "Ignorance",
+    "_type": ["sloth", "pride"],
+    "_stats": {
         "HP": 70,
         "attack": 45,
         "defense": 80,
         "speed": 60
     },
-    "movesKnown": {
+    "_movesKnown": {
         "tier 1": {
            "normalLock": null,
            "boss": null
@@ -353,15 +353,15 @@
     }
 },
 {
-    "name": "Sarcophagus",
-    "type": ["pride", "greed"],
-    "stats": {
+    "_name": "Sarcophagus",
+    "_type": ["pride", "greed"],
+    "_stats": {
         "HP": 80,
         "attack": 40,
         "defense": 70,
         "speed": 40
     },
-    "movesKnown": {
+    "_movesKnown": {
         "tier 1": {
            "normalLock": null,
            "boss": null
@@ -373,15 +373,15 @@
     }
 },
 {
-    "name": "Fuckboy",
-    "type": ["lust", "sloth"],
-    "stats": {
+    "_name": "Fuckboy",
+    "_type": ["lust", "sloth"],
+    "_stats": {
         "HP": 40,
         "attack": 58,
         "defense": 25,
         "speed": 30
     },
-    "movesKnown": {
+    "_movesKnown": {
         "tier 1": {
            "normalLock": ["Laze", "Show Off", null, null],
            "boss": ["Laze", "Show Off", null, null]
@@ -393,15 +393,15 @@
     }
 },
 {
-    "name": "Dragon",
-    "type": ["greed", "wrath"],
-    "stats": {
+    "_name": "Dragon",
+    "_type": ["greed", "wrath"],
+    "_stats": {
         "HP": 70,
         "attack": 55,
         "defense": 80,
         "speed": 36
     },
-    "movesKnown": {
+    "_movesKnown": {
         "tier 1": {
            "normalLock":  ["Fuck You Money", "Consecutive Normal Punches", null, null],
            "boss":  ["Fuck You Money", "Consecutive Normal Punches", null, null]
@@ -413,15 +413,15 @@
     }
 },
 {
-    "name": "Lion Yiffer",
-    "type": ["lust", "pride"],
-    "stats": {
+    "_name": "Lion Yiffer",
+    "_type": ["lust", "pride"],
+    "_stats": {
         "HP": 30,
         "attack": 50,
         "defense": 30,
         "speed": 50
     },
-    "movesKnown": {
+    "_movesKnown": {
         "tier 1": {
            "normalLock": null,
            "boss": null

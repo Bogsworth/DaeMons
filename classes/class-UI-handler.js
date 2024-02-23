@@ -85,11 +85,11 @@ class UIHandler {
         let nameChanges = new Map([
             [
                 this.divIds.yourMon.name,
-                this.battleState.playerParty.activeMon.returnName()
+                this.battleState.playerParty.activeMon.name
             ],
             [
                 this.divIds.theirMon.name,
-                this.battleState.enemyLock.party.activeMon.returnName()
+                this.battleState.enemyLock.party.activeMon.name
             ]
         ])
         for ( let [ key, val ] of nameChanges ) {
@@ -104,7 +104,7 @@ class UIHandler {
                 this.battleState
                     .playerParty
                     .activeMon
-                    .returnCurrentHPReadable()
+                    .currentHPReadable
             ],
             [
                 this.divIds.theirMon.HP,
@@ -112,7 +112,7 @@ class UIHandler {
                     .enemyLock
                     .party
                     .activeMon
-                    .returnCurrentHPReadable()
+                    .currentHPReadable
             ]
         ]);
         
@@ -152,14 +152,14 @@ class UIHandler {
                 this.battleState
                     .playerParty
                     .members
-                    .map(daemon => daemon.returnName()),
+                    .map( daemon => daemon.name ),
                 'selectMons'
         )
         this.populateSelect(
             this.battleState
                 .playerParty
                 .activeMon
-                .returnMoves()
+                .moves
                 .filter( move => move !== null )
                 .map( move => move.name ),
             'selectMoves'
@@ -195,7 +195,7 @@ class UIHandler {
             let newButt = document.createElement('button');
             let idText = 'mon' + i++;
     
-            newButt.textContent = mon.returnName();
+            newButt.textContent = mon.name;
             newButt.name = idText; 
             newButt.id = idText;
             infoDiv.appendChild( newButt );
@@ -245,12 +245,12 @@ class UIHandler {
         }
     
         let constructorMap = new Map([
-            ['statInfo0', myMon.returnType()],
-            ['statInfo1', myMon.returnAttackStat()],
-            ['statInfo2', myMon.returnDefenseStat()],
-            ['statInfo3', myMon.returnSpeedStat()],
+            ['statInfo0', myMon.type],
+            ['statInfo1', myMon.statAttack],
+            ['statInfo2', myMon.statDefense],
+            ['statInfo3', myMon.statSpeed],
             ['expandedMon', myMon.name],
-            ['expandedMonHP', myMon.returnCurrentHPReadable()]
+            ['expandedMonHP', myMon.currentHPReadable]
         ]);
     
         for (let i = 0; i < myMon.returnTotalMovesKnown(); i++) {
@@ -282,7 +282,7 @@ class UIHandler {
             .getElementById( 'selectMons' )
             .options
             .selectedIndex - 1;
-        const CURRENT_NAME = this.battleState.playerParty.activeMon.returnName();
+        const CURRENT_NAME = this.battleState.playerParty.activeMon.name;
         const PARTY = this.battleState.playerParty.members;
         const ACTIVE_MON = this.battleState.playerParty.activeMon;
 
@@ -290,7 +290,7 @@ class UIHandler {
             this.writeToMessageBox( 'Actually pick a Daemon before switching.'); 
             return false;
         }
-        else if ( PARTY[ CHOSEN_MON_INDEX ].returnCurrentHP() <= 0 ) {
+        else if ( PARTY[ CHOSEN_MON_INDEX ].isDead ) {
             this.writeToMessageBox( `That Daemon is dead and gone, you cannot switch to them.` );
             return false;
         }
@@ -310,13 +310,13 @@ class UIHandler {
             .getElementById( 'selectMoves' )
             .options
             .selectedIndex;
-        const CHOSEN_MOVE = ACTIVE_MON.returnMoves()[ CHOSEN_MOVE_INDEX - 1];
+        const CHOSEN_MOVE = ACTIVE_MON.moves[ CHOSEN_MOVE_INDEX - 1];
 
         if ( CHOSEN_MOVE_INDEX == 0 ) {
             this.writeToMessageBox('Pick a move before attacking.')
             return false;
         }
-        else if ( ACTIVE_MON.returnCurrentHP() <= 0 ) {
+        else if ( ACTIVE_MON.isDead ) {
             this.writeToMessageBox( `Your Daemon is dead, choose a new one` );
             return false;
         }

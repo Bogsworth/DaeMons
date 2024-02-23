@@ -33,10 +33,10 @@ class InterludeUIHandler {
     partySelectPopulator( select ) {
         const UUID_ARRAY = this.state
             .allHeldMons
-            .map( daemon => daemon.returnUUID() );
+            .map( daemon => daemon.uuid );
         const NAME_ARRAY = this.state
             .allHeldMons
-            .map( daemon => daemon.returnName() );
+            .map( daemon => daemon.name );
         const ELEMENT = document.getElementById( select );
         
         this.populateSelect( NAME_ARRAY, UUID_ARRAY, select );
@@ -85,7 +85,7 @@ class InterludeUIHandler {
         console.log(this.state.currentParty.members)
 
         this.state.currentParty.members
-            .map( daemon => daemon.returnUUID() )
+            .map( daemon => daemon.uuid )
             .forEach( uuid => this.partySelects[index++].value = uuid );
     }
 
@@ -104,7 +104,7 @@ class InterludeUIHandler {
             .filter( value => value !== DEFAULT_STRING );
         const SELECTED_MONS = SELECTED_MONS_UUIDS
             .map( uuid => ALL_MONS_ARRAY
-                .filter( daemon => daemon.returnUUID() === uuid ))
+                .filter( daemon => daemon.uuid === uuid ))
             .flat();
         const PARTY = new Party();
 

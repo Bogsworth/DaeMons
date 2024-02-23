@@ -21,19 +21,22 @@ class Warlock {
             reward: {}
         }
     ) {
-        let formattedBuilder = builder;
+        console.log(builder)
+        let formatedBuilder = builder;
 
         if ( typeof( builder ) === 'string') {
-            formattedBuilder = this.returnBuildObjFromLockID( builder, 0 );
+            formatedBuilder = this.returnBuildObjFromLockID( builder, 0 );
         }
 
-        this.id = formattedBuilder.id;
-        this.name = formattedBuilder.name;
-        this.daemonTypes = formattedBuilder.daemonTypes;
-        // this.tier = formattedBuilder.tier;
-        this.party = new Party( formattedBuilder.party );
-        this.description = formattedBuilder.description;
-        this.reward = formattedBuilder.reward;
+        console.log(formatedBuilder);
+
+        this.id = formatedBuilder.id;
+        this.name = formatedBuilder.name;
+        this.daemonTypes = formatedBuilder.daemonTypes;
+        // this.tier = formatedBuilder.tier;
+        this.party = new Party( formatedBuilder.party );
+        this.description = formatedBuilder.description;
+        this.reward = formatedBuilder.reward;
     }
 
     returnBuildObjFromLockID( ID, tier = 1, isBossFlag = false ) {
@@ -42,6 +45,10 @@ class Warlock {
         }
         const LOCK_MAP = parse.createWarlocks(lockJSON);
         const LOCK_INFO = LOCK_MAP.get( ID );
+
+        console.log(LOCK_MAP)
+        console.log(LOCK_INFO)
+
         const PARTY_CREATOR = this.partyCreator(LOCK_INFO.allowedDaemons[tier], tier, isBossFlag)
         let builder = {};
 
@@ -90,11 +97,21 @@ class Warlock {
 
         function createDaemonFromName( name, tier, isBossFlag ) {
             const MON_TABLE = parse.createMonTable()
-            const DAEMON_ID = calc.returnIDFromName( name, MON_TABLE );
+            const DAEMON_ID = returnIDFromName( name, MON_TABLE );
             const DAEMON = new Daemon();
 
             DAEMON.generateDaemonFromID( DAEMON_ID, tier, isBossFlag )
             return DAEMON;
+        }
+
+        function returnIDFromName( name, map ) {
+            let id = false;
+            
+            map.forEach( move => {
+                if (move._name !== name) { return; }
+                id = move._id;
+            });
+            return id;
         }
     }
 
@@ -108,9 +125,9 @@ class Warlock {
 
     switchToRandomMon() {
         const REMAINING_MON = this.party.members
-            .filter(daemon => ! daemon.returnTrueIfDead());
+            .filter(daemon => ! daemon.isDead );
         const RANDOM_INDEX = Math.floor( Math.random() * REMAINING_MON.length );
-        const CHOSEN_UUID = REMAINING_MON[ RANDOM_INDEX ].returnUUID();
+        const CHOSEN_UUID = REMAINING_MON[ RANDOM_INDEX ].uuid;
 
         this.party.switchActiveDaemonByUUID( CHOSEN_UUID );
     }

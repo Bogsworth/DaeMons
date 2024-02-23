@@ -2,9 +2,8 @@ import * as util from './lib/utility.js'
 import { Party } from './classes/class-party.js';
 
 function createStarterSection( daemon, optionId ) {
-    const NAME = daemon.returnName();
-    //const TYPE = typeToReadable(daemon.returnType());
-    const TYPE = daemon.returnTypeAsString();
+    const NAME = daemon.name;
+    const TYPE = daemon.typeAsString;
     const DESC = `The daemon ${NAME} is a pretty cool dude.`      
     let elIdMap = new Map([
         ['option0', ['name0', 'type0', 'desc0']],

@@ -4,49 +4,81 @@ import { Move } from './class-move.js'
 
 class Daemon {
     constructor( builderJSON = {
-            "id": "",
-            "name": "",
-            "type": [""],
-            "stats": {
+            "_id": "",
+            "_name": "",
+            "_type": [""],
+            "_stats": {
                 "HP": 1,
                 "attack": 1,
                 "defense": 1,
                 "speed": 1
             },
-            "moves": [null, null, null, null],
-            "tempStatChange":  {
+            "_moves": [null, null, null, null],
+            "_tempStatChange":  {
                 "attack": 0,
                 "defense": 0,
                 "speed": 0
             },
-            "description": "I am a daemon!!! Grrrr"
+            "_description": "I am a daemon!!! Grrrr"
     }) {
         let formattedBuilder = this.returnBuildObjFromJSON( builderJSON );
 
-        this.uuid = formattedBuilder[ 'uuid' ];
-        this.id = formattedBuilder[ 'id' ]
-        this.name = formattedBuilder[ 'name' ];
-        this.type = formattedBuilder[ 'type' ];
-        this.stats = formattedBuilder[ 'stats' ];
-        this.moves = formattedBuilder['moves'];
-        this.currentHP = formattedBuilder['currentHP']
-        this.tempStatChange = formattedBuilder['tempStatChange']
-        this.description = formattedBuilder['description']
+        this._uuid = formattedBuilder[ '_uuid' ];
+        this._id = formattedBuilder[ '_id' ]
+        this._name = formattedBuilder[ '_name' ];
+        this._type = formattedBuilder[ '_type' ];
+        this._stats = formattedBuilder[ '_stats' ];
+        this._moves = formattedBuilder[ '_moves' ];
+        this._currentHP = formattedBuilder[ '_currentHP' ];
+        this._tempStatChange = formattedBuilder[ '_tempStatChange' ];
+        this._description = formattedBuilder[ '_description' ];
     }
 
+    get uuid() { return this._uuid; }
+    get id() { return this._id; }
+    get name() { return this._name; }
+    get description() { return this._description; }
+
+    get type() { return this._type; }
+    get typeAsString() { this.typeToString(); }
+    
+    // TODO: have moves return only moves, not nulls
+    get moves() { return this._moves; }
+    get movesNumberKnown() { this.returnTotalMovesKnown(); }
+
+    get stats() { return this._stats; }
+    get tempStatChange() { return this._tempStatChange; }
+    get statsTempModifiers() { return this._tempStatChange; }
+    
+    get statHP() { return this._stats.HP; }
+    get currentHP() { return this._currentHP; }
+    get currentHPReadable() { return this._currentHP + '/' + this._stats.HP + ' hp'; }
+    get isDead() { return this._currentHP <= 0; }
+
+    get statAttack() { return this._stats.attack; }
+    get statDefense() { return this._stats.defense; }
+    get statSpeed() { return this._stats.speed; }
+    
+    get statAttackModified() { return this.returnModifiedStat( 'attack' ); }
+    get statDefenseModified() { return this.returnModifiedStat( 'defense' ); }
+    get statSpeedModified() { return this.returnModifiedStat( 'speed' ); }
+
     returnBuildObjFromJSON( builder ) {
-        this.initIfUndefined(
-            builder[ 'tempStatChange' ],
+        const UUID = uuidv4();
+
+        builder[ '_tempStatChange' ] = this.initIfUndefined(
+            builder[ '_tempStatChange' ],
             { attack: 0, defense: 0, speed: 0 }
         );
-        this.initIfUndefined(
-            builder[ 'currentHP' ],
-            builder['stats']['HP']
+        builder[ '_currentHP' ] = this.initIfUndefined(
+            builder[ '_currentHP' ],
+            builder['_stats']['HP']
         );
-        builder['moves'] = this.moveMaker(builder['moves']);
-        if ( builder['uuid'] === undefined ) {
-            builder['uuid'] = uuidv4();
-        }
+        builder[ '_uuid'] = this.initIfUndefined(
+            builder[ '_uuid' ],
+            UUID
+        );
+        builder[ '_moves' ] = this.moveMaker( builder[ '_moves' ] );
 
         return builder;
 
@@ -68,94 +100,62 @@ class Daemon {
     /**
      * 
      * @param {*} id default 'monID000'
-     * @param {*} tier default 1
+     * @param {*} TIER default 1
      * @param {*} bossFlag default false
      */
     generateDaemonFromID( id = 'monID000', tier = 1, bossFlag = false ) {
-        if ( typeof( tier ) === 'number') {
-            tier = 'tier ' + tier;
-        }
-        const LOCK_TYPE = this.bossFlagBoolToStr(bossFlag);        
-        const MON_TABLE = new Map(parse.createMonTable());
-        const BUILDER = MON_TABLE.get(id);
+        const TIER = this.tierToString( tier );
+        const LOCK_TYPE = this.bossFlagBoolToStr( bossFlag );        
+        const MON_TABLE = new Map( parse.createMonTable() );
+        const BUILDER = MON_TABLE.get( id );
+        const MOVE_NAMES = BUILDER._movesKnown[ TIER ][ LOCK_TYPE ];
 
-        // console.log(BUILDER.movesKnown)
-        const MOVE_NAMES = BUILDER.movesKnown[tier][LOCK_TYPE];
-
-        this.id = BUILDER[ 'id' ];
-        this.name = BUILDER[ 'name' ];
-        this.type = BUILDER[ 'type' ];
-        this.stats = BUILDER[ 'stats' ];
-        this.moves = this.moveMaker( MOVE_NAMES );
-        this.currentHP = BUILDER[ 'stats' ][ 'HP' ];
-        this.tempStatChange = { "attack": 0, "defense": 0, "speed": 0 };
-        this.description = this.initIfUndefined(
-            BUILDER[ 'description' ],
+        this._id = BUILDER[ '_id' ];
+        this._name = BUILDER[ '_name' ];
+        this._type = BUILDER[ '_type' ];
+        this._stats = BUILDER[ '_stats' ];
+        this._moves = this.moveMaker( MOVE_NAMES );
+        this._currentHP = BUILDER[ '_stats' ][ 'HP' ];
+        this._tempStatChange = { "attack": 0, "defense": 0, "speed": 0 };
+        this._description = this.initIfUndefined(
+            BUILDER[ '_description' ],
             'MonTable doesnt have descriptions yet'
         );
     }
 
     initIfUndefined( obj, setValue ) {
-        if ( obj === undefined ) obj = setValue;
+        if ( obj === undefined ) {
+            obj = setValue;
+        }
         return obj;
     }
 
     moveMaker( moveNameArray ) {
-        let moveArray = moveNameArray.map(moveName => {
-            if (moveName == null) return moveName;
-            return new Move( moveName );
-        })
-
+        let moveArray = moveNameArray
+            .filter( moveName => moveName !== null )
+            .map( moveName => new Move( moveName ));
         return moveArray;
     }
-
-    returnUUID() { return this.uuid; }
-    returnID() { return this.id; }
-    returnName() { return this.name; }
-    returnType() { return this.type; }
-    returnTypeAsString() {
-        if ( this.type.length == 1 ) {
-            return this.type[0];
-        }
-        else if ( this.type.length == 2) {
-            return `${this.type[0]}, ${this.type[1]}`;
-        }
-    }
-    returnStats() { return this.stats; }
-    returnTempStatsModifiers() { return this.tempStatChange; }
-    returnMoves() { return this.moves; }
-    returnCurrentHP() { return this.currentHP; }
-    returnCurrentHPReadable() {
-        return this.currentHP + '/' + this.stats.HP + ' hp'
-    }
-    returnHPStat() { return this.stats.HP; }
-    returnAttackStat() { return this.stats.attack; }
-    returnDefenseStat() { return this.stats.defense; }
-    returnSpeedStat() { return this.stats.speed; }
-    returnDescription() { return this.description; }
-
-    returnTrueIfDead() { return this.returnCurrentHP() <= 0; }
 
     addMove( newMove ) {
         if ( this.returnTotalMovesKnown() == 4 ) {
             throw new Error('MovesFull');
         }
 
-        let isMoveChaged = false;
-        let newMoveArray = this.moves.map(move => {
-            if ( isMoveChaged || move != null) {
+        let isMoveChanged = false;
+
+        this._moves = this.moves.map(move => {
+            if ( isMoveChanged || move != null) {
                 return move;
             }
 
-            isMoveChaged = true;
+            isMoveChanged = true;
             return newMove;
         });
-
-        this.moves = newMoveArray;
     }
 
     restoreHP() {
-        this.currentHP = this.stats['HP'];
+        this._currentHP = this.statHP;
     }
 
     restoreAllMoveUses() {
@@ -165,38 +165,43 @@ class Daemon {
     }
 
     updateHP( damage ) {
-        this.currentHP -= damage;
+        this._currentHP -= damage;
     }
 
     returnModifiedStat( stat ) {
         const STAT_VAL = this.stats[ stat ];
-        const MODIFIER = this.tempStatChange[ stat ];
+        const MODIFIER = this.statsTempModifiers[ stat ];
         let modifiedStat = STAT_VAL * ( 10 + ( MODIFIER / 2 )) / 10 ;
 
+        if ( stat === 'defense' ) {
+            if ( modifiedStat < 1 ) {
+                modifiedStat = 1;
+            }
+        }
+
         return modifiedStat;
-        // return calc.modifyStat( this.stats[stat], this.tempStatChange[stat]);
     }
 
     updateTempStatChange( stat, change ) {
         const MAX_OFFSET = 6
 
         if (
-            this.tempStatChange[stat] >= MAX_OFFSET ||
-            this.tempStatChange[stat] <= 0 - MAX_OFFSET
+            this._tempStatChange[ stat ] >= MAX_OFFSET ||
+            this._tempStatChange[ stat ] <= 0 - MAX_OFFSET
         ) {
             return false;
         }
 
-        if (this.checkStatChangeInRange( stat, change, MAX_OFFSET )) {
-            this.tempStatChange[stat] += change;
+        if ( this.checkStatChangeInRange( stat, change, MAX_OFFSET ) ) {
+            this._tempStatChange[stat] += change;
             return true;
         }
 
-        if (change >= 0) {
-            this.tempStatChange[stat] = MAX_OFFSET;
+        if ( change >= 0 ) {
+            this._tempStatChange[ stat ] = MAX_OFFSET;
         }
         else {
-            this.tempStatChange[stat] = 0 - MAX_OFFSET;
+            this._tempStatChange [ stat ] = 0 - MAX_OFFSET;
         }
         return true;
     }
@@ -217,11 +222,11 @@ class Daemon {
         }
     }
 
-    copyMon( monToCopy ) {
-        for ( const [ key, val ] of Object.entries( this )) {
-            this[key] = monToCopy[key]
-        }
-    }
+    // copyMon( monToCopy ) {
+    //     for ( const [ key, val ] of Object.entries( this )) {
+    //         this[key] = monToCopy[key]
+    //     }
+    // }
 
     copyFromData ( monString ) {
         for ( const [ key, val ] of Object.entries( this )) {
@@ -242,6 +247,22 @@ class Daemon {
             return 'boss';
         }
         return 'normalLock';
+    }
+
+    tierToString( tier ) {
+        if ( typeof( tier ) === 'number') {
+            tier = 'tier ' + tier;
+        }
+        return tier;
+    }
+
+    typeToString() {
+        if ( this.type.length == 1 ) {
+            return this.type[0];
+        }
+        else if ( this.type.length == 2) {
+            return `${this.type[0]}, ${this.type[1]}`;
+        }
     }
 };
 

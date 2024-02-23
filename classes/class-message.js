@@ -17,7 +17,7 @@ class Message {
         (
             this.battleState.typeTable,
             this.chosenMove.type, 
-            this.defendingMon.returnType()
+            this.defendingMon.type
         );
 
         this.statsAffectedArray = this.chosenMove.statsAffectedArray;

@@ -51,12 +51,9 @@ class Party {
         }
     }
 
-
     checkIfWipe() {
-        return (
-            this.members
-                .every( mon => mon.returnCurrentHP() <= 0 )
-        );
+        return this.members
+            .every( mon => mon.isDead );
     }
 
     saveToLocation() {

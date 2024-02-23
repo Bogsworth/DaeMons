@@ -13,7 +13,7 @@ class InterludeState {
         // TODO: handle multiple possible next rooms
         let warlockConstructor = atlas.battleOrder.get( this.nextRoomsArray[0] ).lock;
         this.nextLock = new Warlock( warlockConstructor )
-        this.nextLockName = this.nextLock.returnName();
+        this.nextLockName = this.nextLock.name;
         
         this.newReward = '';
         this.allHeldMons = this.allHeldMonsLoader( sessionStorage.allHeldMons );

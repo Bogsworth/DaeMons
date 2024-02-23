@@ -129,7 +129,7 @@ function populatePartySelects( state, selectElements ) {
     let i = 0;
     
     state['currentParty'].forEach( mon => {
-        let nameStr = mon.returnName();
+        let nameStr = mon.name;
         
         if (util.checkIfHPZero( mon )) {
             nameStr += ' (dead)';
@@ -180,31 +180,31 @@ function populateChallenger( name ) {
     populateNextFight( nextLock );
 }
 
-function healSuperset( interludeState, parameters ) {
-    parameters.forEach( parameter => {
-        healMons( interludeState, parameter );
-    });
-}
+// function healSuperset( interludeState, parameters ) {
+//     parameters.forEach( parameter => {
+//         healMons( interludeState, parameter );
+//     });
+// }
 
 /**
  * This function will not heal a Daemon if they're already dead
  */
-function healMons( interludeState, parameter ) {
-    let daemons = interludeState[parameter];
-    // console.log(`Trying to heal in ${parameter}`)
-    // console.log(daemons);
+// function healMons( interludeState, parameter ) {
+//     let daemons = interludeState[parameter];
+//     // console.log(`Trying to heal in ${parameter}`)
+//     // console.log(daemons);
     
-    daemons.forEach( mon => {
-    // interludeState[parameter].forEach( mon => {
-        if ( util.checkIfHPZero( mon )) {
-            return;
-        }
-        mon.currentHP = mon.returnHPStat();
-    })
-    // console.log(interludeState[parameter])
-    interludeState.updateParam( daemons, parameter );
-    // console.log(interludeState[parameter])
-}
+//     daemons.forEach( mon => {
+//     // interludeState[parameter].forEach( mon => {
+//         if ( util.checkIfHPZero( mon )) {
+//             return;
+//         }
+//         mon.currentHP = mon.returnHPStat();
+//     })
+//     // console.log(interludeState[parameter])
+//     interludeState.updateParam( daemons, parameter );
+//     // console.log(interludeState[parameter])
+// }
 
 function restoreMoveUsesSuperSet( interludeState, parameters ) {
     parameters.forEach( parameter => {
@@ -280,7 +280,7 @@ export {
     populateNextFight,
     updateDaemonSummary,
     loadBattle,
-    healSuperset,
+    // healSuperset,
     restoreMoveUsesSuperSet,
     populatePartySelects,
     keepSelectsUnique,
