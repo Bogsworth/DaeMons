@@ -1,12 +1,13 @@
 import * as calc from '../lib/Calculations.js'
 
 class Message {
-    constructor(battleState, activeFlag, chosenMove, moveHit) {
+    constructor( battleState, isPlayerActive, chosenMove, moveHit, damage ) {
         
         this.battleState = battleState;
         this.chosenMove = chosenMove;
-        this.activeFlag = activeFlag;
+        this.isPlayerActive = isPlayerActive;
         this.moveHit = moveHit;
+        this.damage = damage;
         this.message = '';
 
         this.attackingMon = this.returnAttacker();
@@ -14,18 +15,11 @@ class Message {
 
         this.typeMod = calc.calculateTypeModifier
         (
-            this.battleState.TYPE_TABLE,
+            this.battleState.typeTable,
             this.chosenMove.returnType(), 
             this.defendingMon.returnType()
         );
 
-
-        this.damage = calc.calculateDamage( {
-            attacker: this.attackingMon,
-            defender: this.defendingMon,
-            move: this.chosenMove,
-            typeModifier: this.typeMod
-        } );
         this.statsAffectedArray = this.chosenMove.returnStatsAffectedArray();
         this.activeLock = this.setActiveLock();
 
@@ -57,32 +51,32 @@ class Message {
         }
 
         this.statsAffectedArray.forEach( effect => {
-            let target = effect[0]
-            let stat = effect[1];
-            let selfTargeting = ( target == 'self' );
+            const TARGET = effect[0]
+            const STAT = effect[1];
+            const IS_SELF_TARGETING = ( TARGET === 'self' );
 
-            if ( selfTargeting ) {
-                if ( this.activeFlag ) {
+            if ( IS_SELF_TARGETING ) {
+                if ( this.isPlayerActive ) {
                     templates.affectSelf = {}
                     templates.affectSelf.player = `Your ${this.attackingMon.name} `
-                    + `increased its ${stat} stat`
+                    + `increased its ${STAT} stat`
                 }
                 else {
                     templates.affectSelf = {}
                     templates.affectSelf.enemy = `Enemy ${this.attackingMon.name} `
-                    + `increased its ${stat} stat`
+                    + `increased its ${STAT} stat`
                 }
             }
             else {
-                if ( this.activeFlag ) {
+                if ( this.isPlayerActive ) {
                     templates.affectOther = {}
                     templates.affectOther.player = `Your ${this.attackingMon.name} `
-                    + `reduced opponent's ${this.defendingMon.name} ${stat} stat`
+                    + `reduced opponent's ${this.defendingMon.name} ${STAT} stat`
                 }
                 else {
                     templates.affectOther = {};
                     templates.affectOther.enemy = `Enemy ${this.attackingMon.name} `
-                    + `reduced your ${this.defendingMon.name}'s ${stat} stat`
+                    + `reduced your ${this.defendingMon.name}'s ${STAT} stat`
                 }
             }
         });
@@ -91,21 +85,21 @@ class Message {
     }
 
     returnAttacker() {
-        if (this.activeFlag) {
+        if (this.isPlayerActive) {
             return this.battleState.playerParty.activeMon;
         }
         return this.battleState.enemyLock.party.activeMon;
     }
 
     returnDefender() {
-        if (! this.activeFlag) {
+        if (! this.isPlayerActive) {
             return this.battleState.playerParty.activeMon
         }
         return this.battleState.enemyLock.party.activeMon;
     }
 
     setActiveLock() {
-        if (this.activeFlag) {
+        if (this.isPlayerActive) {
             return 'player';
         }
         else {

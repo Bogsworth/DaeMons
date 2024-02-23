@@ -9,47 +9,40 @@ import { StorageHandler } from './class-storage-handler.js'
 import { Message } from './class-message.js'
 
 class BattleState {
-    constructor( enemyLock = new Warlock()) {
+    constructor( enemyLock = new Warlock() ) {
+        this._handler;
+        this._playerParty = this.partyLoader( sessionStorage.currentParty );
+        this._enemyLock = enemyLock;
+        this._typeTable = parse.createCounterTable();
+    }
+
+    get handler() { return this._handler; }
+    get playerParty() { return this._playerParty; }
+    get enemyLock() { return this._enemyLock; }
+    get typeTable() { return this._typeTable; }
+
+    set handler( handler ) { this._handler = handler; }
+    set playerParty( party ) { this._playerParty = party; }
+    set enemyLock( lock ) { this._enemyLock = lock; }
+    set typeTable( table ) { this._typeTable = table; }
+
+    partyLoader( storage ) {
+        const PARSED_STORAGE = JSON.parse( storage );
+        const PARTY = new Party( PARSED_STORAGE );
         
-        this.handler;
-        this.playerParty = this.partyLoader(sessionStorage.currentParty);
-        this.enemyLock = enemyLock;
-        this.TYPE_TABLE = parse.createCounterTable();
-        // this.battleEnder = new StorageHandler(this);
+        // console.log( sessionStorage );
+        // console.log( sessionStorage.currentParty );
+        // console.log( storage );
+        // console.log( playerParty );
+        return PARTY;
     }
 
-    setHandlerInit(handler) {
-        this.handler = handler;
-    }
-
-    partyLoader(storage) {
-        console.log(sessionStorage)
-        console.log(sessionStorage.currentParty)
-        console.log(storage)
-        let parsedStorage = JSON.parse(storage);
-        // console.log(sessionStorage.currentParty);
-        // console.log(parsedStorage);
-        let playerParty = new Party(parsedStorage)
-        console.log(playerParty)
-
-        return playerParty
-        // let partyArray = [];
-        
-        // parsedStorage.forEach(daemon => {
-        //     let newMon = new Daemon();
-
-        //     newMon.copyFromData(JSON.stringify(daemon));
-        //     partyArray.push(newMon);
-        // })
-        // return new Party( partyArray );
-    }
-
-    handleAttack () {
-        console.log('attack button pressed');
-
+    handleAttack() {
         let myMon = this.playerParty.activeMon;
         let theirParty = this.enemyLock.party.members;
         let waitForPressResolve;
+
+        console.log('attack button pressed');
 
         function waitForPress() {
             return new Promise(resolve => waitForPressResolve = resolve);
@@ -252,8 +245,8 @@ class BattleState {
                         await waitForPress();
                         HANDLER.writeToMessageBox( `You lose.` );
                         await waitForPress();
-                        //state.battleEnder.endGame();
-                        state.endFight();
+                        state.endGame();
+                        // state.endFight();
                         break;
                     }
                     if (! state.enemyLock.party.members.checkIfWipe()) {
@@ -280,7 +273,7 @@ class BattleState {
     useMove( attackingMon, defendingMon, chosenMove, playerActiveFlag ) {
         const TYPE_MOD = calc.calculateTypeModifier
         (
-            this.TYPE_TABLE,
+            this.typeTable,
             chosenMove.returnType(), 
             defendingMon.returnType()
         );
@@ -293,21 +286,22 @@ class BattleState {
         
         let damage = calc.calculateDamage( ROUND_INFO );
         let moveHit = chosenMove.checkIfHit();
-        let messageMaker = new Message(this, playerActiveFlag, chosenMove, moveHit);
+        let messageMaker = new Message(this, playerActiveFlag, chosenMove, moveHit, damage);
 
         console.log( ROUND_INFO );
 
         chosenMove
             .returnStatsAffectedArray()
             .forEach( effect => {
-                let target = effect[0]
-                let stat = effect[1];
-                let change = effect[2];
-                if ( target == 'self' ) {
-                    attackingMon.updateTempStatChange( stat, change );
+                const TARGET = effect[ 0 ];
+                const STAT = effect[ 1 ];
+                const CHANGE = effect[ 2 ];
+
+                if ( TARGET === 'self' ) {
+                    attackingMon.updateTempStatChange( STAT, CHANGE );
                 }
-                if (target == 'enemy') {
-                    defendingMon.updateTempStatChange( stat, change );
+                if ( TARGET === 'enemy' ) {
+                    defendingMon.updateTempStatChange( STAT, CHANGE );
                 }
         })
         chosenMove.decrementRemainingUses();
@@ -315,7 +309,7 @@ class BattleState {
             damage = 0;
         }
         defendingMon.updateHP( damage );
-        this.handler.updateShownHP()
+        this.handler.updateShownHP();
         this.handler.writeToMessageBox( messageMaker.returnMessage() );
     }
 
@@ -323,7 +317,7 @@ class BattleState {
         let waitForPressResolve;
 
         function waitForPress() {
-            return new Promise(resolve => waitForPressResolve = resolve);
+            return new Promise( resolve => waitForPressResolve = resolve );
         }
     
         let btnResolver = function() {
@@ -332,8 +326,8 @@ class BattleState {
             }
         }
 
-        console.log('switch button pressed');
-        console.log(this.playerParty.members)
+        console.log( 'switch button pressed' );
+        console.log( this.playerParty.members );
         switchMons( this );
     
         async function switchMons( state ) {
@@ -349,7 +343,7 @@ class BattleState {
 
             if ( ! HANDLER.monSwitchChecker() ) {
                 await waitForPress();
-                HANDLER.postRoundCleanUp(btnResolver)
+                HANDLER.postRoundCleanUp( btnResolver )
                 return;
             }
             await waitForPress();
@@ -358,7 +352,7 @@ class BattleState {
             let prevMon = activeMon;
 
             // Actually switch daemons
-            state.playerParty.switchActiveDaemonToIndex(CHOSEN_MON_INDEX)
+            state.playerParty.switchActiveDaemonToIndex( CHOSEN_MON_INDEX );
             activeMon = state.playerParty.activeMon;
 
             // Update UI
@@ -373,17 +367,24 @@ class BattleState {
                 const ENEMY_MOVE = state.enemyLock.chooseMove();
                 
                 state.useMove( theirMon, activeMon, ENEMY_MOVE, false );
-                HANDLER.updateInfoBox(activeMon)
+                HANDLER.updateInfoBox( activeMon );
                 await waitForPress();
             }
-            HANDLER.postRoundCleanUp(btnResolver)
+            HANDLER.postRoundCleanUp( btnResolver );
         }
     }
 
     endFight() {
-        console.log(this)
-        let battleEnder = new StorageHandler(this);
-        battleEnder.endFight()
+        const BATTLE_ENDER = new StorageHandler( this );
+        
+        console.log( this );
+        BATTLE_ENDER.endFight();
+    }
+
+    endGame() {
+        const BATTLE_ENDER = new StorageHandler( this );
+        
+        BATTLE_ENDER.endGame();
     }
 }
 

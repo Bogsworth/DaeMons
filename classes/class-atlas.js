@@ -7,13 +7,13 @@ import * as parse from '../lib/Import.js'
 import { Warlock } from './class-warlock.js'
 
 class Atlas {
-    constructor(requiredLocksPerTier = [1, 3, 1, 1]) {
+    constructor( requiredLocksPerTier = [1, 3, 1, 1] ) {
         if ( ! Array.isArray( requiredLocksPerTier )) {
-            this.initializeFromMap(requiredLocksPerTier);
+            this.initializeFromMap( requiredLocksPerTier );
             return;
         }
         
-        this._lockMap = parse.createWarlocks(lockJSON);
+        this._lockMap = parse.createWarlocks( lockJSON );
         this._tierMap = this.returnTierMap();
         this._battleOrder = new Map()
 
@@ -38,14 +38,14 @@ class Atlas {
     returnTierMap() {
         let tierMap = new Map();
 
-        for (let [ lockID, lockData] of this.lockMap) {
-            Object.keys(lockData.allowedDaemons).forEach( tier => {
-                if (! tierMap.has(tier)) {
-                    tierMap.set(tier, [])
-                }
-
-                tierMap.get(tier).push(lockID)
-            })
+        for ( let [ lockID, lockData ] of this.lockMap ) {
+            Object.keys( lockData.allowedDaemons )
+                .forEach( tier => {
+                    if ( ! tierMap.has( tier )) {
+                        tierMap.set( tier, [] );
+                    }
+                    tierMap.get( tier ).push( lockID );
+                });
         }
         return tierMap;
     }
@@ -60,7 +60,7 @@ class Atlas {
             let choices = randArrayNoRepeats( locksRequired, NUM_LOCKS );
 
             choices.forEach( chosenLockIndex => {
-                const LOCK_ID = this.tierMap.get(TIER)[chosenLockIndex]
+                const LOCK_ID = this.tierMap.get( TIER )[ chosenLockIndex ];
                 const LOCK = new Warlock();
                 const NEXT_ROOM_ID = this.generateNextRoomID();
                 let isFirstRoom = this.battleOrder.size == 0;
@@ -68,7 +68,7 @@ class Atlas {
                 if ( ! isFirstRoom ) {
                     this.battleOrder.get( prevRoomID ).nextRoomID.push( NEXT_ROOM_ID );
                 }
-                LOCK.generateWarlockFromID( LOCK_ID, TIER )
+                LOCK.generateWarlockFromID( LOCK_ID, TIER );
                 this.battleOrder.set(
                     NEXT_ROOM_ID,
                     {
@@ -82,37 +82,36 @@ class Atlas {
         })
 
         function randArrayNoRepeats(length, availableOptions) {
-            let array = Array.apply(null, Array(length)).map(function () {});
+            let array = Array.apply( null, Array( length )).map( function () {} );
             let i = 0;
         
             array.forEach( val => {
-                val = getRandomInt(availableOptions);
+                val = getRandomInt( availableOptions );
         
-                if ( i == 0 ) {
-                    array[i++] = val;
+                if ( i === 0 ) {
+                    array[ i++ ] = val;
                     return;
                 }
         
-                array[i] = val;
-                while (array[ i - 1 ] == val) {
-                    val = getRandomInt(availableOptions);
-                    array[i] = val;
+                array[ i ] = val;
+                while ( array[ i - 1 ] === val ) {
+                    val = getRandomInt( availableOptions );
+                    array[ i ] = val;
                 }
                 i++;
             })
             return array;
-        
-            function getRandomInt( max ) {
-                return Math.floor(Math.random() * max);
-            }
+        }
+        function getRandomInt( max ) {
+            return Math.floor( Math.random() * max );
         }
     }
 
-    addGauntlets(numberOfGauntlets = 1) {
+    addGauntlets( numberOfGauntlets = 1 ) {
         let keys = Array.from( this.battleOrder.keys() );
-        let allowedGauntletStarts = keys.slice(1, this.battleOrder.size - 1);
+        let allowedGauntletStarts = keys.slice( 1, this.battleOrder.size - 1 );
 
-        while( numberOfGauntlets-- > 0 ){
+        while( numberOfGauntlets-- >= 1 ){
             let gauntlet = this.generateGauntlet(2);
             let roomID = allowedGauntletStarts[
                 Math.floor(
@@ -120,23 +119,23 @@ class Atlas {
                 )
             ];
 
-            this.battleOrder.get(roomID).availableGauntlets.push(gauntlet);
+            this.battleOrder.get( roomID ).availableGauntlets.push( gauntlet );
         }
     }
 
-    generateGauntlet(length, allowedLockTiers = ['tier 1']) {
+    generateGauntlet( length, allowedLockTiers = [ 'tier 1' ] ) {
         let i = 0;
         let allowedIDs = [];
         let lockArray = [];
         
         allowedLockTiers.forEach( tier => {
-            let currentidArray = this.tierMap.get(tier);
+            let currentIDArray = this.tierMap.get( tier );
 
-            allowedIDs = allowedIDs.concat( currentidArray );
+            allowedIDs = allowedIDs.concat( currentIDArray );
         })
 
         while ( i++ < length ) {
-            let chosenID = allowedIDs[Math.floor(Math.random()*allowedIDs.length)];
+            let chosenID = allowedIDs[ Math.floor( Math.random() * allowedIDs.length )];
 
             lockArray.push(chosenID);
         }
@@ -155,41 +154,11 @@ class Atlas {
     }
 
     printGauntlets() {
-        Array.from(this.battleOrder.values()).forEach(room => {
-            if (room.availableGauntlets.length >= 1) {
-                console.log(room.availableGauntlets);
-            }
-        })
+        Array.from( this.battleOrder.values() )
+            .filter( room => room.availableGauntlets.length >= 1)
+            .forEach( room => console.log( room.availableGauntlets ));
     }
 }
-
-// function randArrayNoRepeats(length, availableOptions) {
-//     let array = Array.apply(null, Array(length)).map(function () {});
-//     let i = 0;
-
-//     array.forEach( val => {
-//         val = getRandomInt(availableOptions);
-
-//         if ( i == 0 ) {
-//             array[i++] = val;
-//             return;
-//         }
-
-//         array[i] = val;
-//         while (array[ i - 1 ] == val) {
-//             val = getRandomInt(availableOptions);
-//             array[i] = val;
-//         }
-//         i++;
-//     })
-//     return array;
-
-//     function getRandomInt( max ) {
-//         return Math.floor(Math.random() * max);
-//     }
-// }
-
-
 
 // let atlas = new Atlas([1, 2]);
 // console.log(atlas)

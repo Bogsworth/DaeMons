@@ -38,39 +38,28 @@ import { UIHandler } from '../../../classes/class-UI-handler.js';
 import { Daemon } from '../../../classes/class-daemon.js';
 import { StorageHandler } from '../../../classes/class-storage-handler.js';
 
-let storage = new StorageHandler();
+const STORAGE = new StorageHandler();
+const LEVELS = STORAGE.restoreAtlas();
+const FIGHT_STATE = STORAGE.loadRoom();
 
-let levels = storage.restoreAtlas();
-
-// let fightState;
-
-// if ( sessionStorage.currentRoomID == undefined) {
-//     fightState = new BattleState( levels.battleOrder.get('roomID000').lock)
-// }
-// else {
-//     fightState = new BattleState( sessionStorage.currentRoomID )
-// }
-
-let fightState = storage.loadRoom();
-
-
-// battleEnder.restoreAtlas();
-
+// #region
 // ------
 // Testing with multiple mons
 
-console.log(fightState.playerParty.members)
+// console.log(FIGHT_STATE.playerParty.members)
 // let tempDaemon = new Daemon()
 // tempDaemon.generateDaemonFromID('monID002')
-// fightState.playerParty.addMonToParty(tempDaemon)
-// console.log(fightState.playerParty.members)
+// FIGHT_STATE.playerParty.addMonToParty(tempDaemon)
+// console.log(FIGHT_STATE.playerParty.members)
 
 // ------
+// #endregion
 
-let handler = new UIHandler(fightState)
-fightState.setHandlerInit(handler);
+const HANDLER = new UIHandler( FIGHT_STATE );
 
-console.log(levels)
-console.log(sessionStorage)
-console.log(fightState)
+FIGHT_STATE.handler = HANDLER;
+
+console.log( LEVELS );
+console.log( sessionStorage );
+console.log( FIGHT_STATE );
 

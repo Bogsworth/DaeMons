@@ -5,38 +5,28 @@ import { Warlock } from './class-warlock.js';
 import { Daemon } from './class-daemon.js';
 
 class InterludeState {
-    constructor ( atlas, builder = {
-        'newReward': '""',
-        'allHeldMons': '""',
-        'nextLock': '""',
-        'nextLockName': '""'
-
-    }) {
-        for (let [key, val] of Object.entries(builder)) {
-            if (val == undefined ) {
-                builder[key] = '""';
-            }
-        }
+    constructor ( atlas ) {
         this.atlas = atlas;
         this.currentParty = this.partyLoader( sessionStorage.currentParty );
-        this.nextRoomsArray = this.returnNextRoomsArray();
+        this.nextRoomsArray = this.nextRooms;
 
         // TODO: handle multiple possible next rooms
-        this.nextLock = new Warlock(atlas.battleOrder.get(this.nextRoomsArray[0]).lock)
+        let warlockConstructor = atlas.battleOrder.get( this.nextRoomsArray[0] ).lock;
+        this.nextLock = new Warlock( warlockConstructor )
         this.nextLockName = this.nextLock.returnName();
         
         this.newReward = '';
-        this.allHeldMons = this.allHeldMonsLoader(sessionStorage.allHeldMons);
+        this.allHeldMons = this.allHeldMonsLoader( sessionStorage.allHeldMons );
     }
 
-    returnNextRoomsArray() {
+    get nextRooms() {
         return this.atlas
             .battleOrder
             .get( sessionStorage.previousRoomID )
             .nextRoomID;
     }
 
-    partyLoader(storage) {
+    partyLoader( storage ) {
         const PARSED_STORAGE = JSON.parse( storage );
         let playerParty = new Party( PARSED_STORAGE );
 
@@ -52,17 +42,15 @@ class InterludeState {
         try { 
             parsedStorage = JSON.parse( storage ); 
         } catch( error ) {
-            console.log('storage not parseable as JSON') 
+            console.log('storage not parseable as JSON') ;
             return billsPC;
         } 
         if ( ! ( parsedStorage.length === 0 || parsedStorage === undefined )) {
-            console.log('passed if statemetn')
             billsPC = parsedStorage
                 .map( daemonData => new Daemon( daemonData ))
                 .concat(this.currentParty.members);
         }
-        console.log(billsPC)
-
+        console.log(billsPC);
         return billsPC;
     }
 
@@ -71,7 +59,7 @@ class InterludeState {
 
         members
             .filter( daemon => daemon.currentHP > 0 )
-            .forEach( daemon => daemon.restoreHP());
+            .forEach( daemon => daemon.restoreHP() );
     }
 
     restorePartyMoves() {

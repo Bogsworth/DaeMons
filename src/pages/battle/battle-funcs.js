@@ -69,7 +69,7 @@ import { Move } from '../../../classes/class-move.js'
 // }
 
 // function handleSwitch( fightState ) {   
-//     let typeTable = fightState.TYPE_TABLE;
+//     let typeTable = fightState.typeTable;
 //     let myParty = fightState.myParty;
 //     let theirMon = fightState.theirActiveMon;
 //     let activeMon = fightState.myActiveMon;
@@ -163,7 +163,7 @@ import { Move } from '../../../classes/class-move.js'
 // }
 
 // function handleAttack( fightState ) {
-//     let typeTable = fightState.TYPE_TABLE;
+//     let typeTable = fightState.typeTable;
 //     let myMon = fightState.myActiveMon;
 //     let myParty = fightState.myParty;
 //     let theirParty = fightState.theirParty;

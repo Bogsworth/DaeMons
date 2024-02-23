@@ -51,16 +51,16 @@ console.log(lockAtlas);
 // console.log(testNextLockList);
 
 let interludeState = new InterludeState(
-    lockAtlas,
-    {
-        //currentParty: playerParty,
-        'newReward': sessionStorage.newReward,
-        'allHeldMons': sessionStorage.allHeldMons,
-        'nextLock': sessionStorage.nextLock,
-        'nextLockName': sessionStorage.nextLockName
-    }
+    lockAtlas
+    // {
+    //     //currentParty: playerParty,
+    //     'newReward': sessionStorage.newReward,
+    //     'allHeldMons': sessionStorage.allHeldMons,
+    //     'nextLock': sessionStorage.nextLock,
+    //     'nextLockName': sessionStorage.nextLockName
+    // }
 );
-console.log(interludeState)
+console.log( interludeState );
 
 let tempDaemon = new Daemon();
 tempDaemon.generateDaemonFromID( 'monID005' );
