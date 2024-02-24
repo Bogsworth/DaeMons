@@ -1,5 +1,5 @@
 class UIHandler {
-    constructor(battleState) {
+    constructor( battleState ) {
         this.battleState = battleState;
         this.moveArrayId = [[
             'moveName0',
@@ -59,7 +59,7 @@ class UIHandler {
         this.monButtonsInit();
         this.attachFightButtons();
         this.populateSelectInit();
-        this.updateInfoBox(this.battleState.playerParty.activeMon);
+        this.updateInfoBox( this.battleState.playerParty.activeMon );
     }
 
     changeHeader( newHeader ) {
@@ -236,7 +236,7 @@ class UIHandler {
 
     updateInfoBox( mons, buttId = false) {
         let myMon;
-        if (buttId == false ) {
+        if ( buttId == false ) {
             myMon = mons;
         }
         else {
@@ -254,16 +254,16 @@ class UIHandler {
         ]);
     
         for (let i = 0; i < myMon.returnTotalMovesKnown(); i++) {
-            let currentMoveIds = this.moveArrayId[i];
-            let currentMove = myMon.moves[i];
+            let currentMoveIds = this.moveArrayId[ i ];
+            let currentMove = myMon.moves[ i ];
     
-            constructorMap.set(currentMoveIds[0], currentMove.name);
-            constructorMap.set(currentMoveIds[1], currentMove.type);
-            constructorMap.set(currentMoveIds[2], currentMove.power);
-            constructorMap.set(currentMoveIds[3], currentMove.usesReadable);
-            constructorMap.set(currentMoveIds[4], currentMove.accuracy);
-            constructorMap.set(currentMoveIds[5], currentMove.statsAffectedArray);
-            constructorMap.set(currentMoveIds[6], currentMove.description);
+            constructorMap.set( currentMoveIds[0], currentMove.name );
+            constructorMap.set( currentMoveIds[1], currentMove.type );
+            constructorMap.set( currentMoveIds[2], currentMove.power );
+            constructorMap.set( currentMoveIds[3], currentMove.usesReadable );
+            constructorMap.set( currentMoveIds[4], currentMove.accuracy );
+            constructorMap.set( currentMoveIds[5], currentMove.statsAffectedArray );
+            constructorMap.set( currentMoveIds[6], currentMove.description );
         }
     
         constructorMap.forEach((info, id) => {
@@ -345,7 +345,7 @@ class UIHandler {
         this.disableButtons();
     }
 
-    postRoundCleanUp(btnResolver) {
+    postRoundCleanUp( btnResolver ) {
         const btn = document.getElementById('ok');
 
         this.enableButtons();
@@ -353,16 +353,8 @@ class UIHandler {
         this.writeToMessageBox( 'What do you want to do?' );
     }
 
-    disableButtons(buttNames = [ 'attack', 'switch']) {
-        buttNames.forEach( name => {
-            this.disableButton(name);
-        })
-    }
-    
-    enableButtons(buttNames = [ 'attack', 'switch']) {
-        buttNames.forEach( name => {
-            this.enableButton(name);
-        })
+    disableButtons( buttNames = [ 'attack', 'switch' ] ) {
+        buttNames.forEach( name => this.disableButton( name ));
     }
 
     disableButton( name ) {
@@ -370,6 +362,10 @@ class UIHandler {
         element.disabled = true;
     }
     
+    enableButtons( buttNames = [ 'attack', 'switch' ] ) {
+        buttNames.forEach( name => this.enableButton( name ));
+    }
+
     enableButton( name ) {
         let element = document.getElementsByName( name )[0];
         element.disabled = false;

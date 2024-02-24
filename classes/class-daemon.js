@@ -21,7 +21,10 @@ class Daemon {
             },
             "_description": "I am a daemon!!! Grrrr"
     }) {
-        let formattedBuilder = this.returnBuildObjFromJSON( builderJSON );
+        let formattedBuilder = this.generateDaemonBuildObject( builderJSON );
+
+        console.log(formattedBuilder);
+        console.log(JSON.stringify(formattedBuilder))
 
         this._uuid = formattedBuilder[ '_uuid' ];
         this._id = formattedBuilder[ '_id' ]
@@ -63,7 +66,7 @@ class Daemon {
     get statDefenseModified() { return this.returnModifiedStat( 'defense' ); }
     get statSpeedModified() { return this.returnModifiedStat( 'speed' ); }
 
-    returnBuildObjFromJSON( builder ) {
+    generateDaemonBuildObject( builder ) {
         const UUID = uuidv4();
 
         builder[ '_tempStatChange' ] = this.initIfUndefined(

@@ -38,8 +38,8 @@ class BattleState {
     }
 
     handleAttack() {
-        let myMon = this.playerParty.activeMon;
-        let theirParty = this.enemyLock.party.members;
+        // let myMon = this.playerParty.activeMon;
+
         let waitForPressResolve;
 
         console.log('attack button pressed');
@@ -58,6 +58,7 @@ class BattleState {
 
         async function roundRunner(state) {
             const HANDLER = state.handler;
+
             HANDLER.preRoundInit(btnResolver);
             
             if (! HANDLER.monFightChecker() ) {
@@ -65,20 +66,19 @@ class BattleState {
                 HANDLER.postRoundCleanUp(btnResolver)
                 return;
             }
-
-            const ACTIVE_MON = state.playerParty.activeMon
             const CHOSEN_MOVE_INDEX = document
                 .getElementById( 'selectMoves' )
                 .options
                 .selectedIndex;
-            const CHOSEN_MOVE = ACTIVE_MON.moves[ CHOSEN_MOVE_INDEX - 1];
+            const MY_MON = state.playerParty.activeMon
+            const CHOSEN_MOVE = MY_MON.moves[ CHOSEN_MOVE_INDEX - 1];
             const THEIR_MON = state.enemyLock.party.activeMon;
             const THEIR_MOVE = state.enemyLock.chooseMove();
             const ENEMY_LOCK = state.enemyLock;
             
             let turnOrder = [];
             let myTurn = {
-                mon: ACTIVE_MON,
+                mon: MY_MON,
                 move: CHOSEN_MOVE,
                 activeFlag: true
             };
@@ -88,47 +88,38 @@ class BattleState {
                 activeFlag: false
             };
     
-            if (
-                ACTIVE_MON.returnModifiedStat('speed') >=
-                THEIR_MON.returnModifiedStat('speed')
-            ) {
-                turnOrder.push(myTurn);
-                turnOrder.push(theirTurn);
+            if ( MY_MON.statSpeedModified >= THEIR_MON.statSpeedModified ) {
+                turnOrder.push( myTurn );
+                turnOrder.push( theirTurn );
             }
             else {
-                turnOrder.push(theirTurn);
-                turnOrder.push(myTurn);
+                turnOrder.push( theirTurn );
+                turnOrder.push( myTurn );
             }
 
-            state.useMove
-            (
+            state.useMove(
                 turnOrder[0].mon,
                 turnOrder[1].mon,
                 turnOrder[0].move,
                 turnOrder[0].activeFlag
             );
-            HANDLER.updateInfoBox(myMon);
+            HANDLER.updateInfoBox(MY_MON);
             await waitForPress();
 
-            if (   
-                ! ( myMon.isDead ) &&
-                ! ( THEIR_MON.isDead )
-            ) {
-                state.useMove
-                (
+            if (( ! MY_MON.isDead ) && ( ! THEIR_MON.isDead )) {
+                state.useMove(
                     turnOrder[1].mon,
                     turnOrder[0].mon,
                     turnOrder[1].move,
                     turnOrder[1].activeFlag
                 );
-                HANDLER.updateInfoBox(myMon);
+                HANDLER.updateInfoBox(MY_MON);
                 await waitForPress();
             }
 
             let theirMonBitTracker =  + ( THEIR_MON.isDead );
-            let myMonBitTracker = + ( myMon.isDead );
+            let myMonBitTracker = + ( MY_MON.isDead );
             let bitTracker = theirMonBitTracker.toString() + myMonBitTracker.toString();
-            console.log(bitTracker)
 
             //#region
             /**
@@ -190,7 +181,7 @@ class BattleState {
             // Currently this is not its own function because I don't know 
             // how to do the 'await waitForPress()' in a different
             // function...
-            switch (bitTracker) {
+            switch ( bitTracker ) {
                 case '00':
                     // Nothing?
                     break;
@@ -271,43 +262,13 @@ class BattleState {
     }
     
     useMove( attackingMon, defendingMon, chosenMove, playerActiveFlag ) {
-        const TYPE_MOD = calc.calculateTypeModifier
-        (
-            this.typeTable,
-            chosenMove.type, 
-            defendingMon.type
-        );
-        const ROUND_INFO = {
-            attacker: attackingMon,
-            defender: defendingMon,
-            move: chosenMove,
-            typeModifier: TYPE_MOD
-        };
-        
-        let damage = calc.calculateDamage( ROUND_INFO );
-        let moveHit = chosenMove.checkIfHit();
-        let messageMaker = new Message(this, playerActiveFlag, chosenMove, moveHit, damage);
+        const DAMAGE = chosenMove.useMove( attackingMon, defendingMon );
+        let messageMaker = new Message( this, playerActiveFlag, chosenMove, DAMAGE );
 
-        console.log( ROUND_INFO );
+        console.log(attackingMon);
+        console.log(defendingMon);
+        console.log(chosenMove);
 
-        chosenMove.statsAffectedArray
-            .forEach( effect => {
-                const TARGET = effect[ 0 ];
-                const STAT = effect[ 1 ];
-                const CHANGE = effect[ 2 ];
-
-                if ( TARGET === 'self' ) {
-                    attackingMon.updateTempStatChange( STAT, CHANGE );
-                }
-                if ( TARGET === 'enemy' ) {
-                    defendingMon.updateTempStatChange( STAT, CHANGE );
-                }
-        })
-        chosenMove.decrementRemainingUses();
-        if ( ! moveHit ) {
-            damage = 0;
-        }
-        defendingMon.updateHP( damage );
         this.handler.updateShownHP();
         this.handler.writeToMessageBox( messageMaker.returnMessage() );
     }
@@ -326,7 +287,6 @@ class BattleState {
         }
 
         console.log( 'switch button pressed' );
-        console.log( this.playerParty.members );
         switchMons( this );
     
         async function switchMons( state ) {

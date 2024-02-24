@@ -22,21 +22,21 @@ class Warlock {
         }
     ) {
         console.log(builder)
-        let formatedBuilder = builder;
+        let formattedBuilder = builder;
 
         if ( typeof( builder ) === 'string') {
-            formatedBuilder = this.returnBuildObjFromLockID( builder, 0 );
+            formattedBuilder = this.returnBuildObjFromLockID( builder, 0 );
         }
 
-        console.log(formatedBuilder);
+        console.log(formattedBuilder);
 
-        this.id = formatedBuilder.id;
-        this.name = formatedBuilder.name;
-        this.daemonTypes = formatedBuilder.daemonTypes;
-        // this.tier = formatedBuilder.tier;
-        this.party = new Party( formatedBuilder.party );
-        this.description = formatedBuilder.description;
-        this.reward = formatedBuilder.reward;
+        this.id = formattedBuilder.id;
+        this.name = formattedBuilder.name;
+        this.daemonTypes = formattedBuilder.daemonTypes;
+        // this.tier = formattedBuilder.tier;
+        this.party = new Party( formattedBuilder.party );
+        this.description = formattedBuilder.description;
+        this.reward = formattedBuilder.reward;
     }
 
     returnBuildObjFromLockID( ID, tier = 1, isBossFlag = false ) {

@@ -1,12 +1,12 @@
 import * as calc from '../lib/Calculations.js'
 
 class Message {
-    constructor( battleState, isPlayerActive, chosenMove, moveHit, damage ) {
+    constructor( battleState, isPlayerActive, chosenMove, damage ) {
         
         this.battleState = battleState;
         this.chosenMove = chosenMove;
         this.isPlayerActive = isPlayerActive;
-        this.moveHit = moveHit;
+        this.moveHit = chosenMove.isHitOnLastUse;
         this.damage = damage;
         this.message = '';
 
@@ -122,7 +122,6 @@ class Message {
         }
         if ( isMoveStatAffecting ) {
             if ( this.templates.affectSelf ) {
-                console.log(this.templates)
                 this.message += this.templates.affectSelf[ activeLock ];
             }
             if (this.templates.affectOther ) {

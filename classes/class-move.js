@@ -1,4 +1,5 @@
-import * as parse from '../lib/Import.js'
+import * as parse from '../lib/Import.js';
+import { Daemon } from './class-daemon.js';
 
 class Move {
     /**
@@ -26,17 +27,17 @@ class Move {
             }
         }
     }) {
-        let formatedBuilder = this.generateMoveBuildObj( builder );
+        let formattedBuilder = this.generateMoveBuildObj( builder );
 
-        this._id = formatedBuilder[ '_id' ];
-        this._name = formatedBuilder[ '_name' ];
-        this._type = formatedBuilder[ '_type' ];
-        this._power = formatedBuilder[ '_power' ];
-        this._accuracy = formatedBuilder[ '_accuracy' ];
-        this._uses = formatedBuilder[ '_uses' ];
-        this._statsAffected = formatedBuilder[ '_statsAffected' ];
-        this._remainingUses = formatedBuilder[ '_remainingUses' ];
-        this._description = formatedBuilder[ '_description' ];
+        this._id = formattedBuilder[ '_id' ];
+        this._name = formattedBuilder[ '_name' ];
+        this._type = formattedBuilder[ '_type' ];
+        this._power = formattedBuilder[ '_power' ];
+        this._accuracy = formattedBuilder[ '_accuracy' ];
+        this._uses = formattedBuilder[ '_uses' ];
+        this._statsAffected = formattedBuilder[ '_statsAffected' ];
+        this._remainingUses = formattedBuilder[ '_remainingUses' ];
+        this._description = formattedBuilder[ '_description' ];
         this._isHitOnLastUse = false;
     }
 
@@ -119,20 +120,70 @@ class Move {
     }
 
     // TODO: Is there some way to try this but throw specific exception within this function?
-    // TODO: Implement this function
-    useMove() {
+    useMove( attackingMon, defendingMon ) {
         if (this._remainingUses <= 0 ) {
             console.log('Using move with no uses left');
             return;
         }
+        let damage = 0;
 
         this.decrementRemainingUses();
         this.checkIfHit();
-        return;
+
+        if ( ! this.isHitOnLastUse ) {
+            return damage;
+        }
+
+        this.statsAffectedArray
+            .forEach( effect => applyEffect( effect, attackingMon, defendingMon ));
+        damage = this.calculateDamage({
+            attacker: attackingMon,
+            defender: defendingMon}
+        );
+        defendingMon.updateHP( damage );
+        
+        return damage;
+
+        function applyEffect( effect, attackingMon, defendingMon ) {
+            const TARGET = effect[ 0 ];
+            const STAT = effect[ 1 ];
+            const CHANGE = effect[ 2 ];
+
+            if ( TARGET === 'self' ) {
+                attackingMon.updateTempStatChange( STAT, CHANGE );
+            }
+            if ( TARGET === 'enemy' ) {
+                defendingMon.updateTempStatChange( STAT, CHANGE );
+            }
+        }
     }
 
-    useMoveFull( defendingMon ) {
-        
+    calculateTypeModifier( defMonTyping = [] ) {
+        let typeTable = parse.createCounterTable();
+        let multiplier = 1;
+    
+        defMonTyping.forEach( type => {
+            multiplier *= typeTable[ this.type ][ `vs_${type}` ]
+        });
+        return multiplier;
+    }
+
+    calculateDamage ( data = {
+        attacker: new Daemon(),
+        defender: new Daemon(),
+    }) {
+        const POWER = this.power;
+        const TYPE_MOD = this.calculateTypeModifier( data.defender.type );
+    
+        const MODIFIED_ATT = data.attacker.statAttackModified;
+        const MODIFIED_DEF = data.defender.statDefenseModified;
+    
+        let results = 0.4 * ( TYPE_MOD * ( MODIFIED_ATT / MODIFIED_DEF ) * POWER );
+        if ( results < 1 && POWER !== 0 ) {
+            results = 1;
+        }
+    
+        return Math.round( results );
     }
 
     decrementRemainingUses( decrementBy = 1) {
