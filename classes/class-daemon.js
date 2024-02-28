@@ -62,9 +62,9 @@ class Daemon {
     get statDefense() { return this._stats.defense; }
     get statSpeed() { return this._stats.speed; }
     
-    get statAttackModified() { return this.returnModifiedStat( 'attack' ); }
-    get statDefenseModified() { return this.returnModifiedStat( 'defense' ); }
-    get statSpeedModified() { return this.returnModifiedStat( 'speed' ); }
+    get statAttackModified() { return this._returnModifiedStat( 'attack' ); }
+    get statDefenseModified() { return this._returnModifiedStat( 'defense' ); }
+    get statSpeedModified() { return this._returnModifiedStat( 'speed' ); }
 
     generateDaemonBuildObject( builder ) {
         const UUID = uuidv4();
@@ -171,7 +171,7 @@ class Daemon {
         this._currentHP -= damage;
     }
 
-    returnModifiedStat( stat ) {
+    _returnModifiedStat( stat ) {
         const STAT_VAL = this.stats[ stat ];
         const MODIFIER = this.statsTempModifiers[ stat ];
         let modifiedStat = STAT_VAL * ( 10 + ( MODIFIER / 2 )) / 10 ;
@@ -196,7 +196,7 @@ class Daemon {
         }
 
         if ( this.checkStatChangeInRange( stat, change, MAX_OFFSET ) ) {
-            this._tempStatChange[stat] += change;
+            this._tempStatChange[ stat ] += change;
             return true;
         }
 
@@ -214,14 +214,14 @@ class Daemon {
         const MIN_VAL = 0 - maxOffset;
 
         return (
-            this.tempStatChange[stat] + change <= MAX_VAL &&
-            this.tempStatChange[stat] + change >= MIN_VAL
+            this.tempStatChange[ stat ] + change <= MAX_VAL &&
+            this.tempStatChange[ stat ] + change >= MIN_VAL
         );
     }
 
     resetTempStatModifiers() {
-        for (let [stat, mod] of Object.entries(this.tempStatChange)) {
-            this.tempStatChange[stat] = 0;
+        for (let [ stat, mod ] of Object.entries(this.tempStatChange)) {
+            this.tempStatChange[ stat ] = 0;
         }
     }
 

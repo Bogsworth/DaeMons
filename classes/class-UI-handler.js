@@ -1,7 +1,7 @@
 class UIHandler {
     constructor( battleState ) {
-        this.battleState = battleState;
-        this.moveArrayId = [[
+        this._battleState = battleState;
+        this._moveArrayId = [[
             'moveName0',
             'moveType0',
             'movePower0',
@@ -37,7 +37,7 @@ class UIHandler {
             'moveStatsAffected3',
             'moveDesc3'
         ]];
-        this.divIds = {
+        this._divIds = {
             yourMon:{
                 HP: 'yourMonHP',
                 name: 'yourMon'
@@ -53,26 +53,32 @@ class UIHandler {
         this.handlerInit();
     }
 
+    get battleState() { return this._battleState; }
+    // get moveArrayId() { return this._moveArrayId; }
+    get divIds() { return this._divIds; }
+
+    set battleState( state ) { this._battleState = state; }
+
     handlerInit() {
-        this.changeHeader(this.generateHeaderFromWarlock());
+        this.changeHeader( this.generateHeaderFromWarlock() );
         this.updateMons();
         this.monButtonsInit();
         this.attachFightButtons();
         this.populateSelectInit();
-        this.updateInfoBox( this.battleState.playerParty.activeMon );
+        this.updateInfoBox( this._battleState.playerParty.activeMon );
     }
 
     changeHeader( newHeader ) {
-        const ELEMENT = document.getElementById(this.divIds.header);
+        const ELEMENT = document.getElementById(this._divIds.header);
 
         ELEMENT.textContent = newHeader;
     }
 
     generateHeaderFromWarlock () {
-        const NAME = this.battleState.enemyLock.name;
+        const NAME = this._battleState.enemyLock.name;
         const TITLE = `Fight with ${NAME}`;
     
-        console.log(TITLE);
+        console.log( TITLE );
         return TITLE;
     }
 
@@ -84,12 +90,12 @@ class UIHandler {
     updateName() {
         let nameChanges = new Map([
             [
-                this.divIds.yourMon.name,
-                this.battleState.playerParty.activeMon.name
+                this._divIds.yourMon.name,
+                this._battleState.playerParty.activeMon.name
             ],
             [
-                this.divIds.theirMon.name,
-                this.battleState.enemyLock.party.activeMon.name
+                this._divIds.theirMon.name,
+                this._battleState.enemyLock.party.activeMon.name
             ]
         ])
         for ( let [ key, val ] of nameChanges ) {
@@ -100,15 +106,15 @@ class UIHandler {
     updateShownHP() {
         let hpChanges = new Map([
             [
-                this.divIds.yourMon.HP,
-                this.battleState
+                this._divIds.yourMon.HP,
+                this._battleState
                     .playerParty
                     .activeMon
                     .currentHPReadable
             ],
             [
-                this.divIds.theirMon.HP,
-                this.battleState
+                this._divIds.theirMon.HP,
+                this._battleState
                     .enemyLock
                     .party
                     .activeMon
@@ -127,7 +133,7 @@ class UIHandler {
         this.generateMonButtons()
             .forEach(
                 buttId => this.attachButtonId(
-                    () => HANDLER.expandInfoBox( buttId, HANDLER.battleState ),
+                    () => HANDLER.expandInfoBox( buttId, HANDLER._battleState ),
                     buttId
                 )
             )   
@@ -136,12 +142,12 @@ class UIHandler {
     attachFightButtons() {
         this.attachButtonId
         (
-            () => this.battleState.handleAttack(),
+            () => this._battleState.handleAttack(),
             'attack'
         );
         this.attachButtonId
         (
-            () => this.battleState.handleSwitch(),
+            () => this._battleState.handleSwitch(),
             'switch'
         );
         this.attachButtonId( this.handleOk, 'ok' );
@@ -149,14 +155,14 @@ class UIHandler {
 
     populateSelectInit() {
         this.populateSelect(
-                this.battleState
+                this._battleState
                     .playerParty
                     .members
                     .map( daemon => daemon.name ),
                 'selectMons'
         )
         this.populateSelect(
-            this.battleState
+            this._battleState
                 .playerParty
                 .activeMon
                 .moves
@@ -166,33 +172,33 @@ class UIHandler {
         )       
     }
 
-    populateSelect(array, selectID) {
+    populateSelect( array, selectID ) {
         const SELECT = document.getElementById( selectID );
         
         this.removeSelectOptions( SELECT );
         array.forEach( string => {
-            let element = document.createElement('option')
+            let element = document.createElement('option');
             
             element.textContent = string;
             SELECT.appendChild( element );
         })
     }
     
-    removeSelectOptions(selectElement) {
+    removeSelectOptions( selectElement ) {
         var i, L = selectElement.options.length - 1;
         for( i = L; i > 0; i-- ) {
-            selectElement.remove(i);
+            selectElement.remove( i );
         }
     }
 
     generateMonButtons() {
-        let monArray = this.battleState.playerParty.members
-        let infoDiv = document.getElementById('bottomBar');
+        let monArray = this._battleState.playerParty.members
+        let infoDiv = document.getElementById( 'bottomBar' );
         let i = 0;
         let buttonIdArray = [];
         
         monArray.forEach(mon => {
-            let newButt = document.createElement('button');
+            let newButt = document.createElement( 'button' );
             let idText = 'mon' + i++;
     
             newButt.textContent = mon.name;
@@ -200,7 +206,7 @@ class UIHandler {
             newButt.id = idText;
             infoDiv.appendChild( newButt );
     
-            buttonIdArray.push(idText);
+            buttonIdArray.push( idText );
         })
     
         return buttonIdArray;
@@ -209,15 +215,15 @@ class UIHandler {
     attachButtonId( doFunction, elementId ) {
         let el = document.getElementById( elementId );
     
-        document.addEventListener("DOMContentLoaded", () => {
-            el.addEventListener("click", doFunction, false);
+        document.addEventListener( "DOMContentLoaded", () => {
+            el.addEventListener( "click", doFunction, false );
         })
     }
 
     expandInfoBox( buttonId, state ) {
         let elBar = document.getElementById( 'expandingBottomBar' );
         let hiddenElementMatcher = document.getElementById( 'buttonMatcher' );
-        let currentText = hiddenElementMatcher.textContent
+        let currentText = hiddenElementMatcher.textContent;
     
         if (
             ! ( elBar.style.flexGrow == 0 ) &&
@@ -234,7 +240,7 @@ class UIHandler {
         }   
     }
 
-    updateInfoBox( mons, buttId = false) {
+    updateInfoBox( mons, buttId = false ) {
         let myMon;
         if ( buttId == false ) {
             myMon = mons;
@@ -253,8 +259,8 @@ class UIHandler {
             ['expandedMonHP', myMon.currentHPReadable]
         ]);
     
-        for (let i = 0; i < myMon.returnTotalMovesKnown(); i++) {
-            let currentMoveIds = this.moveArrayId[ i ];
+        for ( let i = 0; i < myMon.returnTotalMovesKnown(); i++ ) {
+            let currentMoveIds = this._moveArrayId[ i ];
             let currentMove = myMon.moves[ i ];
     
             constructorMap.set( currentMoveIds[0], currentMove.name );
@@ -266,8 +272,8 @@ class UIHandler {
             constructorMap.set( currentMoveIds[6], currentMove.description );
         }
     
-        constructorMap.forEach((info, id) => {
-            let el = document.getElementById(id);
+        constructorMap.forEach(( info, id ) => {
+            let el = document.getElementById( id );
     
             el.textContent = info;
         }) 
@@ -282,9 +288,9 @@ class UIHandler {
             .getElementById( 'selectMons' )
             .options
             .selectedIndex - 1;
-        const CURRENT_NAME = this.battleState.playerParty.activeMon.name;
-        const PARTY = this.battleState.playerParty.members;
-        const ACTIVE_MON = this.battleState.playerParty.activeMon;
+        const CURRENT_NAME = this._battleState.playerParty.activeMon.name;
+        const PARTY = this._battleState.playerParty.members;
+        const ACTIVE_MON = this._battleState.playerParty.activeMon;
 
         if ( CHOSEN_MON_INDEX == -1 ) {
             this.writeToMessageBox( 'Actually pick a Daemon before switching.'); 
@@ -305,7 +311,7 @@ class UIHandler {
     }
 
     monFightChecker() {
-        const ACTIVE_MON = this.battleState.playerParty.activeMon
+        const ACTIVE_MON = this._battleState.playerParty.activeMon;
         const CHOSEN_MOVE_INDEX = document
             .getElementById( 'selectMoves' )
             .options
@@ -313,7 +319,7 @@ class UIHandler {
         const CHOSEN_MOVE = ACTIVE_MON.moves[ CHOSEN_MOVE_INDEX - 1];
 
         if ( CHOSEN_MOVE_INDEX == 0 ) {
-            this.writeToMessageBox('Pick a move before attacking.')
+            this.writeToMessageBox('Pick a move before attacking.');
             return false;
         }
         else if ( ACTIVE_MON.isDead ) {
@@ -330,23 +336,23 @@ class UIHandler {
     }
 
     writeToMessageBox( message ) {
-        const ID = this.divIds.messageBoxId;
+        const ID = this._divIds.messageBoxId;
         const element = document.getElementById( ID );
 
-        console.log(message);
+        console.log( message );
         element.textContent = message;
         return;
     }
 
     preRoundInit(btnResolver) {
-        const btn = document.getElementById('ok');
+        const btn = document.getElementById( 'ok' );
 
         btn.addEventListener( 'click', btnResolver );
         this.disableButtons();
     }
 
     postRoundCleanUp( btnResolver ) {
-        const btn = document.getElementById('ok');
+        const btn = document.getElementById( 'ok' );
 
         this.enableButtons();
         btn.removeEventListener( 'click', btnResolver );
