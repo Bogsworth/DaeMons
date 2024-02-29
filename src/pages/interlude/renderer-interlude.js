@@ -55,8 +55,8 @@ interludeState.restorePartyMoves();
 //     FULL_DAEMON_TABLE,
 //     interludeState
 // );
-storage.setState( interludeState );
-storage.setHandler( UIHandler )
+storage.battleState = interludeState;
+storage.UIHandler = UIHandler;
 
 intFuncs.populateDaemonInspect();
 

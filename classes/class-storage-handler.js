@@ -4,20 +4,27 @@ import { Warlock } from "./class-warlock.js";
 import { Party } from "./class-party.js";
 
 class StorageHandler {
-    constructor(battleState = {}) {
-        this.battleState = battleState;
-        this.UIHandler;
+    constructor( battleState = {} ) {
+        this._battleState = battleState;
+        this._UIHandler;
 
-        this.initialSessionStorage = sessionStorage;
-        this.homeScreenLocation = '../../../index.html';
-        this.interludeLocation = '../interlude/interlude.html';
-        this.battleLocation = '../battle/battle.html';
+        this._initialSessionStorage = sessionStorage;
+        this._homeScreenLocation = '../../../index.html';
+        this._interludeLocation = '../interlude/interlude.html';
+        this._battleLocation = '../battle/battle.html';
         
         // this.endFight();
     }
 
-    setState( newState ) { this.battleState = newState; }
-    setHandler( handler ) { this.UIHandler = handler; }
+    get battleState() { return this._battleState; }
+    get UIHandler() { return this._UIHandler; }
+    get initialSessionStorage() { return this._initialSessionStorage; }
+    get homeScreenLocation() { return this._homeScreenLocation; }
+    get interludeLocation() { return this._interludeLocation; }
+    get battleLocation() { return this._battleLocation; }
+
+    set battleState( newState ) { this._battleState = newState; }
+    set UIHandler( handler ) { this._UIHandler = handler; }
 
     endFight() {
         this.savePostFightData();
@@ -81,12 +88,12 @@ class StorageHandler {
 
     restoreAtlas() {
         let atlasInfoString = this.initialSessionStorage.atlas;
+        const DEFAULT_ATLAS = new Atlas( [ 1,2 ] );
+        let isNoSavedAtlas = ( atlasInfoString === undefined );
 
-        if ( atlasInfoString === undefined ) {
-            let newAtlas = new Atlas([1,2]);
-
-            this.saveAtlas( newAtlas );
-            return newAtlas;
+        if ( isNoSavedAtlas ) {
+            this.saveAtlas( DEFAULT_ATLAS );
+            return DEFAULT_ATLAS;
         }
        
         return new Atlas(JSON.parse(atlasInfoString, reviver));

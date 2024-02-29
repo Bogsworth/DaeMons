@@ -263,8 +263,10 @@ class BattleState {
         const DAMAGE = chosenMove.useMove( attackingMon, defendingMon );
         const message = new Message( this, playerActiveFlag, chosenMove, DAMAGE );
 
+        console.log(message)
+
         this.handler.updateShownHP();
-        this.handler.writeToMessageBox( message.returnMessage() );
+        this.handler.writeToMessageBox( message.text );
     }
 
     handleSwitch() {   

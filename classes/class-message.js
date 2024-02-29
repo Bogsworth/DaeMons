@@ -3,30 +3,44 @@ import * as calc from '../lib/Calculations.js'
 class Message {
     constructor( battleState, isPlayerActive, chosenMove, damage ) {
         
-        this.battleState = battleState;
-        this.chosenMove = chosenMove;
-        this.isPlayerActive = isPlayerActive;
-        this.moveHit = chosenMove.isHitOnLastUse;
-        this.damage = damage;
-        this.message = '';
-
-        this.attackingMon = this.returnAttacker();
-        this.defendingMon = this.returnDefender();
-
-        this.typeMod = calc.calculateTypeModifier
+        this._battleState = battleState;
+        this._chosenMove = chosenMove;
+        this._isPlayerActive = isPlayerActive;
+        this._damage = damage;
+        this._typeMod = calc.calculateTypeModifier
         (
             this.battleState.typeTable,
             this.chosenMove.type, 
             this.defendingMon.type
         );
+        this._activeLock;
+        this._templates;
+        this._text = '';
 
-        this.statsAffectedArray = this.chosenMove.statsAffectedArray;
-        this.activeLock = this.setActiveLock();
-
-        this.templates = this.createTemplates();
+        this.initFunc();
     }
 
-    createTemplates() {
+    get battleState() { return this._battleState; }
+    get chosenMove() { return this._chosenMove; }
+    get isPlayerActive() { return this._isPlayerActive; }
+    get damage() { return this._damage; }
+    get attackingMon() { return this.returnAttacker(); }
+    get defendingMon() { return this.returnDefender(); }
+    get typeMod() { return this._typeMod; }
+    get activeLock() { return this._activeLock; }
+    get statsAffectedArray() { return this.chosenMove.statsAffectedArray }
+    get templates() { return this._templates; }
+
+    get text() { return this._text; }
+    set addToText( string ) { this._text += string; }
+
+    initFunc() {
+        this.setActiveLock();
+        this.initTemplates();
+        this.initMessage();
+    }
+
+    initTemplates() {
         let moveAffectsStats = this.chosenMove.isStatsAffected;
         let templates = {
             didDamage: {
@@ -41,98 +55,105 @@ class Message {
                 player: 'but it failed...',
                 enemy: 'but it failed!'
             },
-            superEffective:{
+            superEffective: {
                 player: ` - it's super effective!`,
                 enemy: ` - it's super effective!`
-            }
-        }
-        if ( ! moveAffectsStats) {
-            return templates;
+            },
+            affectSelf: {},
+            affectOther: {}
         }
 
-        this.statsAffectedArray.forEach( effect => {
-            const TARGET = effect[0]
-            const STAT = effect[1];
-            const IS_SELF_TARGETING = ( TARGET === 'self' );
+        if ( moveAffectsStats ) {
+            this.statsAffectedArray
+                .forEach( effect => 
+                    this.writeStatAffectTemplate( effect, templates )
+                );
+        }
+        
+        this._templates = templates;
+    }
 
-            if ( IS_SELF_TARGETING ) {
-                if ( this.isPlayerActive ) {
-                    templates.affectSelf = {}
-                    templates.affectSelf.player = `Your ${this.attackingMon.name} `
-                    + `increased its ${STAT} stat`
-                }
-                else {
-                    templates.affectSelf = {}
-                    templates.affectSelf.enemy = `Enemy ${this.attackingMon.name} `
-                    + `increased its ${STAT} stat`
-                }
+    writeStatAffectTemplate( effect, templates ) {
+        const TARGET = effect[0]
+        const STAT = effect[1];
+        const IS_SELF_TARGETING = ( TARGET === 'self' );
+
+        if ( IS_SELF_TARGETING ) {
+            if ( this.isPlayerActive ) {
+                templates.affectSelf.player = `Your ${this.attackingMon.name} `
+                + `increased its ${STAT} stat`;
             }
             else {
-                if ( this.isPlayerActive ) {
-                    templates.affectOther = {}
-                    templates.affectOther.player = `Your ${this.attackingMon.name} `
-                    + `reduced opponent's ${this.defendingMon.name} ${STAT} stat`
-                }
-                else {
-                    templates.affectOther = {};
-                    templates.affectOther.enemy = `Enemy ${this.attackingMon.name} `
-                    + `reduced your ${this.defendingMon.name}'s ${STAT} stat`
-                }
+                templates.affectSelf.enemy = `Enemy ${this.attackingMon.name} `
+                + `increased its ${STAT} stat`;
             }
-        });
-
-        return templates;
+        }
+        else {
+            if ( this.isPlayerActive ) {
+                templates.affectOther.player = `Your ${this.attackingMon.name} `
+                + `reduced opponent's ${this.defendingMon.name} ${STAT} stat`;
+            }
+            else {
+                templates.affectOther.enemy = `Enemy ${this.attackingMon.name} `
+                + `reduced your ${this.defendingMon.name}'s ${STAT} stat`;
+            }
+        }
     }
 
     returnAttacker() {
-        if (this.isPlayerActive) {
+        if ( this.isPlayerActive ) {
             return this.battleState.playerParty.activeMon;
         }
         return this.battleState.enemyLock.party.activeMon;
     }
 
     returnDefender() {
-        if (! this.isPlayerActive) {
+        if ( ! this.isPlayerActive ) {
             return this.battleState.playerParty.activeMon
         }
         return this.battleState.enemyLock.party.activeMon;
     }
 
     setActiveLock() {
-        if (this.isPlayerActive) {
-            return 'player';
+        let activeLock = 'enemy';
+        
+        if ( this.isPlayerActive ) {
+            activeLock = 'player';
         }
-        else {
-            return 'enemy';
-        }
+        this._activeLock = activeLock;
     }
 
-    returnMessage() {
-        let activeLock = this.setActiveLock();
+    initMessage() {
+        let activeLock = this.activeLock;
+        let didMoveHit = this.chosenMove.isHitOnLastUse;
         let isMoveDamaging = this.chosenMove.power !== 0;
         let isMoveStatAffecting = this.statsAffectedArray.length !== 0;
         let isMoveSuperEffective = ( this.typeMod > 1 ) && ( this.chosenMove.power != 0 )
 
-        if ( ! this.moveHit ) {
-            this.message += this.templates.missed[ activeLock ];
-            return this.message;
+        if ( ! didMoveHit ) {
+            this.addToText = this.templates.missed[ activeLock ];
+            return;
         }
+
         if ( isMoveDamaging ) {
-            this.message += this.templates.didDamage[ activeLock ];
+            this.addToText = this.templates.didDamage[ activeLock ];
         }
         if ( isMoveStatAffecting ) {
-            if ( this.templates.affectSelf ) {
-                this.message += this.templates.affectSelf[ activeLock ];
+            let isMoveSelfAffecting = Object
+                .keys(this.templates.affectSelf).length !== 0;
+            let isMoveOtherAffecting = Object.
+                keys(this.templates.affectOther).length !== 0;
+
+            if ( isMoveSelfAffecting ) {
+                this.addToText = this.templates.affectSelf[ activeLock ];
             }
-            if (this.templates.affectOther ) {
-                this.message += this.templates.affectOther[ activeLock ];
+            if ( isMoveOtherAffecting ) {
+                this.addToText = this.templates.affectOther[ activeLock ];
             }
         }
         if ( isMoveSuperEffective ) {
-            this.message += this.templates.superEffective[ activeLock ];
+            this.addToText = this.templates.superEffective[ activeLock ];
         }
-
-        return this.message;
     }
 }
 
