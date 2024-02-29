@@ -2,28 +2,29 @@ import { Daemon } from './class-daemon.js'
 import { Move } from './class-move.js'
 
 class Party {
-    // constructor(builder = [ new Daemon() ]) {
-        
-    //     this.members = builder;
-    //     this.activeMon = this.members[0];
-    // }
     constructor(
         builder = {
-            members: [],
-            activeMon: {}
+            '_members': [],
+            '_activeMon': {}
         }
     ) {
-        this.members = createDaemonArray( builder.members );
-        this.activeMon;
+        this._members = this._createDaemonArray( builder['_members'] );
+        this._activeMon;
         this.updateActiveMon();
+    }
 
-        function createDaemonArray(daemonData) {
-            if ( daemonData.length == 0 ) {
-                return [];
-            }
+    get members() { return this._members; }
+    get activeMon() { return this._activeMon; }
 
-            return daemonData.map(daemon => new Daemon(daemon))
+    set members( daemonArray ) { this._members = daemonArray; }
+    set activeMon( daemon ) { this._activeMon = daemon }
+
+    _createDaemonArray( daemonData ) {
+        if ( daemonData.length === 0 ) {
+            return [];
         }
+
+        return daemonData.map( daemon => new Daemon( daemon ))
     }
 
     returnMembers() {
@@ -43,22 +44,22 @@ class Party {
     }
 
     updateActiveMon() {
-        if (this.members[0] === undefined) {
+        if ( this.members[ 0 ] === undefined ) {
             this.activeMon = {};
         }
         else {
-            this.activeMon = this.members[0];
+            this.activeMon = this.members[ 0 ];
         }
     }
 
-    checkIfWipe() {
+    isPartyWipe() {
         return this.members
             .every( mon => mon.isDead );
     }
 
     saveToLocation() {
-        sessionStorage.currentParty = JSON.stringify(this);
-        console.log(sessionStorage)
+        sessionStorage.currentParty = JSON.stringify( this );
+        console.log( sessionStorage );
     }
 
     switchActiveDaemonToIndex( index ) {

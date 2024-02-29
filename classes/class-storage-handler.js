@@ -26,6 +26,17 @@ class StorageHandler {
     }
 
     startFight() {
+        const PARTY = this.UIHandler.selectedParty;
+        let isADeadMonInParty = ! PARTY.members.every( daemon => ! daemon.isDead );
+
+        if ( isADeadMonInParty ) {
+            const CONFIRMATION_MSG = 'You are bringing a dead Daemon with you, are you sure you want to do that?';
+            
+            if ( ! confirm( CONFIRMATION_MSG )) {
+                return;
+            }
+        } 
+
         this.savePostInterludeData();
         // return;
         window.location.href = this.battleLocation;
@@ -60,7 +71,7 @@ class StorageHandler {
 
     savePostInterludeBillsPC() {
         const PARTY = this.UIHandler.returnSelectedParty().members;
-        const UUIDs = PARTY.map(daemon => daemon.uuid)
+        const UUIDs = PARTY.map( daemon => daemon.uuid )
         const BILLS_PC = this.battleState.allHeldMons
             .filter( daemon => ! UUIDs.includes( daemon.uuid ));
     
@@ -93,13 +104,13 @@ class StorageHandler {
     saveAtlas( atlas ) {
         sessionStorage.atlas = JSON.stringify( atlas, replacer );
 
-        function replacer(key, value) {
+        function replacer( key, value ) {
             if ( ! ( value instanceof Map )) {
                 return value;
             }
             return {
                 dataType: 'Map',
-                value: [...value]
+                value: [ ...value ]
             };
         }
     }
@@ -115,7 +126,7 @@ class StorageHandler {
         }
         
         const ROOM_WARLOCK = new Warlock( ATLAS.battleOrder.get( roomID ).lock );
-        
+
         return new BattleState( ROOM_WARLOCK );
     }
 
@@ -124,6 +135,10 @@ class StorageHandler {
 
         sessionStorage.currentParty = JSON.stringify(PARTY);
     }
+
+    getReward() {
+        // sessionStorage.newReward = JSON.stringify(fightState.enemyLock.reward);
+    }
     
     getNextChallenger() {
         const NEXT_LOCK = this.battleState.atlas
@@ -131,24 +146,10 @@ class StorageHandler {
         // sessionStorage.nextLockName = JSON.stringify(fightState.enemyLock.nextFight)
     }
     
-    getReward() {
-        // sessionStorage.newReward = JSON.stringify(fightState.enemyLock.reward);
-    }
-    
     endGame() {
         sessionStorage.clear();
         window.location.href = this.homeScreenLocation;
     }
-
-        // createPartyFromStarter( daemon ) {
-    //     console.log('Im trying to create a party')
-    // }
-
-    // copyFromAtlasString(JSONString) {
-    //     let myMap = new Map(Object.entries(JSON.parse(JSONString)));
-    //     console.dir(myMap, {depth: null})
-
-    // }
 }
 
 export { StorageHandler }

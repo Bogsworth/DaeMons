@@ -2,23 +2,23 @@ import * as parse from '../../../lib/import.js'
 import * as calc from '../../../lib/calculations.js'
 import * as util from '../../../lib/utility.js'
 
-function setupReadyButton() {
-    const READY_BTN_NAME = 'startFight';
-    const READY_BTN = document.getElementsByName(READY_BTN_NAME)[0];
+// function setupReadyButton() {
+//     const READY_BTN_NAME = 'startFight';
+//     const READY_BTN = document.getElementsByName(READY_BTN_NAME)[0];
     
-    //READY_BTN.addEventListener('click', loadBattle);
-}
+//     //READY_BTN.addEventListener('click', loadBattle);
+// }
 
-function populateNextFight( warlock ) {
-    const NAME_ID = 'lockName';
-    const DESC_ID = 'lockDescription';
+// function populateNextFight( warlock ) {
+//     const NAME_ID = 'lockName';
+//     const DESC_ID = 'lockDescription';
 
-    let nameEl = document.getElementById( NAME_ID );
-    let descEl = document.getElementById( DESC_ID );
+//     let nameEl = document.getElementById( NAME_ID );
+//     let descEl = document.getElementById( DESC_ID );
 
-    nameEl.textContent = warlock.name;
-    descEl.textContent = warlock.description;
-}
+//     nameEl.textContent = warlock.name;
+//     descEl.textContent = warlock.description;
+// }
 
 function populateDaemonInspect() {
     const SELECT_ID = 'daemonListSelect';
@@ -29,7 +29,6 @@ function populateDaemonInspect() {
     
     SEL_ELEMENT.addEventListener( 'change', updateDaemonSummary );
     MOVE_SEL_EL.addEventListener( 'change', updateMoveStats);
-
 }
 
 function updateDaemonSummary() {
@@ -206,22 +205,22 @@ function populateChallenger( name ) {
 //     // console.log(interludeState[parameter])
 // }
 
-function restoreMoveUsesSuperSet( interludeState, parameters ) {
-    parameters.forEach( parameter => {
-        restoreMoveUses( interludeState, parameter );
-    })
-}
+// function restoreMoveUsesSuperSet( interludeState, parameters ) {
+//     parameters.forEach( parameter => {
+//         restoreMoveUses( interludeState, parameter );
+//     })
+// }
 
-function restoreMoveUses( interludeState, parameter ) {
-    let daemons = interludeState[parameter];
-    // console.log(daemons)
-    // console.log(daemons[0].moves[0].remainingUses)
+// function restoreMoveUses( interludeState, parameter ) {
+//     let daemons = interludeState[parameter];
+//     // console.log(daemons)
+//     // console.log(daemons[0].moves[0].remainingUses)
 
-    daemons.forEach( mon => {
-        mon.restoreAllMoveUses();
-    })
-    interludeState.updateParam( daemons, parameter );
-}
+//     daemons.forEach( mon => {
+//         mon.restoreAllMoveUses();
+//     })
+//     interludeState.updateParam( daemons, parameter );
+// }
 
 function handleReward( rewardString, FULL_DAEMON_LIST, state ) {
     if (rewardString == "") {
@@ -256,35 +255,35 @@ function returnRandomIndexFromArray( array ) {
     return array[INDEX];
 }
 
-function loadBattle() {
-    let party = util.parseDaemonJSON(JSON.parse(sessionStorage.currentParty))
+// function loadBattle() {
+//     let party = util.parseDaemonJSON(JSON.parse(sessionStorage.currentParty))
 
-    console.log('Im in loadBattle');
-    console.log(sessionStorage);
+//     console.log('Im in loadBattle');
+//     console.log(sessionStorage);
 
-    if ( util.checkIfPartyContainsDeadMon( party )) {
-        const CONFIRMATION_MSG = 'You are bringing a dead Daemon with you, are you sure you want to do that?';
+//     if ( util.checkIfPartyContainsDeadMon( party )) {
+//         const CONFIRMATION_MSG = 'You are bringing a dead Daemon with you, are you sure you want to do that?';
         
-        if ( confirm( CONFIRMATION_MSG )) {
-            window.location.href = '../battle/battle.html';
-        }
-        else {
-            return;
-        }
-    }
+//         if ( confirm( CONFIRMATION_MSG )) {
+//             window.location.href = '../battle/battle.html';
+//         }
+//         else {
+//             return;
+//         }
+//     }
 
-    window.location.href = '../battle/battle.html';
-}
+//     window.location.href = '../battle/battle.html';
+// }
 
 export {
-    populateNextFight,
+    // populateNextFight,
     updateDaemonSummary,
-    loadBattle,
+    // loadBattle,
     // healSuperset,
-    restoreMoveUsesSuperSet,
+    // restoreMoveUsesSuperSet,
     populatePartySelects,
     keepSelectsUnique,
-    setupReadyButton,
+    // setupReadyButton,
     populateChallenger,
     handleReward,
     returnRandomIndexFromArray,

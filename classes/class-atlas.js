@@ -39,7 +39,7 @@ class Atlas {
         let tierMap = new Map();
 
         for ( let [ lockID, lockData ] of this.lockMap ) {
-            Object.keys( lockData.allowedDaemons )
+            Object.keys( lockData._allowedDaemons )
                 .forEach( tier => {
                     if ( ! tierMap.has( tier )) {
                         tierMap.set( tier, [] );
@@ -60,7 +60,6 @@ class Atlas {
             let choices = randArrayNoRepeats( locksRequired, NUM_LOCKS );
 
             choices.forEach( chosenLockIndex => {
-                console.log(TIER)
                 const LOCK_ID = this.tierMap.get( TIER )[ chosenLockIndex ];
                 const LOCK = new Warlock();
                 const NEXT_ROOM_ID = this.generateNextRoomID();
@@ -69,11 +68,8 @@ class Atlas {
                 if ( ! isFirstRoom ) {
                     this.battleOrder.get( prevRoomID ).nextRoomID.push( NEXT_ROOM_ID );
                 }
-                console.log(LOCK)
-                console.log(LOCK_ID)
-                console.log(TIER)
+
                 LOCK.generateWarlockFromID( LOCK_ID, TIER );
-                console.log(LOCK)
                 this.battleOrder.set(
                     NEXT_ROOM_ID,
                     {

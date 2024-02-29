@@ -1,47 +1,47 @@
 [{
-    "name": "Tutorial",
-    "daemonTypes": ["unaligned"],
-    "allowedDaemons": {
+    "_name": "Tutorial",
+    "_daemonTypes": ["unaligned"],
+    "_allowedDaemons": {
         "tier 0": [["Normal Guy"]]
     },
-    "description": "This guy should be a walk in the park",
-    "reward": {
+    "_description": "This guy should be a walk in the park",
+    "_reward": {
         "name": "Normal Guy",
         "moves": ["Smack", "Philanthropy", null, null]
     }
 },
 {
-    "name": "Fight Guy",
-    "daemonTypes": ["wrath"],
-    "allowedDaemons": {
+    "_name": "Fight Guy",
+    "_daemonTypes": ["wrath"],
+    "_allowedDaemons": {
         "tier 1": [["Angy Boy"], ["Punch Goblin"]],
         "tier 2": [["Barbarian"]],
         "tier 3": [["Jingoist"], ["Dragon"]]
     },
-    "description": "This guy should be a walk in the park too",
-    "reward": {
+    "_description": "This guy should be a walk in the park too",
+    "_reward": {
         "name": "Punch Goblin",
         "moves": ["Do You Lift?", "Smack", null, null]
     }
 },
 {
-    "name": "Ling Yao",
-    "daemonTypes": ["greed"],
-    "allowedDaemons": {
+    "_name": "Ling Yao",
+    "_daemonTypes": ["greed"],
+    "_allowedDaemons": {
         "tier 1": [["Imp"]],
         "tier 2": [["Imp"]],
         "tier 3": [["Imp"]]
     },
-    "description": "If you turn your back on something you wanted, then you don't deserve to call yourself 'Greed'!",
-    "reward": {
+    "_description": "If you turn your back on something you wanted, then you don't deserve to call yourself 'Greed'!",
+    "_reward": {
         "name": "Imp",
         "moves": [null, null, null, null]
     }
 },
 {
-    "name": "Pushover",
-    "daemonTypes": ["unaligned", "pride"],
-    "allowedDaemons": {
+    "_name": "Pushover",
+    "_daemonTypes": ["unaligned", "pride"],
+    "_allowedDaemons": {
         "tier 1":
         [
             ["Precocious Little Shit"],
@@ -51,8 +51,8 @@
         "tier 2": [["Precocious Little Shit"]],
         "tier 3": [["Precocious Little Shit"]]
     },
-    "description": "This guy should be a walk in the park three",
-    "reward": {
+    "_description": "This guy should be a walk in the park three",
+    "_reward": {
         "name": "Precocious Little Shit",
         "moves": ["Show Off", "Charm", null, null]
     }

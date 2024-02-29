@@ -1,7 +1,5 @@
 import * as parse from '../lib/Import.js'
-import * as util from '../lib/utility.js'
-import * as calc from '../lib/Calculations.js'
-import * as battFuncs from '../src/pages/battle/battle-funcs.js'
+
 import { Party } from './class-party.js'
 import { Warlock } from './class-warlock.js'
 import { Daemon } from './class-daemon.js'
@@ -186,7 +184,7 @@ class BattleState {
                     // Nothing?
                     break;
                 case '01':
-                    if ( ! state.playerParty.checkIfWipe())  {
+                    if ( ! state.playerParty.isPartyWipe())  {
                         HANDLER.writeToMessageBox( 'Your dude has died, RIP');
                         await waitForPress();
                         break;
@@ -201,7 +199,7 @@ class BattleState {
                     state.endFight();
                     break;
                 case '10':
-                    if ( state.enemyLock.party.checkIfWipe()) {
+                    if ( state.enemyLock.party.isPartyWipe()) {
                         HANDLER.writeToMessageBox( 'Their dude has died, hell yeah!');
                         await waitForPress();
                         HANDLER.writeToMessageBox( `You've defeated this dingus!` )
@@ -229,7 +227,7 @@ class BattleState {
                 case '11':
                     HANDLER.writeToMessageBox( 'Your dude has died, RIP');
                     await waitForPress();
-                    if ( state.playerParty.checkIfWipe() ) {
+                    if ( state.playerParty.isPartyWipe() ) {
                         HANDLER.writeToMessageBox( `You have no more Daemons to connect to` );
                         await waitForPress();
                         HANDLER.writeToMessageBox( `Without the protection of any Daemons you cannot go on`);
@@ -240,7 +238,7 @@ class BattleState {
                         // state.endFight();
                         break;
                     }
-                    if (! state.enemyLock.party.members.checkIfWipe()) {
+                    if (! state.enemyLock.party.members.isPartyWipe()) {
                         break;
                     }
                     HANDLER.writeToMessageBox( 'Their dude has died, hell yeah!');
@@ -263,14 +261,10 @@ class BattleState {
     
     useMove( attackingMon, defendingMon, chosenMove, playerActiveFlag ) {
         const DAMAGE = chosenMove.useMove( attackingMon, defendingMon );
-        let messageMaker = new Message( this, playerActiveFlag, chosenMove, DAMAGE );
-
-        console.log(attackingMon);
-        console.log(defendingMon);
-        console.log(chosenMove);
+        const message = new Message( this, playerActiveFlag, chosenMove, DAMAGE );
 
         this.handler.updateShownHP();
-        this.handler.writeToMessageBox( messageMaker.returnMessage() );
+        this.handler.writeToMessageBox( message.returnMessage() );
     }
 
     handleSwitch() {   

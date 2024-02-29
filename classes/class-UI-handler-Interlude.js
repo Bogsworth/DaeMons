@@ -19,10 +19,13 @@ class InterludeUIHandler {
         this.initUI();
     }
 
+    get selectedParty() { return this.returnSelectedParty(); }
+
     initUI() {
         this.populatePartySelects();
         this.setInitialSelectOptions();
         this.keepSelectsUnique();
+        this.populateNextFight();
     }
 
     populatePartySelects() {
@@ -82,11 +85,11 @@ class InterludeUIHandler {
 
     setInitialSelectOptions() {
         let index = 0;
-        console.log(this.state.currentParty.members)
+        console.log( this.state.currentParty.members );
 
         this.state.currentParty.members
             .map( daemon => daemon.uuid )
-            .forEach( uuid => this.partySelects[index++].value = uuid );
+            .forEach( uuid => this.partySelects[ index++ ].value = uuid );
     }
 
     removeSelectOptions(selectElement) {
@@ -110,6 +113,17 @@ class InterludeUIHandler {
 
         PARTY.setParty( SELECTED_MONS );
         return PARTY;
+    }
+
+    populateNextFight() {
+        const NEXT_LOCK = this.state.nextLock;
+        const NAME_ID = 'lockName';
+        const DESC_ID = 'lockDescription';
+        const NAME_ELEMENT = document.getElementById( NAME_ID );
+        const DESCRIPTION_ELEMENT = document.getElementById( DESC_ID );
+
+        NAME_ELEMENT.textContent = NEXT_LOCK.name;
+        DESCRIPTION_ELEMENT.textContent = NEXT_LOCK.description;
     }
 
 }

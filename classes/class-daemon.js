@@ -23,9 +23,6 @@ class Daemon {
     }) {
         let formattedBuilder = this.generateDaemonBuildObject( builderJSON );
 
-        console.log(formattedBuilder);
-        console.log(JSON.stringify(formattedBuilder))
-
         this._uuid = formattedBuilder[ '_uuid' ];
         this._id = formattedBuilder[ '_id' ]
         this._name = formattedBuilder[ '_name' ];
@@ -47,7 +44,7 @@ class Daemon {
     
     // TODO: have moves return only moves, not nulls
     get moves() { return this._moves; }
-    get movesNumberKnown() { this.returnTotalMovesKnown(); }
+    get movesNumberKnown() { return this._returnTotalMovesKnown(); }
 
     get stats() { return this._stats; }
     get tempStatChange() { return this._tempStatChange; }
@@ -141,7 +138,7 @@ class Daemon {
     }
 
     addMove( newMove ) {
-        if ( this.returnTotalMovesKnown() == 4 ) {
+        if ( this.movesNumberKnown == 4 ) {
             throw new Error('MovesFull');
         }
 
@@ -233,9 +230,9 @@ class Daemon {
         this.populateMovesWithObjs();
     }
 
-    returnTotalMovesKnown() {
+    _returnTotalMovesKnown() {
         const doesMoveExist = (move) => move != null;
-        
+
         return this.moves.filter( doesMoveExist ).length;
     }
 

@@ -259,7 +259,7 @@ class UIHandler {
             ['expandedMonHP', myMon.currentHPReadable]
         ]);
     
-        for ( let i = 0; i < myMon.returnTotalMovesKnown(); i++ ) {
+        for ( let i = 0; i < myMon.movesNumberKnown; i++ ) {
             let currentMoveIds = this._moveArrayId[ i ];
             let currentMove = myMon.moves[ i ];
     
