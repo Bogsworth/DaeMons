@@ -34,13 +34,12 @@
 
 import { BattleState } from '../../../classes/class-battle-state.js';
 import { Atlas } from '../../../classes/class-atlas.js'
-import { UIHandler } from '../../../classes/class-UI-handler.js';
-import { Daemon } from '../../../classes/class-daemon.js';
+import { BattleUIHandler } from '../../../classes/class-UI-handler-battle.js';
 import { StorageHandler } from '../../../classes/class-storage-handler.js';
 
 const STORAGE = new StorageHandler();
-const LEVELS = STORAGE.restoreAtlas();
-const FIGHT_STATE = STORAGE.loadRoom();
+const LEVELS = new Atlas( STORAGE.getAtlasBuilder() );
+const FIGHT_STATE = new BattleState( STORAGE.getRoomWarlock() );
 
 // #region
 // ------
@@ -55,11 +54,13 @@ const FIGHT_STATE = STORAGE.loadRoom();
 // ------
 // #endregion
 
-const HANDLER = new UIHandler( FIGHT_STATE );
+const HANDLER = new BattleUIHandler( FIGHT_STATE );
+
+STORAGE.state = FIGHT_STATE;
+STORAGE.UIHandler = HANDLER;
 
 FIGHT_STATE.handler = HANDLER;
 
+console.log( STORAGE );
 console.log( LEVELS );
-console.log( sessionStorage );
 console.log( FIGHT_STATE );
-

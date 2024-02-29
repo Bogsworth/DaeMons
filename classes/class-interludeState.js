@@ -34,8 +34,8 @@ class InterludeState {
     }
 
     allHeldMonsLoader( storage ) {
-        // .map( member => member ) is required or else billsPC ends up pointint at party,
-        // not copying into its own instance
+        // .map( member => member ) is required or else billsPC ends up pointing
+        // at party, not copying into its own instance
         let billsPC = this.currentParty.returnMembers().map( member => member );
         let parsedStorage = undefined;
 

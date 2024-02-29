@@ -1,4 +1,4 @@
-class UIHandler {
+class BattleUIHandler {
     constructor( battleState ) {
         this._battleState = battleState;
         this._moveArrayId = [[
@@ -379,4 +379,4 @@ class UIHandler {
 
 }
 
-export { UIHandler }
+export { BattleUIHandler }

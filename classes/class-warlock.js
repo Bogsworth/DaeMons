@@ -27,8 +27,6 @@ class Warlock {
             formattedBuilder = this.returnBuildObjFromLockID( builder, 0 );
         }
 
-        console.log(formattedBuilder)
-
         this._id = formattedBuilder[ '_id' ];
         this._name = formattedBuilder[ '_name' ];
         this._daemonTypes = formattedBuilder[ '_daemonTypes' ];
@@ -90,9 +88,6 @@ class Warlock {
         }
         const LOCK_MAP = parse.createWarlocks( lockJSON );
         const LOCK_INFO = LOCK_MAP.get( ID );
-
-        console.log( LOCK_INFO );
-
         const PARTY_CREATOR = this.partyCreator(
             LOCK_INFO._allowedDaemons[ tier ],
             tier,

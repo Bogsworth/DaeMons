@@ -23,44 +23,39 @@
 import * as intFuncs from './interlude-funcs.js';
 import { InterludeState } from '../../../classes/class-interludeState.js';
 import { StorageHandler } from '../../../classes/class-storage-handler.js';
-import { InterludeUIHandler } from '../../../classes/class-UI-handler-Interlude.js';
+import { InterludeUIHandler } from '../../../classes/class-UI-handler-interlude.js';
 import { Daemon } from '../../../classes/class-daemon.js';
+import { Atlas } from '../../../classes/class-atlas.js';
 
 
-let storage = new StorageHandler();
-let lockAtlas = storage.restoreAtlas();
-let interludeState = new InterludeState( lockAtlas );
+const STORAGE = new StorageHandler();
+const LEVELS = new Atlas( STORAGE.getAtlasBuilder() );
+const INT_STATE = new InterludeState( LEVELS ); // Interlude State
 
-
+// #region
+// ------
+// Testing giving monID005 aka 'Angy Boy' after each fight
 let tempDaemon = new Daemon();
 tempDaemon.generateDaemonFromID( 'monID005' );
-interludeState.allHeldMons.push( tempDaemon );
+INT_STATE.allHeldMons.push( tempDaemon );
+// ------
+// #endregion
 
+const HANDLER = new InterludeUIHandler( INT_STATE );
 
-let UIHandler = new InterludeUIHandler( interludeState );
+STORAGE.state = INT_STATE;
+STORAGE.UIHandler = HANDLER;
 
+INT_STATE.healParty();
+INT_STATE.restorePartyMoves();
 
-console.log( storage );
-console.log( lockAtlas );
-console.log( interludeState );
-
-
-interludeState.healParty();
-interludeState.restorePartyMoves();
-
-
-// intFuncs.handleReward
-// (
-//     JSON.stringify(interludeState.newReward),
-//     FULL_DAEMON_TABLE,
-//     interludeState
-// );
-storage.battleState = interludeState;
-storage.UIHandler = UIHandler;
+console.log( STORAGE );
+console.log( LEVELS );
+console.log( INT_STATE );
 
 intFuncs.populateDaemonInspect();
 
 document.getElementsByName('startFight')[0].addEventListener(
     'click',
-    () => storage.startFight()
+    () => STORAGE.startFight()
 );
