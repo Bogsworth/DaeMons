@@ -10,20 +10,51 @@ class InterludeState {
         this.currentParty = this.partyLoader( sessionStorage.currentParty );
         this.nextRoomsArray = this.nextRooms;
 
-        // TODO: handle multiple possible next rooms
-        let warlockConstructor = atlas.battleOrder.get( this.nextRoomsArray[0] ).lock;
-        this.nextLock = new Warlock( warlockConstructor )
+        let warlockConstructor = this.enemyLockLoader();
+        this.nextLock = new Warlock( warlockConstructor );
         this.nextLockName = this.nextLock.name;
         
         this.newReward = '';
         this.allHeldMons = this.allHeldMonsLoader( sessionStorage.allHeldMons );
+        this._isGameOver = false;
+
+        this.initInterlude();
     }
 
-    get nextRooms() {
-        return this.atlas
-            .battleOrder
-            .get( sessionStorage.previousRoomID )
-            .nextRoomID;
+    get nextRooms() { return this.nextRoomArrayGetter(); }
+    get isGameOver() { return this._isGameOver; }
+
+    set isGameOver( isItOver ) { this._isGameOver = isItOver; }
+
+    initInterlude() {
+        this.checkIfAtEnd();
+    }
+
+    checkIfAtEnd() {
+        // If the nextRoomsArray is empty, there are no more rooms
+        // Therefore we are at the end
+        if ( this.nextRoomsArray.length === 0 ) {
+            this.isGameOver = true;
+        }
+    }
+
+    // TODO: handle multiple possible next rooms
+    enemyLockLoader() {
+        let nextLock;
+
+        try {
+            nextLock = this.atlas.battleOrder
+                .get( this.nextRoomsArray[0] ).lock;
+        } catch ( error ) {
+            if ( this.nextRoomsArray.length === 0 ) {
+                console.log('nextRoom is empty array, we should be at end game');
+            }
+            else {
+                console.log('idk why enemyLockLoader() failed');
+            }
+        }
+        
+        return nextLock;
     }
 
     partyLoader( storage ) {
@@ -58,7 +89,7 @@ class InterludeState {
         let members = this.currentParty.members;
 
         members
-            .filter( daemon => daemon.currentHP > 0 )
+            .filter( daemon => daemon.isAlive )
             .forEach( daemon => daemon.restoreHP() );
     }
 
@@ -68,8 +99,19 @@ class InterludeState {
         members.forEach( daemon => daemon.restoreAllMoveUses() )
     }
 
+    nextRoomArrayGetter() {
+        if ( sessionStorage.previousRoomID === "undefined" ) {
+            sessionStorage.previousRoomID = 'roomID000';
+        }
+
+        const NEXT_ROOM_ARRAY = this.atlas
+            .battleOrder
+            .get( sessionStorage.previousRoomID )
+            .nextRoomID;
+
+        return NEXT_ROOM_ARRAY;
+    }
+
 };
 
-export {
-    InterludeState
-}
+export { InterludeState }

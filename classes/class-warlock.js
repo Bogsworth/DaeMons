@@ -1,4 +1,5 @@
 import { Daemon } from './class-daemon.js'
+import { Move } from './class-move.js';
 import { Party } from './class-party.js'
 import lockJSON from '../data/enemy-warlocks.json' assert { type: "json"};
 import * as calc from '../lib/Calculations.js'
@@ -33,7 +34,8 @@ class Warlock {
         this._tier = formattedBuilder[ '_tier' ];
         this._party = new Party( formattedBuilder[ '_party' ] );
         this._description = formattedBuilder[ '_description' ];
-        this._reward = formattedBuilder[ '_reward' ];
+        this._rawRewardData = formattedBuilder[ '_reward' ];
+        this._reward = this._createReward( this._rawRewardData );
     }
 
     get id() { return this._id; }
@@ -42,7 +44,9 @@ class Warlock {
     get tier() { return this._tier };
     get party() { return this._party; }
     get description() { return this._description; }
+    get rawRewardData() { return this._rawRewardData; }
     get reward() { return this._reward; }
+    get hasReward() { return ( this._reward );}
 
     set id( id ) { this._id = id; }
     set name( name ) { this._name = name; }
@@ -59,8 +63,8 @@ class Warlock {
         const LOCK_MAP = parse.createWarlocks(lockJSON);
         const LOCK_INFO = LOCK_MAP.get( ID );
 
-        console.log(LOCK_MAP)
-        console.log(LOCK_INFO)
+        console.log(LOCK_MAP);
+        console.log(LOCK_INFO);
 
         const PARTY_CREATOR = this.partyCreator( 
             LOCK_INFO._allowedDaemons[ tier ],
@@ -112,21 +116,23 @@ class Warlock {
         const SELECTED_DAEMON_NAMES = allowedDaemonsOfTier[ INDEX ];
 
         return SELECTED_DAEMON_NAMES
-            .map( daemonName => createDaemonFromName( daemonName, tier, isBossFlag ));
+            .map( daemonName => 
+                this.createDaemonFromName( daemonName, tier, isBossFlag )
+            );     
+    }
 
-        function createDaemonFromName( name, tier, isBossFlag ) {
-            const MON_TABLE = parse.createMonTable()
-            const DAEMON_ID = returnIDFromName( name, MON_TABLE );
-            const DAEMON = new Daemon();
+    createDaemonFromName( name, tier, isBossFlag ) {
+        const DAEMON_ID = returnIDFromName( name );
+        const DAEMON = new Daemon();
 
-            DAEMON.generateDaemonFromID( DAEMON_ID, tier, isBossFlag )
-            return DAEMON;
-        }
+        DAEMON.generateDaemonFromID( DAEMON_ID, tier, isBossFlag )
+        return DAEMON;
 
-        function returnIDFromName( name, map ) {
+        function returnIDFromName( name ) {
+            const MON_TABLE = parse.createMonTable();
             let id = false;
             
-            map.forEach( move => {
+            MON_TABLE.forEach( move => {
                 if (move._name !== name) { return; }
                 id = move._id;
             });
@@ -156,6 +162,21 @@ class Warlock {
         
         NEW_PARTY.setParty( partyArray );
         return NEW_PARTY;
+    }
+
+    _createReward( rewardData ) {
+        // const REWARD = this._reward;
+        const REWARD = rewardData;
+
+        if ( REWARD.type === "Daemon" ) {
+            const REWARD_MON = this.createDaemonFromName( REWARD.name, this.tier, false );
+
+            return REWARD_MON;
+        }
+        if ( REWARD.type === "Move" ) {
+            console.log( 'Currently cant create Mover reward' );
+            return;
+        }
     }
 }
 

@@ -245,10 +245,9 @@ class BattleState {
                     await waitForPress();
                     HANDLER.writeToMessageBox( `You've defeated this dingus!` )
                     await waitForPress();
-                    if ( state.enemyLock.reward != "" ) {
+                    if ( state.enemyLock.hasReward ) {
                         let reward = state.enemyLock.reward;
 
-                        // TODO: Make better reward handling
                         HANDLER.writeToMessageBox( `You've earned a(n) ${reward.name}!`);
                         await waitForPress();
                     }
@@ -263,7 +262,7 @@ class BattleState {
         const DAMAGE = chosenMove.useMove( attackingMon, defendingMon );
         const message = new Message( this, playerActiveFlag, chosenMove, DAMAGE );
 
-        console.log(message)
+        console.log(message);
 
         this.handler.updateShownHP();
         this.handler.writeToMessageBox( message.text );

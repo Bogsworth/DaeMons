@@ -54,6 +54,7 @@ class Daemon {
     get currentHP() { return this._currentHP; }
     get currentHPReadable() { return this._currentHP + '/' + this._stats.HP + ' hp'; }
     get isDead() { return this._currentHP <= 0; }
+    get isAlive() { return this._currentHP > 0; }
 
     get statAttack() { return this._stats.attack; }
     get statDefense() { return this._stats.defense; }

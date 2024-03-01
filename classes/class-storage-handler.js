@@ -1,7 +1,7 @@
 import { Atlas } from "./class-atlas.js";
-import { BattleState } from "./class-battle-state.js";
 import { Warlock } from "./class-warlock.js";
-import { Party } from "./class-party.js";
+import { Daemon } from "./class-daemon.js";
+import { Move } from "./class-move.js";
 
 class StorageHandler {
     constructor( currentState = {} ) {
@@ -22,13 +22,33 @@ class StorageHandler {
     get interludePage() { return this._locations.interludePage; }
     get battlePage() { return this._locations.battlePage; }
     get chosenParty() { return this.UIHandler.selectedParty; }
+    get isGameOver() { return this._state.isGameOver; }
 
     set state( newState ) { this._state = newState; }
     set UIHandler( handler ) { this._UIHandler = handler; }
 
+    checkIfEndGame() {
+        if ( ! this.isGameOver ) {
+            return;
+        }
+
+        const END_GAME_MSG = "Congratulations! You've beaten the game!\n" + 
+            "Would you like to play again?\n" +
+            "Please pretend this says 'Yes' and 'No'";
+        
+        if ( confirm( END_GAME_MSG ) ) {
+            this.endGame();
+        }
+        else {
+            console.log( 'Somehow quit program' );
+            // TODO: Quit program
+        }
+    }
+
     endFight() {
         this.savePostFightData();
-        //return;
+        // Uncomment and recomment to pause stay on screen
+        // return;
         window.location.href = this.interludePage;
     }
 
@@ -45,6 +65,7 @@ class StorageHandler {
         } 
 
         this.savePostInterludeData();
+        // Uncomment and recomment to pause stay on screen
         // return;
         window.location.href = this.battlePage;
     }
@@ -52,8 +73,8 @@ class StorageHandler {
     savePostFightData() {
         console.log(this.state);
         this.savePostFightParty();
-        this.getReward();
-        this.getNextChallenger();
+        this.saveReward();
+        this.iterateRoom();
     }
 
     savePostInterludeData() {
@@ -98,8 +119,6 @@ class StorageHandler {
 
         const ATLAS_BUILDER = JSON.parse( atlasInfoString, reviver );
         return ATLAS_BUILDER;
-       
-        // return new Atlas( JSON.parse( atlasInfoString, reviver ));
 
         function reviver( key, value ) {
             if ( typeof value === 'object' && value !== null ) {
@@ -146,14 +165,38 @@ class StorageHandler {
         sessionStorage.currentParty = JSON.stringify(PARTY);
     }
 
-    getReward() {
-        // sessionStorage.newReward = JSON.stringify(fightState.enemyLock.reward);
+    saveReward() {
+        const REWARD_OBJECT = this._state.enemyLock.reward;
+        const REWARD_TYPE = this._state.enemyLock.rawRewardData.type;
+        const TO_SAVE = {
+            data: REWARD_OBJECT,
+            type: REWARD_TYPE
+        };
+        
+        sessionStorage.newReward = JSON.stringify( TO_SAVE );
+    }
+
+    loadReward() {
+        const REWARD_DATA = JSON.parse( this._initialSessionStorage.newReward );
+        
+        if ( REWARD_DATA.type === 'Daemon' ) {
+            const REWARD = new Daemon( REWARD_DATA.data );
+
+            this._state.allHeldMons.push( REWARD );
+            return
+        }
+
+        if ( REWARD_DATA.type === 'Move' ) {
+            const REWARD = new Move( REWARD_DATA.data );
+
+            // TODO: Handle a move as a reward
+            console.log( 'idk how to handle this yet...' );
+            return;
+        }
     }
     
-    getNextChallenger() {
-        const NEXT_LOCK = this.state.atlas
-
-        // sessionStorage.nextLockName = JSON.stringify(fightState.enemyLock.nextFight)
+    iterateRoom() {
+        sessionStorage.previousRoomID = sessionStorage.currentRoomID;
     }
     
     endGame() {

@@ -6,6 +6,7 @@
     },
     "_description": "This guy should be a walk in the park",
     "_reward": {
+        "type": "Daemon",
         "name": "Normal Guy",
         "moves": ["Smack", "Philanthropy", null, null]
     }
@@ -20,6 +21,7 @@
     },
     "_description": "This guy should be a walk in the park too",
     "_reward": {
+        "type": "Daemon",
         "name": "Punch Goblin",
         "moves": ["Do You Lift?", "Smack", null, null]
     }
@@ -34,6 +36,7 @@
     },
     "_description": "If you turn your back on something you wanted, then you don't deserve to call yourself 'Greed'!",
     "_reward": {
+        "type": "Daemon",
         "name": "Imp",
         "moves": [null, null, null, null]
     }
@@ -53,6 +56,7 @@
     },
     "_description": "This guy should be a walk in the park three",
     "_reward": {
+        "type": "Daemon",
         "name": "Precocious Little Shit",
         "moves": ["Show Off", "Charm", null, null]
     }

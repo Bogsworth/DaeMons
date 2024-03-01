@@ -9,12 +9,47 @@ class InterludeUIHandler {
             'partySelect1',
             'partySelect2'
         ];
-        this._daemonSelectID = 'daemonListSelect';
         this._partySelects = [
             document.getElementById( this._partySelectArray[0] ),
             document.getElementById( this._partySelectArray[1] ),
             document.getElementById( this._partySelectArray[2] ),
         ];
+        this._moveArrayId = [[
+            'moveName0',
+            'moveType0',
+            'movePower0',
+            'moveUses0',
+            'moveAccuracy0',
+            'moveStatsAffected0',
+            'moveDesc0'
+        ],
+        [
+            'moveName1',
+            'moveType1',
+            'movePower1',
+            'moveUses1',
+            'moveAccuracy1',
+            'moveStatsAffected1',
+            'moveDesc1'
+        ],
+        [
+            'moveName2',
+            'moveType2',
+            'movePower2',
+            'moveUses2',
+            'moveAccuracy2',
+            'moveStatsAffected2',
+            'moveDesc2'
+        ],
+        [
+            'moveName3',
+            'moveType3',
+            'movePower3',
+            'moveUses3',
+            'moveAccuracy3',
+            'moveStatsAffected3',
+            'moveDesc3'
+        ]];
 
         this.initUI();
     }
@@ -26,6 +61,108 @@ class InterludeUIHandler {
         this.setInitialSelectOptions();
         this.keepSelectsUnique();
         this.populateNextFight();
+
+        this.monButtonsInit();
+        this.updateInfoBox( this._state.allHeldMons );
+    }
+
+    monButtonsInit() {
+        const HANDLER = this;
+
+        this.generateMonButtons()
+            .forEach(
+                buttId => this.attachButtonId(
+                    () => HANDLER.expandInfoBox( buttId, HANDLER._state ),
+                    buttId
+                )
+            )   
+    }
+
+    generateMonButtons() {
+        let monArray = this._state.allHeldMons;
+        let infoDiv = document.getElementById( 'bottomBar' );
+        let i = 0;
+        let buttonIdArray = [];
+        
+        monArray.forEach(mon => {
+            let newButt = document.createElement( 'button' );
+            let idText = 'mon' + i++;
+    
+            newButt.textContent = mon.name;
+            newButt.name = idText; 
+            newButt.id = idText;
+            infoDiv.appendChild( newButt );
+    
+            buttonIdArray.push( idText );
+        })
+    
+        return buttonIdArray;
+    }
+
+    attachButtonId( doFunction, elementId ) {
+        let el = document.getElementById( elementId );
+    
+        document.addEventListener( "DOMContentLoaded", () => {
+            el.addEventListener( "click", doFunction, false );
+        })
+    }
+
+    expandInfoBox( buttonId, state ) {
+        let elBar = document.getElementById( 'expandingBottomBar' );
+        let hiddenElementMatcher = document.getElementById( 'buttonMatcher' );
+        let currentText = hiddenElementMatcher.textContent;
+    
+        if (
+            ! ( elBar.style.flexGrow == 0 ) &&
+            currentText == buttonId
+        ) {
+            elBar.style.flexGrow = 0;
+        }
+        else {
+            elBar.style.flexGrow = 1;
+            // Update info
+            this.updateInfoBox( state.allHeldMons, buttonId );
+            hiddenElementMatcher.textContent = buttonId;
+        }
+    }
+
+    updateInfoBox( mons, buttId = false ) {
+        let myMon;
+        if ( buttId == false ) {
+            myMon = mons;
+        }
+        else {
+            let buttNumb = buttId.slice(-1)
+            myMon = mons[ buttNumb ];
+        }
+    
+        let constructorMap = new Map([
+            ['statInfo0', myMon.type],
+            ['statInfo1', myMon.statAttack],
+            ['statInfo2', myMon.statDefense],
+            ['statInfo3', myMon.statSpeed],
+            ['expandedMon', myMon.name],
+            ['expandedMonHP', myMon.currentHPReadable]
+        ]);
+    
+        for ( let i = 0; i < myMon.movesNumberKnown; i++ ) {
+            let currentMoveIds = this._moveArrayId[ i ];
+            let currentMove = myMon.moves[ i ];
+    
+            constructorMap.set( currentMoveIds[0], currentMove.name );
+            constructorMap.set( currentMoveIds[1], currentMove.type );
+            constructorMap.set( currentMoveIds[2], currentMove.power );
+            constructorMap.set( currentMoveIds[3], currentMove.usesReadable );
+            constructorMap.set( currentMoveIds[4], currentMove.accuracy );
+            constructorMap.set( currentMoveIds[5], currentMove.statsAffectedArray );
+            constructorMap.set( currentMoveIds[6], currentMove.description );
+        }
+    
+        constructorMap.forEach(( info, id ) => {
+            let el = document.getElementById( id );
+    
+            el.textContent = info;
+        }) 
     }
 
     populatePartySelects() {

@@ -1,12 +1,13 @@
 /*
 # TODO List
 ## Required TODOs
-- [ ] TODO: ??
+- [ ] TODO: Figure out why the next roomID doesn't change
 
 ## Nice to have TODOs
 - [ ] TODO: Better format for move information ( moveToPrintable() )
 - [ ] TODO: Better formatting in general
 - [ ] TODO: Make healing depend on difficulty
+
 
 ## TODONE!!!
 - [x] TODONE: When switching Mons, HP didn't get restored for some reason
@@ -20,30 +21,30 @@
     ~~- [ ] TODO: Remove dead Daemons~~
 */
 
-import * as intFuncs from './interlude-funcs.js';
 import { InterludeState } from '../../../classes/class-interludeState.js';
 import { StorageHandler } from '../../../classes/class-storage-handler.js';
 import { InterludeUIHandler } from '../../../classes/class-UI-handler-interlude.js';
-import { Daemon } from '../../../classes/class-daemon.js';
 import { Atlas } from '../../../classes/class-atlas.js';
-
 
 const STORAGE = new StorageHandler();
 const LEVELS = new Atlas( STORAGE.getAtlasBuilder() );
 const INT_STATE = new InterludeState( LEVELS ); // Interlude State
 
+STORAGE.state = INT_STATE;
+STORAGE.loadReward();
+STORAGE.checkIfEndGame();
+
 // #region
 // ------
 // Testing giving monID005 aka 'Angy Boy' after each fight
-let tempDaemon = new Daemon();
-tempDaemon.generateDaemonFromID( 'monID005' );
-INT_STATE.allHeldMons.push( tempDaemon );
+// let tempDaemon = new Daemon();
+// tempDaemon.generateDaemonFromID( 'monID005' );
+// INT_STATE.allHeldMons.push( tempDaemon );
 // ------
 // #endregion
 
 const HANDLER = new InterludeUIHandler( INT_STATE );
 
-STORAGE.state = INT_STATE;
 STORAGE.UIHandler = HANDLER;
 
 INT_STATE.healParty();
@@ -52,8 +53,6 @@ INT_STATE.restorePartyMoves();
 console.log( STORAGE );
 console.log( LEVELS );
 console.log( INT_STATE );
-
-intFuncs.populateDaemonInspect();
 
 document.getElementsByName('startFight')[0].addEventListener(
     'click',
