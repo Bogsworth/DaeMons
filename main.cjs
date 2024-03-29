@@ -6,7 +6,7 @@ const createWindow = () => {
         width: 1200,
         height: 1400,
         webPreferences: {
-            preload: path.join(__dirname, 'preload-main.js')
+            preload: path.join(__dirname, 'main-preload.js')
           }
     });
 
@@ -17,7 +17,7 @@ app.whenReady().then(() => {
     ipcMain.handle('ping', () => 'pong')
     ipcMain.handle('start', () =>
     {
-        return 'battle.html'
+        // return 'battle.html'
     })
     createWindow();
 

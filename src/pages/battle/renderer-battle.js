@@ -32,54 +32,35 @@
 - [x] TODONE: Add power points equivalent
 */
 
-import * as util from '../../../lib/utility.js'
-import * as parse from '../../../lib/import.js'
-import * as scripts from './battle-funcs.js'
+import { BattleState } from '../../../classes/class-battle-state.js';
+import { Atlas } from '../../../classes/class-atlas.js'
+import { BattleUIHandler } from '../../../classes/class-UI-handler-battle.js';
+import { StorageHandler } from '../../../classes/class-storage-handler.js';
 
-const TYPE_TABLE = parse.createCounterTable();
+const STORAGE = new StorageHandler();
+const LEVELS = new Atlas( STORAGE.getAtlasBuilder() );
+const FIGHT_STATE = new BattleState( STORAGE.getRoomWarlock() );
 
-// Note: myParty[0] always starts as the active Daemon;
-let myParty = scripts.loadMyParty();
-let currentLock = scripts.loadCurrentLock();
-let fightState = {
-    TYPE_TABLE: TYPE_TABLE,
-    myParty: myParty,
-    myActiveMon: myParty[0],
-    enemyLock: currentLock,
-    theirParty: currentLock.party,
-    theirActiveMon: currentLock.party[0]
-}
-const HEADER = scripts.generateHeaderFromWarlock( fightState.enemyLock );
+// #region
+// ------
+// Testing with multiple mons
 
-console.log(sessionStorage)
-console.log(fightState)
+// console.log(FIGHT_STATE.playerParty.members)
+// let tempDaemon = new Daemon()
+// tempDaemon.generateDaemonFromID('monID002')
+// FIGHT_STATE.playerParty.addMonToParty(tempDaemon)
+// console.log(FIGHT_STATE.playerParty.members)
 
-scripts.changeHeader( HEADER );
-util.populateSelect( fightState.myActiveMon.moves, 'selectMoves' );
-util.populateSelect( fightState.myParty, 'selectMons' );
+// ------
+// #endregion
 
-let monButtons = scripts.generateMonButtons(fightState.myParty);
+const HANDLER = new BattleUIHandler( FIGHT_STATE );
 
-util.attachButton(
-    function() {
-        scripts.handleAttack( fightState );
-    },
-    'attack' );
-util.attachButton(
-    function () {
-        scripts.handleSwitch( fightState )
-    },
-    'switch' );
-util.attachButton( scripts.handleOk, 'ok' );
+STORAGE.state = FIGHT_STATE;
+STORAGE.UIHandler = HANDLER;
 
-monButtons.forEach( buttId => {
-    util.attachButton(
-        function() {
-            scripts.expandInfoBox( buttId, fightState );
-        },
-        buttId
-    );
-})
+FIGHT_STATE.handler = HANDLER;
 
-scripts.updateMon( fightState.myActiveMon, true );
-scripts.updateMon( fightState.theirActiveMon, false );
+console.log( STORAGE );
+console.log( LEVELS );
+console.log( FIGHT_STATE );

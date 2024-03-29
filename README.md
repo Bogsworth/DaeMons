@@ -13,15 +13,18 @@
 - A move to create more, slightly weaker, mons in your empty party slot(s)
 - Init as a move, maybe a self destruct that maximizes your next mon's attack, defense, speed, etc.?
 
-### Linux Daemon Ideas
- - Init
- - BioD
- - CronD
- - FingerD
- - SwapperD
- - SysLogD
- - SyncD
- - Reap Children as a move, normally killing a process's children but... it sounds terrible lol
+### Linux Type
+#### Daemon Ideas
+- Init
+- BioD
+- CronD
+- FingerD
+- SwapperD
+- SysLogD
+- SyncD
+- Reap Children as a move, normally killing a process's children but... it sounds terrible lol
+#### Moves
+- BlockChain
 
 ## Current Type Counter Table
 |  | Unaligned | Lust | Gluttony | Greed | Sloth | Wrath | Envy | Pride |

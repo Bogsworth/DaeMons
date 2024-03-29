@@ -1,6 +1,6 @@
 {
   "devDependencies": {
-    "electron": "^27.1.0"
+    "electron": "^27.3.2"
   },
   "name": "daemons",
   "description": "Rogue-like game for fun",

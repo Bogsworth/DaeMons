@@ -1,8 +1,8 @@
-import * as util from './lib/utility.js'
+import { Party } from './classes/class-party.js';
 
 function createStarterSection( daemon, optionId ) {
-    const NAME = daemon.returnName();
-    const TYPE = typeToReadable(daemon.returnType());
+    const NAME = daemon.name;
+    const TYPE = daemon.typeAsString;
     const DESC = `The daemon ${NAME} is a pretty cool dude.`      
     let elIdMap = new Map([
         ['option0', ['name0', 'type0', 'desc0']],
@@ -21,17 +21,14 @@ function createStarterSection( daemon, optionId ) {
 }
 
 function startGame( chosenMon ) {
-    util.savePostFightParty( [chosenMon] );
-}
+    // util.savePostFightParty( [chosenMon] );
+    let party = new Party()
+    party.addMonToParty( chosenMon )
+    party.saveToLocation();
+    console.log( sessionStorage )
 
-// Helper functions
-function typeToReadable( typeArray ) {
-    if ( typeArray.length == 1 ) {
-        return typeArray[0];
-    }
-    else if ( typeArray.length == 2) {
-        return `${typeArray[0]}, ${typeArray[1]}`;
-    }
+    window.location.href = "./src/pages/battle/battle.html"
+
 }
 
 export {

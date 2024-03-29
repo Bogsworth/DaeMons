@@ -1,10 +1,10 @@
 [{
-    "name": "Smack",
-    "type": "unaligned",
-    "power": 35,
-    "accuracy": 100,
-    "uses": 30,
-    "statsAffected": {
+    "_name": "Smack",
+    "_type": "unaligned",
+    "_power": 35,
+    "_accuracy": 100,
+    "_uses": 30,
+    "_statsAffected": {
         "self": {
             "attack": 0,
             "defense": 0,
@@ -18,12 +18,12 @@
     }
 },
 {
-    "name": "Bind",
-    "type": "lust",
-    "power": 20,
-    "accuracy": 100,
-    "uses": 30,
-    "statsAffected": {
+    "_name": "Bind",
+    "_type": "lust",
+    "_power": 20,
+    "_accuracy": 100,
+    "_uses": 30,
+    "_statsAffected": {
         "self": {
             "attack": 0,
             "defense": 0,
@@ -37,12 +37,12 @@
     }
 },    
 {
-    "name": "Chain Whip",
-    "type": "lust",
-    "power": 50,
-    "accuracy": 95,
-    "uses": 20,
-    "statsAffected": {
+    "_name": "Chain Whip",
+    "_type": "lust",
+    "_power": 50,
+    "_accuracy": 95,
+    "_uses": 20,
+    "_statsAffected": {
         "self": {
             "attack": 0,
             "defense": 0,
@@ -57,12 +57,12 @@
 
 },
 {
-    "name": "Charm",
-    "type": "lust",
-    "power": 0,
-    "accuracy": 100,
-    "uses": 20,
-    "statsAffected": {
+    "_name": "Charm",
+    "_type": "lust",
+    "_power": 0,
+    "_accuracy": 100,
+    "_uses": 20,
+    "_statsAffected": {
         "self": {
             "attack": 0,
             "defense": 0,
@@ -78,12 +78,12 @@
 },
 
 {
-    "name": "Nibble",
-    "type": "gluttony",
-    "power": 20,
-    "accuracy": 100,
-    "uses": 30,
-    "statsAffected": {
+    "_name": "Nibble",
+    "_type": "gluttony",
+    "_power": 20,
+    "_accuracy": 100,
+    "_uses": 30,
+    "_statsAffected": {
         "self": {
             "attack": 0,
             "defense": 0,
@@ -97,12 +97,12 @@
     }
 },
 {
-    "name": "Bite",
-    "type": "gluttony",
-    "power": 55,
-    "accuracy": 95,
-    "uses": 20,
-    "statsAffected": {
+    "_name": "Bite",
+    "_type": "gluttony",
+    "_power": 55,
+    "_accuracy": 95,
+    "_uses": 20,
+    "_statsAffected": {
         "self": {
             "attack": 0,
             "defense": 0,
@@ -116,12 +116,12 @@
     }
 },
 {
-    "name": "Vore",
-    "type": "gluttony",
-    "power": 130,
-    "accuracy": 80,
-    "uses": 5,
-    "statsAffected": {
+    "_name": "Vore",
+    "_type": "gluttony",
+    "_power": 130,
+    "_accuracy": 80,
+    "_uses": 5,
+    "_statsAffected": {
         "self": {
             "attack": 0,
             "defense": 0,
@@ -136,12 +136,12 @@
 },
 
 {
-    "name": "Buyout",
-    "type": "greed",
-    "power": 35,
-    "accuracy": 90,
-    "uses": 25,
-    "statsAffected": {
+    "_name": "Buyout",
+    "_type": "greed",
+    "_power": 35,
+    "_accuracy": 90,
+    "_uses": 25,
+    "_statsAffected": {
         "self": {
             "attack": 0,
             "defense": 0,
@@ -155,12 +155,12 @@
     }
 },
 {
-    "name": "Fuck You Money",
-    "type": "greed",
-    "power": 70,
-    "accuracy": 100,
-    "uses": 10,
-    "statsAffected": {
+    "_name": "Fuck You Money",
+    "_type": "greed",
+    "_power": 70,
+    "_accuracy": 100,
+    "_uses": 10,
+    "_statsAffected": {
         "self": {
             "attack": 0,
             "defense": 0,
@@ -174,12 +174,12 @@
     }
 },
 {
-    "name": "Philanthropy",
-    "type": "greed",
-    "power": 0,
-    "accuracy": 100,
-    "uses": 20,
-    "statsAffected": {
+    "_name": "Philanthropy",
+    "_type": "greed",
+    "_power": 0,
+    "_accuracy": 100,
+    "_uses": 20,
+    "_statsAffected": {
         "self": {
             "attack": 0,
             "defense": 0,
@@ -194,12 +194,12 @@
 },
 
 {
-    "name": "Laze",
-    "type": "sloth",
-    "power": 15,
-    "accuracy": 100,
-    "uses": 30,
-    "statsAffected": {
+    "_name": "Laze",
+    "_type": "sloth",
+    "_power": 15,
+    "_accuracy": 100,
+    "_uses": 30,
+    "_statsAffected": {
         "self": {
             "attack": 0,
             "defense": 0,
@@ -213,12 +213,12 @@
     }
 },
 {
-    "name": "Cozy Up",
-    "type": "sloth",
-    "power": 0,
-    "accuracy": 100,
-    "uses": 20,
-    "statsAffected": {
+    "_name": "Cozy Up",
+    "_type": "sloth",
+    "_power": 0,
+    "_accuracy": 100,
+    "_uses": 20,
+    "_statsAffected": {
         "self": {
             "attack": 0,
             "defense": 1,
@@ -232,12 +232,12 @@
     }
 },
 {
-    "name": "Remove FOMO",
-    "type": "sloth",
-    "power": 50,
-    "accuracy": 95,
-    "uses": 20,
-    "statsAffected": {
+    "_name": "Remove FOMO",
+    "_type": "sloth",
+    "_power": 50,
+    "_accuracy": 95,
+    "_uses": 20,
+    "_statsAffected": {
         "self": {
             "attack": 0,
             "defense": 0,
@@ -251,12 +251,12 @@
     }
 },
 {
-    "name": "Convince to Stay In",
-    "type": "sloth",
-    "power": 80,
-    "accuracy": 90,
-    "uses": 10,
-    "statsAffected": {
+    "_name": "Convince to Stay In",
+    "_type": "sloth",
+    "_power": 80,
+    "_accuracy": 90,
+    "_uses": 10,
+    "_statsAffected": {
         "self": {
             "attack": 0,
             "defense": 0,
@@ -271,12 +271,12 @@
 },
 
 {
-    "name": "Do You Lift?",
-    "type": "wrath",
-    "power": 0,
-    "accuracy": 100,
-    "uses": 10,
-    "statsAffected": {
+    "_name": "Do You Lift?",
+    "_type": "wrath",
+    "_power": 0,
+    "_accuracy": 100,
+    "_uses": 10,
+    "_statsAffected": {
         "self": {
             "attack": 2,
             "defense": 0,
@@ -290,12 +290,12 @@
     }
 },
 {
-    "name": "Normal Punch",
-    "type": "wrath",
-    "power": 30,
-    "accuracy": 100,
-    "uses": 30,
-    "statsAffected": {
+    "_name": "Normal Punch",
+    "_type": "wrath",
+    "_power": 30,
+    "_accuracy": 100,
+    "_uses": 30,
+    "_statsAffected": {
         "self": {
             "attack": 0,
             "defense": 0,
@@ -309,51 +309,12 @@
     }
 },
 {
-    "name": "Consecutive Normal Punches",
-    "type": "wrath",
-    "power": 70,
-    "accuracy": 100,
-    "uses": 15,
-    "statsAffected": {
-        "self": {
-            "attack": 0,
-            "defense": 0,
-            "speed": 0
-        },
-        "enemy": {
-            "attack": 0,
-            "defense": 0,
-            "speed": 0
-        }
-    }
-},
-
-{
-    "name": "Lash Out",
-    "type": "envy",
-    "power": 25,
-    "accuracy": 100,
-    "uses": 30,
-    "statsAffected": {
-        "self": {
-            "attack": 0,
-            "defense": 0,
-            "speed": 0
-        },
-        "enemy": {
-            "attack": 0,
-            "defense": 0,
-            "speed": 0
-        }
-    }
-},
-{
-    "name": "Sabotage",
-    "type": "envy",
-    "power": 70,
-    "accuracy": 70,
-    "uses": 15,
-    "statsAffected": {
+    "_name": "Consecutive Normal Punches",
+    "_type": "wrath",
+    "_power": 70,
+    "_accuracy": 100,
+    "_uses": 15,
+    "_statsAffected": {
         "self": {
             "attack": 0,
             "defense": 0,
@@ -367,14 +328,53 @@
     }
 },
 
+{
+    "_name": "Lash Out",
+    "_type": "envy",
+    "_power": 25,
+    "_accuracy": 100,
+    "_uses": 30,
+    "_statsAffected": {
+        "self": {
+            "attack": 0,
+            "defense": 0,
+            "speed": 0
+        },
+        "enemy": {
+            "attack": 0,
+            "defense": 0,
+            "speed": 0
+        }
+    }
+},
+{
+    "_name": "Sabotage",
+    "_type": "envy",
+    "_power": 70,
+    "_accuracy": 70,
+    "_uses": 15,
+    "_statsAffected": {
+        "self": {
+            "attack": 0,
+            "defense": 0,
+            "speed": 0
+        },
+        "enemy": {
+            "attack": 0,
+            "defense": 0,
+            "speed": 0
+        }
+    }
+},
+
 
 {
-    "name": "Show Off",
-    "type": "pride",
-    "power": 35,
-    "accuracy": 90,
-    "uses": 20,
-    "statsAffected": {
+    "_name": "Show Off",
+    "_type": "pride",
+    "_power": 35,
+    "_accuracy": 90,
+    "_uses": 20,
+    "_statsAffected": {
         "self": {
             "attack": 0,
             "defense": 0,
@@ -388,12 +388,12 @@
     }
 },
 {
-    "name": "Lord Over",
-    "type": "pride",
-    "power": 110,
-    "accuracy": 80,
-    "uses": 5,
-    "statsAffected": {
+    "_name": "Lord Over",
+    "_type": "pride",
+    "_power": 110,
+    "_accuracy": 80,
+    "_uses": 5,
+    "_statsAffected": {
         "self": {
             "attack": 0,
             "defense": 0,
@@ -407,12 +407,12 @@
     }
 },
 {
-    "name": "The Pants Stay Brown",
-    "type": "pride",
-    "power": 140,
-    "accuracy": 50,
-    "uses": 5,
-    "statsAffected": {
+    "_name": "The Pants Stay Brown",
+    "_type": "pride",
+    "_power": 140,
+    "_accuracy": 50,
+    "_uses": 5,
+    "_statsAffected": {
         "self": {
             "attack": 0,
             "defense": 0,
