@@ -1,7 +1,6 @@
 // Taking in a json with different tiers of rooms and arranging them
 // for this playthrough
 
-import roomJSON from '../data/enemy-warlocks-by-tier.json' assert { type: "json" };
 import lockJSON from '../data/enemy-warlocks.json' assert { type: "json"};
 import * as parse from '../lib/Import.js'
 import { Warlock } from './class-warlock.js'
@@ -15,7 +14,7 @@ class Atlas {
         
         this._lockMap = parse.createWarlocks( lockJSON );
         this._tierMap = this.returnTierMap();
-        this._battleOrder = new Map()
+        this._battleOrder = new Map();
 
         this.initBattleOrder( requiredLocksPerTier );
         this.addGauntlets();

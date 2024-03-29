@@ -1,73 +1,68 @@
-import * as util from '../lib/utility.js';
-import { Party } from './class-party.js';
 import { StorageHandler } from './class-storage-handler.js';
 import { Warlock } from './class-warlock.js';
 import { Daemon } from './class-daemon.js';
 
 class InterludeState {
     constructor ( atlas ) {
-        this.atlas = atlas;
-        this.currentParty = this.partyLoader( sessionStorage.currentParty );
-        this.nextRoomsArray = this.nextRooms;
-
-        let warlockConstructor = this.enemyLockLoader();
-        this.nextLock = new Warlock( warlockConstructor );
-        this.nextLockName = this.nextLock.name;
-        
-        this.newReward = '';
-        this.allHeldMons = this.allHeldMonsLoader( sessionStorage.allHeldMons );
+        this._storage = new StorageHandler();
+        this._atlas = atlas;
+        this._currentParty = this._storage.loadParty();
+        this._nextRoomsArray = this._nextRoomArrayGetter();
+        this._nextLock = this._enemyLockLoader();
+        this._allHeldMons = this._allHeldMonsLoader();
         this._isGameOver = false;
 
-        this.initInterlude();
+        this._initInterlude();
     }
 
-    get nextRooms() { return this.nextRoomArrayGetter(); }
+    get atlas() { return this._atlas; }
+    get currentParty() { return this._currentParty; }
+    get nextRoomsArray() { return this._nextRoomsArray; }
+    get nextlock() { return this._nextLock; }
+    get nextLockName() { return this._nextLock.name; }
+    get allHeldMons() { return this._allHeldMons; }
+
+    get nextRooms() { return this._nextRoomsArray; }
     get isGameOver() { return this._isGameOver; }
 
-    set isGameOver( isItOver ) { this._isGameOver = isItOver; }
-
-    initInterlude() {
-        this.checkIfAtEnd();
+    //#region "Private" functions
+    _initInterlude() {
+        this._checkIfAtEnd();
     }
 
-    checkIfAtEnd() {
+    _checkIfAtEnd() {
         // If the nextRoomsArray is empty, there are no more rooms
         // Therefore we are at the end
-        if ( this.nextRoomsArray.length === 0 ) {
-            this.isGameOver = true;
+        if ( this._nextRoomsArray.length === 0 ) {
+            this._isGameOver = true;
         }
     }
 
     // TODO: handle multiple possible next rooms
-    enemyLockLoader() {
-        let nextLock;
+    _enemyLockLoader() {
+        let lockConstructor;
 
         try {
-            nextLock = this.atlas.battleOrder
-                .get( this.nextRoomsArray[0] ).lock;
+            lockConstructor = this._atlas.battleOrder
+                .get( this._nextRoomsArray[0] ).lock;
         } catch ( error ) {
-            if ( this.nextRoomsArray.length === 0 ) {
+            if ( this._nextRoomsArray.length === 0 ) {
                 console.log('nextRoom is empty array, we should be at end game');
             }
             else {
-                console.log('idk why enemyLockLoader() failed');
+                console.log('idk why _enemyLockLoader() failed');
             }
         }
         
-        return nextLock;
+        // return nextLock;
+        return new Warlock( lockConstructor );
     }
 
-    partyLoader( storage ) {
-        const PARSED_STORAGE = JSON.parse( storage );
-        let playerParty = new Party( PARSED_STORAGE );
-
-        return playerParty;
-    }
-
-    allHeldMonsLoader( storage ) {
+    _allHeldMonsLoader() {
+        let storage = this._storage.allHeldMons;
         // .map( member => member ) is required or else billsPC ends up pointing
         // at party, not copying into its own instance
-        let billsPC = this.currentParty.returnMembers().map( member => member );
+        let billsPC = this._currentParty.returnMembers().map( member => member );
         let parsedStorage = undefined;
 
         try { 
@@ -79,14 +74,26 @@ class InterludeState {
         if ( ! ( parsedStorage.length === 0 || parsedStorage === undefined )) {
             billsPC = parsedStorage
                 .map( daemonData => new Daemon( daemonData ))
-                .concat(this.currentParty.members);
+                .concat(this._currentParty.members);
         }
         console.log(billsPC);
         return billsPC;
     }
 
+    _nextRoomArrayGetter() {      
+        let previousRoomID = this._storage.previousRoomID;
+
+        const NEXT_ROOM_ARRAY = this._atlas
+            .battleOrder
+            .get( previousRoomID )
+            .nextRoomID;
+        return NEXT_ROOM_ARRAY;
+    }
+    //#endregion
+
+    //#region "Public" functions
     healParty() {
-        let members = this.currentParty.members;
+        let members = this._currentParty.members;
 
         members
             .filter( daemon => daemon.isAlive )
@@ -94,24 +101,11 @@ class InterludeState {
     }
 
     restorePartyMoves() {
-        let members = this.currentParty.members;
+        let members = this._currentParty.members;
 
         members.forEach( daemon => daemon.restoreAllMoveUses() )
     }
-
-    nextRoomArrayGetter() {
-        if ( sessionStorage.previousRoomID === "undefined" ) {
-            sessionStorage.previousRoomID = 'roomID000';
-        }
-
-        const NEXT_ROOM_ARRAY = this.atlas
-            .battleOrder
-            .get( sessionStorage.previousRoomID )
-            .nextRoomID;
-
-        return NEXT_ROOM_ARRAY;
-    }
-
+    //#endregion
 };
 
 export { InterludeState }

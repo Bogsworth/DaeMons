@@ -1,5 +1,4 @@
 import { Daemon } from './class-daemon.js'
-import { Move } from './class-move.js';
 import { Party } from './class-party.js'
 import lockJSON from '../data/enemy-warlocks.json' assert { type: "json"};
 import * as calc from '../lib/Calculations.js'

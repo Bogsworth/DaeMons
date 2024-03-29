@@ -1,5 +1,6 @@
 import { Atlas } from "./class-atlas.js";
 import { Warlock } from "./class-warlock.js";
+import { Party } from "./class-party.js";
 import { Daemon } from "./class-daemon.js";
 import { Move } from "./class-move.js";
 
@@ -17,16 +18,27 @@ class StorageHandler {
 
     get state() { return this._state; }
     get UIHandler() { return this._UIHandler; }
+
     get initialSessionStorage() { return this._initialSessionStorage; }
+    get previousRoomID() { return this.loadPreviousRoomID(); }
+    get allHeldMons() { return this._initialSessionStorage.allHeldMons; }
+    
     get homePage() { return this._locations.homePage; }
     get interludePage() { return this._locations.interludePage; }
     get battlePage() { return this._locations.battlePage; }
+    
     get chosenParty() { return this.UIHandler.selectedParty; }
     get isGameOver() { return this._state.isGameOver; }
 
     set state( newState ) { this._state = newState; }
     set UIHandler( handler ) { this._UIHandler = handler; }
 
+    initStorageForInterlude( interludeState ) {
+        this._state = interludeState;
+        this.loadReward();
+        this.checkIfEndGame();
+    }
+    
     checkIfEndGame() {
         if ( ! this.isGameOver ) {
             return;
@@ -52,7 +64,7 @@ class StorageHandler {
         window.location.href = this.interludePage;
     }
 
-    startFight() {
+    endInterlude() {
         const PARTY = this.chosenParty;
         let isADeadMonInParty = ! PARTY.members.every( daemon => ! daemon.isDead );
 
@@ -84,8 +96,8 @@ class StorageHandler {
     }
     
     saveNextRoomID() {
-        const PREVIOUS_ROOM_ID = this.initialSessionStorage.previousRoomID;
-        const PREVIOUS_ROOM = this.state.atlas.battleOrder.get( PREVIOUS_ROOM_ID );
+        const PREVIOUS_ROOM = this.state.atlas.battleOrder
+            .get( this.previousRoomID );
         
         sessionStorage.currentRoomID = PREVIOUS_ROOM.nextRoomID[0];
     }
@@ -174,6 +186,22 @@ class StorageHandler {
         };
         
         sessionStorage.newReward = JSON.stringify( TO_SAVE );
+    }
+
+    loadParty() {
+        const STORAGE_LOCATION = this._initialSessionStorage.currentParty;
+
+        const PARSED_STORAGE = JSON.parse( STORAGE_LOCATION );
+        let playerParty = new Party( PARSED_STORAGE );
+
+        return playerParty;
+    }
+
+    loadPreviousRoomID() {
+        if ( this._initialSessionStorage.previousRoomID === "undefined" ) {
+            this._initialSessionStorage.previousRoomID = 'roomID000';
+        }
+        return this.initialSessionStorage.previousRoomID;
     }
 
     loadReward() {

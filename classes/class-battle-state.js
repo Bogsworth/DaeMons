@@ -1,5 +1,4 @@
 import * as parse from '../lib/Import.js'
-
 import { Party } from './class-party.js'
 import { Warlock } from './class-warlock.js'
 import { Daemon } from './class-daemon.js'

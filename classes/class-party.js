@@ -1,5 +1,4 @@
 import { Daemon } from './class-daemon.js'
-import { Move } from './class-move.js'
 
 class Party {
     constructor(

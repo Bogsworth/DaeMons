@@ -30,9 +30,7 @@ const STORAGE = new StorageHandler();
 const LEVELS = new Atlas( STORAGE.getAtlasBuilder() );
 const INT_STATE = new InterludeState( LEVELS ); // Interlude State
 
-STORAGE.state = INT_STATE;
-STORAGE.loadReward();
-STORAGE.checkIfEndGame();
+STORAGE.initStorageForInterlude( INT_STATE );
 
 // #region
 // ------
@@ -56,5 +54,5 @@ console.log( INT_STATE );
 
 document.getElementsByName('startFight')[0].addEventListener(
     'click',
-    () => STORAGE.startFight()
+    () => STORAGE.endInterlude()
 );

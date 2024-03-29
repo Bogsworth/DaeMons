@@ -1,4 +1,3 @@
-import * as util from './lib/utility.js'
 import { Party } from './classes/class-party.js';
 
 function createStarterSection( daemon, optionId ) {

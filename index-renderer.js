@@ -1,15 +1,11 @@
-import * as parse from './lib/import.js';
 import * as indexFuncs from './index-funcs.js';
 import * as util from './lib/utility.js';
-import starterJSON from './data/starting-options.json' assert { type: "json" };
 import { Daemon } from './classes/class-daemon.js';
-import { StorageHandler } from './classes/class-storage-handler.js';
 
 /*
 # TODO List
 ## Required TODOs
-- [ ] TODO: A basic landing page
-
+- [ ] TODO: 
 
 ## Nice to have TODOs
 - [ ] TODO: A nicer landing page
@@ -19,6 +15,7 @@ import { StorageHandler } from './classes/class-storage-handler.js';
 
 ## TODONE!!!
 - [x] TODONE: Ability to choose your "starter"
+- [X] TODO: A basic landing page
 
 */
 
@@ -37,15 +34,15 @@ let starterOptionArray = [
     new Daemon()
 ]
 
-starterOptionArray[0].generateDaemonFromID(STARTER_IDS[0], 'asStarter')
-starterOptionArray[1].generateDaemonFromID(STARTER_IDS[1], 'asStarter')
-starterOptionArray[2].generateDaemonFromID(STARTER_IDS[2], 'asStarter')
+starterOptionArray[0].generateDaemonFromID( STARTER_IDS[0], 'asStarter' )
+starterOptionArray[1].generateDaemonFromID( STARTER_IDS[1], 'asStarter' )
+starterOptionArray[2].generateDaemonFromID( STARTER_IDS[2], 'asStarter' )
 
 console.log(starterOptionArray);
 
-indexFuncs.createStarterSection(starterOptionArray[0], 'option0' );
-indexFuncs.createStarterSection(starterOptionArray[1], 'option1' );
-indexFuncs.createStarterSection(starterOptionArray[2], 'option2' );
+indexFuncs.createStarterSection( starterOptionArray[0], 'option0' );
+indexFuncs.createStarterSection( starterOptionArray[1], 'option1' );
+indexFuncs.createStarterSection( starterOptionArray[2], 'option2' );
 
 util.attachButtonId(
     function () {

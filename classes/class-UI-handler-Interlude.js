@@ -63,7 +63,7 @@ class InterludeUIHandler {
         this.populateNextFight();
 
         this.monButtonsInit();
-        this.updateInfoBox( this._state.allHeldMons );
+        this.updateInfoBox( this._state._allHeldMons );
     }
 
     monButtonsInit() {
@@ -79,7 +79,7 @@ class InterludeUIHandler {
     }
 
     generateMonButtons() {
-        let monArray = this._state.allHeldMons;
+        let monArray = this._state._allHeldMons;
         let infoDiv = document.getElementById( 'bottomBar' );
         let i = 0;
         let buttonIdArray = [];
@@ -172,10 +172,10 @@ class InterludeUIHandler {
 
     partySelectPopulator( select ) {
         const UUID_ARRAY = this._state
-            .allHeldMons
+            ._allHeldMons
             .map( daemon => daemon.uuid );
         const NAME_ARRAY = this._state
-            .allHeldMons
+            ._allHeldMons
             .map( daemon => daemon.name );
         const ELEMENT = document.getElementById( select );
         
@@ -208,9 +208,9 @@ class InterludeUIHandler {
 
     setInitialSelectOptions() {
         let index = 0;
-        console.log( this._state.currentParty.members );
+        console.log( this._state._currentParty.members );
 
-        this._state.currentParty.members
+        this._state._currentParty.members
             .map( daemon => daemon.uuid )
             .forEach( uuid => this._partySelects[ index++ ].value = uuid );
     }
@@ -238,7 +238,7 @@ class InterludeUIHandler {
 
     selectedPartyGetter() {
         const DEFAULT_STRING = 'Pick a Daemon';
-        const ALL_MONS_ARRAY = this._state.allHeldMons;
+        const ALL_MONS_ARRAY = this._state._allHeldMons;
         const SELECTED_MONS_UUIDS = this._partySelects
             .map( select => select.value )
             .filter( value => value !== DEFAULT_STRING );
@@ -253,7 +253,7 @@ class InterludeUIHandler {
     }
 
     populateNextFight() {
-        const NEXT_LOCK = this._state.nextLock;
+        const NEXT_LOCK = this._state._nextLock;
         const NAME_ID = 'lockName';
         const DESC_ID = 'lockDescription';
         const NAME_ELEMENT = document.getElementById( NAME_ID );
